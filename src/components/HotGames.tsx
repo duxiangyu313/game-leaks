@@ -62,7 +62,7 @@ export default function HotGames() {
             viewport={{ once: true }}
             transition={{ delay: i * 0.08 }}
           >
-            <Link href={`/games/${game.id}`} className="glass-card block p-4 group h-full">
+            <Link href={`/games/detail?id=${game.id}`} className="glass-card block p-4 group h-full">
               {/* Rank */}
               <div className="flex items-center justify-between mb-3">
                 <span className={`text-lg font-black ${

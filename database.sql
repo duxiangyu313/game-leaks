@@ -178,3 +178,61 @@ CREATE INDEX idx_leaks_status ON leaks(status);
 CREATE INDEX idx_leaks_scheduled ON leaks(scheduled_at) WHERE status = 'scheduled';
 CREATE INDEX idx_admin_logs_action ON admin_logs(action);
 CREATE INDEX idx_admin_logs_created ON admin_logs(created_at DESC);
+
+-- 10. 游戏投票
+CREATE TABLE IF NOT EXISTS game_votes (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  game_id UUID REFERENCES games(id) ON DELETE CASCADE NOT NULL,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  vote_type TEXT NOT NULL CHECK (vote_type IN ('hype', 'disappoint')),
+  created_at TIMESTAMPTZ DEFAULT now(),
+  UNIQUE(game_id, user_id, vote_type)
+);
+ALTER TABLE game_votes ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public read votes" ON game_votes FOR SELECT USING (true);
+CREATE POLICY "Users insert own votes" ON game_votes FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+-- 11. 激活码
+CREATE TABLE IF NOT EXISTS activation_codes (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  code TEXT UNIQUE NOT NULL,
+  game_name TEXT,
+  description TEXT,
+  created_by UUID REFERENCES auth.users(id),
+  claimed_by UUID REFERENCES auth.users(id),
+  claimed_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+ALTER TABLE activation_codes ENABLE ROW LEVEL SECURITY;
+
+-- 12. 匿名投稿
+CREATE TABLE IF NOT EXISTS anonymous_submissions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title TEXT NOT NULL,
+  content TEXT DEFAULT '',
+  credibility TEXT DEFAULT 'rumor',
+  game_name TEXT,
+  submitter_fingerprint TEXT,
+  status TEXT DEFAULT 'pending' CHECK (status IN ('pending','approved','rejected')),
+  reviewer_note TEXT,
+  reward_tier membership_tier,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  reviewed_at TIMESTAMPTZ
+);
+ALTER TABLE anonymous_submissions ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Admin manage submissions" ON anonymous_submissions USING (auth.uid() IN (SELECT id FROM profiles WHERE membership = 'diamond'));
+
+-- 13. 设备会话限制
+CREATE TABLE IF NOT EXISTS device_sessions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  device_fingerprint TEXT NOT NULL,
+  last_seen TIMESTAMPTZ DEFAULT now(),
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+CREATE INDEX idx_device_sessions_user ON device_sessions(user_id);
+
+-- 索引
+CREATE INDEX IF NOT EXISTS idx_votes_game ON game_votes(game_id);
+CREATE INDEX IF NOT EXISTS idx_codes_claimed ON activation_codes(claimed_by);
+CREATE INDEX IF NOT EXISTS idx_submissions_status ON anonymous_submissions(status);
