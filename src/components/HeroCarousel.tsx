@@ -12,7 +12,7 @@ const SLIDES: CarouselSlide[] = [
     title: "归唐 · 六月六日全球首秀",
     subtitle: "网易首款自研买断制3A，安史之乱后的敦煌悲歌，SGF 2026实机首曝",
     image: "",
-    link: "/leaks/1",
+    link: "/leaks/",
     tag: "🔥 重磅",
   },
   {
@@ -20,7 +20,7 @@ const SLIDES: CarouselSlide[] = [
     title: "湮灭之潮 · 成都线下试玩",
     subtitle: "腾讯蛇夫座100人团队，亚瑟王题材高速ACT，30+Boss战今夏来袭",
     image: "",
-    link: "/leaks/2",
+    link: "/leaks/",
     tag: "⚔️ 新游",
   },
   {
@@ -28,7 +28,7 @@ const SLIDES: CarouselSlide[] = [
     title: "影之刃零 · 9月9日发售",
     subtitle: "灵游坊暗黑武侠巨制，全人类手工制作拒绝AI，主线20-30小时",
     image: "",
-    link: "/games/3",
+    link: "/games/",
     tag: "📅 定档",
   },
   {
@@ -36,7 +36,7 @@ const SLIDES: CarouselSlide[] = [
     title: "黑神话 · 钟馗首曝实机",
     subtitle: "游戏科学第二款3A，团队扩军至165人，UE5打造全新捉鬼宇宙",
     image: "",
-    link: "/leaks/4",
+    link: "/leaks/",
     tag: "🔴 独家",
   },
 ];

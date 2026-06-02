@@ -1,145 +1,74 @@
 "use client";
 
-import { useState, FormEvent } from "react";
-import { motion } from "framer-motion";
-import { Mail, MessageCircle, Eye, EyeOff, Loader2 } from "lucide-react";
-import Link from "next/link";
+import { useState } from "react";
 import { supabase } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
 
 export default function AuthPage() {
-  const router = useRouter();
   const [mode, setMode] = useState<"login" | "register">("login");
-  const [showPwd, setShowPwd] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+  const handleAuth = async () => {
     setError("");
     setLoading(true);
-
     try {
       if (mode === "register") {
-        const { error: signUpError } = await supabase.auth.signUp({
-          email,
-          password,
-          options: { data: { username } },
-        });
-        if (signUpError) throw signUpError;
-        // Auto-login after register
-        const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
-        if (signInError) throw signInError;
+        const { error: e } = await supabase.auth.signUp({ email, password });
+        if (e) throw e;
+        const { error: e2 } = await supabase.auth.signInWithPassword({ email, password });
+        if (e2) throw e2;
       } else {
-        const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
-        if (signInError) throw signInError;
+        const { error: e } = await supabase.auth.signInWithPassword({ email, password });
+        if (e) throw e;
       }
-      router.push("/");
-    } catch (err: any) {
-      setError(err.message || "操作失败，请重试");
-    } finally {
+      window.location.href = "/";
+    } catch (e: any) {
+      setError(e.message);
       setLoading(false);
     }
   };
 
   return (
-    <div className="pt-20 pb-20">
-      <div className="max-w-md mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="glass-card p-8"
-        >
-          <h2 className="text-2xl font-bold text-[#F1F5F9] text-center mb-2">
+    <div style={{ paddingTop: 120, paddingBottom: 80 }}>
+      <div style={{ maxWidth: 420, margin: "0 auto", padding: "0 16px" }}>
+        <div style={{ background: "rgba(30,41,59,0.5)", backdropFilter: "blur(16px)", border: "1px solid rgba(30,41,59,0.8)", borderRadius: 12, padding: 32 }}>
+          <h2 style={{ fontSize: 24, fontWeight: 700, color: "#F1F5F9", textAlign: "center", marginBottom: 8 }}>
             {mode === "login" ? "欢迎回来" : "创建账号"}
           </h2>
-          <p className="text-sm text-[#94A3B8] text-center mb-8">
-            {mode === "login" ? "登录你的国游爆料账号" : "加入国产3A游戏爱好者社区"}
+          <p style={{ fontSize: 14, color: "#94A3B8", textAlign: "center", marginBottom: 32 }}>
+            {mode === "login" ? "登录国游爆料" : "加入国产3A社区"}
           </p>
 
-          {/* Social login buttons */}
-          <div className="flex gap-3 mb-6">
-            <button className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#07C160]/10 border border-[#07C160]/20 text-[#07C160] text-sm font-medium hover:bg-[#07C160]/20 transition-all">
-              <MessageCircle className="w-4 h-4" /> 微信登录
-            </button>
-            <button className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#1E293B]/60 border border-[rgba(30,41,59,0.6)] text-[#94A3B8] text-sm font-medium hover:text-[#F1F5F9] hover:border-[#06B6D4]/20 transition-all">
-              <Mail className="w-4 h-4" /> 邮箱登录
-            </button>
+          <div style={{ marginBottom: 16 }}>
+            <label style={{ display: "block", fontSize: 13, color: "#94A3B8", marginBottom: 6 }}>邮箱</label>
+            <input type="email" value={email} onChange={e => setEmail(e.target.value)}
+              style={{ width: "100%", padding: "10px 16px", borderRadius: 12, background: "rgba(30,41,59,0.4)", border: "1px solid rgba(30,41,59,0.6)", color: "#F1F5F9", fontSize: 14, outline: "none", boxSizing: "border-box" }}
+              placeholder="your@email.com" />
+          </div>
+          <div style={{ marginBottom: 16 }}>
+            <label style={{ display: "block", fontSize: 13, color: "#94A3B8", marginBottom: 6 }}>密码</label>
+            <input type="password" value={password} onChange={e => setPassword(e.target.value)}
+              style={{ width: "100%", padding: "10px 16px", borderRadius: 12, background: "rgba(30,41,59,0.4)", border: "1px solid rgba(30,41,59,0.6)", color: "#F1F5F9", fontSize: 14, outline: "none", boxSizing: "border-box" }}
+              placeholder="••••••••" />
           </div>
 
-          <div className="relative mb-6">
-            <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-[rgba(30,41,59,0.6)]" /></div>
-            <div className="relative flex justify-center">
-              <span className="px-3 text-xs text-[#64748B] bg-[#0F172A]">或使用邮箱</span>
-            </div>
-          </div>
+          {error && <div style={{ padding: 12, borderRadius: 12, background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)", color: "#EF4444", fontSize: 14, marginBottom: 16 }}>{error}</div>}
 
-          {/* Email form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {mode === "register" && (
-              <div>
-                <label className="block text-sm text-[#94A3B8] mb-1.5">用户名</label>
-                <input
-                  type="text" value={username} onChange={(e) => setUsername(e.target.value)}
-                  placeholder="你的昵称"
-                  className="w-full px-4 py-2.5 rounded-xl bg-[#1E293B]/40 border border-[rgba(30,41,59,0.6)] text-[#F1F5F9] placeholder-[#64748B] outline-none focus:border-[#06B6D4]/40 transition-all"
-                />
-              </div>
-            )}
-            <div>
-              <label className="block text-sm text-[#94A3B8] mb-1.5">邮箱</label>
-              <input
-                type="email" value={email} onChange={(e) => setEmail(e.target.value)}
-                required
-                placeholder="your@email.com"
-                className="w-full px-4 py-2.5 rounded-xl bg-[#1E293B]/40 border border-[rgba(30,41,59,0.6)] text-[#F1F5F9] placeholder-[#64748B] outline-none focus:border-[#06B6D4]/40 transition-all"
-              />
-            </div>
-            <div>
-              <label className="block text-sm text-[#94A3B8] mb-1.5">密码</label>
-              <div className="relative">
-                <input
-                  type={showPwd ? "text" : "password"}
-                  value={password} onChange={(e) => setPassword(e.target.value)}
-                  required
-                  placeholder="••••••••"
-                  className="w-full px-4 py-2.5 rounded-xl bg-[#1E293B]/40 border border-[rgba(30,41,59,0.6)] text-[#F1F5F9] placeholder-[#64748B] outline-none focus:border-[#06B6D4]/40 transition-all pr-10"
-                />
-                <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#64748B] hover:text-[#94A3B8]">
-                  {showPwd ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
-            </div>
+          <button onClick={handleAuth} disabled={loading}
+            style={{ width: "100%", padding: "12px 0", borderRadius: 12, background: loading ? "#0891B2" : "#06B6D4", color: "white", fontWeight: 600, fontSize: 14, border: "none", cursor: loading ? "not-allowed" : "pointer", opacity: loading ? 0.5 : 1 }}>
+            {loading ? "处理中..." : mode === "login" ? "登录" : "注册"}
+          </button>
 
-            {error && (
-              <div className="p-3 rounded-xl bg-[#EF4444]/10 border border-[#EF4444]/20 text-sm text-[#EF4444]">
-                {error}
-              </div>
-            )}
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-[#06B6D4] to-[#0891B2] hover:shadow-[0_0_20px_rgba(6,182,212,0.25)] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
-            >
-              {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-              {loading ? "处理中..." : mode === "login" ? "登录" : "注册"}
-            </button>
-          </form>
-
-          <p className="text-sm text-[#64748B] text-center mt-6">
+          <p style={{ fontSize: 14, color: "#64748B", textAlign: "center", marginTop: 24 }}>
             {mode === "login" ? "还没有账号？" : "已有账号？"}
-            <button
-              onClick={() => { setMode(mode === "login" ? "register" : "login"); setError(""); }}
-              className="ml-1 text-[#06B6D4] hover:text-[#22D3EE] font-medium"
-            >
+            <span onClick={() => { setMode(mode === "login" ? "register" : "login"); setError(""); }}
+              style={{ color: "#06B6D4", cursor: "pointer", fontWeight: 500, marginLeft: 4 }}>
               {mode === "login" ? "立即注册" : "去登录"}
-            </button>
+            </span>
           </p>
-        </motion.div>
+        </div>
       </div>
     </div>
   );
