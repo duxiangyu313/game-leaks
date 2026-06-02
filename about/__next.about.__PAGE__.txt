@@ -1,0 +1,5 @@
+1:"$Sreact.fragment"
+2:I[97367,["/_next/static/chunks/3wg2-sws8ft_8.js","/_next/static/chunks/27_h2ud3o-3nr.js","/_next/static/chunks/14mrh2-p_w84d.js"],"OutletBoundary"]
+3:"$Sreact.suspense"
+0:{"rsc":["$","$1","c",{"children":[["$","div",null,{"className":"pt-20 pb-20","children":["$","div",null,{"className":"max-w-3xl mx-auto px-6","children":[["$","h1",null,{"className":"text-3xl font-bold text-[#F1F5F9] mb-4","children":"关于我们"}],["$","p",null,{"className":"text-[#94A3B8] leading-relaxed","children":"国游爆料致力于追踪国产3A游戏最新动态，提供深度解析与玩家社区。我们相信国产游戏正在走向世界，值得被更多人看见。"}]]}]}],null,["$","$L2",null,{"children":["$","$3",null,{"name":"Next.MetadataOutlet","children":"$@4"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"v1780405346940"}
+4:null
