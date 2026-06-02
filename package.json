@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && node scripts/fix-rsc.js site",
+    "build": "next build && node scripts/fix-rsc.js build_out",
     "start": "next start",
     "lint": "eslint"
   },
