@@ -99,3 +99,82 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION handle_new_user();
+
+-- 6. 文章表
+CREATE TABLE articles (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title TEXT NOT NULL,
+  content TEXT DEFAULT '',
+  category TEXT DEFAULT 'analysis',
+  required_tier membership_tier DEFAULT 'free',
+  cover_image TEXT,
+  tags TEXT[] DEFAULT '{}',
+  status TEXT DEFAULT 'draft', -- draft, published, scheduled
+  scheduled_at TIMESTAMPTZ,
+  author_id UUID REFERENCES auth.users(id),
+  view_count INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+ALTER TABLE articles ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public read published" ON articles FOR SELECT USING (status = 'published');
+CREATE POLICY "Admin full access articles" ON articles USING (auth.uid() IN (SELECT id FROM profiles WHERE membership = 'diamond'));
+
+-- 7. 爆料表
+CREATE TABLE leaks (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title TEXT NOT NULL,
+  summary TEXT DEFAULT '',
+  content TEXT DEFAULT '',
+  source TEXT,
+  credibility TEXT DEFAULT 'rumor',
+  game_name TEXT,
+  images TEXT[] DEFAULT '{}',
+  status TEXT DEFAULT 'draft',
+  scheduled_at TIMESTAMPTZ,
+  published_at TIMESTAMPTZ,
+  author_id UUID REFERENCES auth.users(id),
+  view_count INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+ALTER TABLE leaks ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public read published leaks" ON leaks FOR SELECT USING (status = 'published');
+
+-- 8. 游戏表
+CREATE TABLE games (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title TEXT NOT NULL,
+  english_title TEXT,
+  cover TEXT,
+  developer TEXT,
+  publisher TEXT,
+  genre TEXT[] DEFAULT '{}',
+  platforms TEXT[] DEFAULT '{}',
+  release_date TEXT,
+  status TEXT DEFAULT 'in-dev',
+  description TEXT DEFAULT '',
+  hype_score INTEGER DEFAULT 50,
+  rating NUMERIC(2,1),
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+ALTER TABLE games ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public read games" ON games FOR SELECT USING (true);
+
+-- 9. 管理员操作日志
+CREATE TABLE admin_logs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  action TEXT NOT NULL,
+  detail TEXT,
+  user_id UUID REFERENCES auth.users(id),
+  ip_address TEXT,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- 索引
+CREATE INDEX idx_articles_status ON articles(status);
+CREATE INDEX idx_leaks_status ON leaks(status);
+CREATE INDEX idx_leaks_scheduled ON leaks(scheduled_at) WHERE status = 'scheduled';
+CREATE INDEX idx_admin_logs_action ON admin_logs(action);
+CREATE INDEX idx_admin_logs_created ON admin_logs(created_at DESC);
