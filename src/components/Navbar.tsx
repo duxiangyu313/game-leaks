@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, X, Search, User, Crown } from "lucide-react";
+import { Menu, X, Search, User, Crown, Settings } from "lucide-react";
 
 const NAV_LINKS = [
   { href: "/", label: "首页" },
@@ -64,6 +64,13 @@ export default function Navbar() {
           </div>
 
           {/* Auth buttons */}
+          <Link
+            href="/account"
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-sm text-[#94A3B8] hover:text-[#F1F5F9] hover:bg-[#1E293B]/50 rounded-lg transition-all"
+          >
+            <Settings className="w-4 h-4" />
+            账户
+          </Link>
           <Link
             href="/auth"
             className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-sm text-[#94A3B8] hover:text-[#F1F5F9] hover:bg-[#1E293B]/50 rounded-lg transition-all"

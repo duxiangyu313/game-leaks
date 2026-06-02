@@ -51,16 +51,33 @@ export interface Article {
   tags: string[];
 }
 
+export type MembershipTier = 'free' | 'silver' | 'gold' | 'diamond';
+
 export interface UserProfile {
   id: string;
   email?: string;
   username: string;
   avatar?: string;
-  wechatId?: string;
-  role: 'user' | 'vip' | 'admin';
+  membership: MembershipTier;
+  subscriptionStatus: 'active' | 'past_due' | 'canceled' | 'inactive';
+  subscriptionEndDate?: string;
+  stripeCustomerId?: string;
+  stripeSubscriptionId?: string;
   joinedAt: string;
   bookmarks: string[];
   following: string[];
+}
+
+export interface Payment {
+  id: string;
+  userId: string;
+  stripeSessionId: string;
+  amount: number;
+  currency: string;
+  tier: MembershipTier;
+  billingCycle: 'monthly' | 'yearly';
+  status: 'pending' | 'completed' | 'refunded' | 'failed';
+  createdAt: string;
 }
 
 export interface CarouselSlide {
