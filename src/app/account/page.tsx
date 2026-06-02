@@ -6,7 +6,7 @@ import Link from "next/link";
 import { User, Crown, Clock, CreditCard, Settings, LogOut, Shield, AlertTriangle } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import { useStripeCheckout } from "@/hooks/useStripeCheckout";
-import { MEMBERSHIP_TIERS, type MembershipTier } from "@/lib/stripe";
+import { MEMBERSHIP_TIERS, type MembershipTier } from "@/lib/stripe-config";
 
 interface Profile {
   username: string;

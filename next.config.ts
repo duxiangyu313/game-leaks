@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   distDir: "site",
   images: { unoptimized: true },
   trailingSlash: true,
+  generateBuildId: async () => "v" + Date.now(),
 };
 
 export default nextConfig;

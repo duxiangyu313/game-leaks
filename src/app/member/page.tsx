@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Crown, Check, Zap, Star, Shield, MessageCircle, Gift, Users, Clock, Sparkles, ArrowRight, X } from "lucide-react";
 import Link from "next/link";
 import { useStripeCheckout } from "@/hooks/useStripeCheckout";
-import { MEMBERSHIP_TIERS, type MembershipTier } from "@/lib/stripe";
+import { MEMBERSHIP_TIERS, type MembershipTier } from "@/lib/stripe-config";
 
 type BillingCycle = "monthly" | "yearly";
 

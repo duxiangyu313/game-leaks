@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { supabase } from "@/lib/supabase/client";
-import type { MembershipTier } from "@/lib/stripe";
+import type { MembershipTier } from "@/lib/stripe-config";
 
 /**
  * Stripe Checkout Hook — 客户端支付流程

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Lock, Crown, ArrowRight } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
-import { MEMBERSHIP_TIERS, type MembershipTier } from "@/lib/stripe";
+import { MEMBERSHIP_TIERS, type MembershipTier } from "@/lib/stripe-config";
 
 interface Props {
   requiredTier: MembershipTier;

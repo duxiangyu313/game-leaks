@@ -62,6 +62,7 @@ export default function Navbar() {
             <Link
               key={link.href}
               href={link.href}
+              prefetch={false}
               className="px-3 py-2 text-sm text-[#94A3B8] hover:text-[#F1F5F9] hover:bg-[#1E293B]/50 rounded-lg transition-all"
             >
               {link.label}
@@ -105,7 +106,8 @@ export default function Navbar() {
         <div className="lg:hidden border-t border-[rgba(30,41,59,0.6)] bg-[#0F172A]/95 backdrop-blur-xl">
           <div className="px-6 py-4 flex flex-col gap-1">
             {NAV_LINKS.map((link) => (
-              <Link key={link.href} href={link.href} className="px-3 py-2.5 text-sm text-[#94A3B8] hover:text-[#F1F5F9] hover:bg-[#1E293B]/50 rounded-lg transition-all" onClick={() => setOpen(false)}>
+              <Link key={link.href} href={link.href}
+              prefetch={false} className="px-3 py-2.5 text-sm text-[#94A3B8] hover:text-[#F1F5F9] hover:bg-[#1E293B]/50 rounded-lg transition-all" onClick={() => setOpen(false)}>
                 {link.label}
               </Link>
             ))}
