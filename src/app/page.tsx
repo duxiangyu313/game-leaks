@@ -6,6 +6,7 @@ import HotTopics from "@/components/HotTopics";
 import LatestLeaks from "@/components/LatestLeaks";
 import HotGames from "@/components/HotGames";
 import UpcomingGames from "@/components/UpcomingGames";
+import HotDiscussions from "@/components/HotDiscussions";
 import VideoSection from "@/components/VideoSection";
 import StatsDashboard from "@/components/StatsDashboard";
 import MemberPromo from "@/components/MemberPromo";
@@ -23,6 +24,7 @@ export default function Home() {
       <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-16"><LatestLeaks /></div>
       <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-16"><HotGames /></div>
       <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-16"><UpcomingGames /></div>
+      <div className="pt-16"><HotDiscussions /></div>
       <div className="pt-16"><VideoSection /></div>
       <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-16"><StatsDashboard /></div>
       <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-16 pb-20"><MemberPromo /></div>

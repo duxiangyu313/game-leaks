@@ -1,0 +1,120 @@
+"use client";
+
+import { useEffect, useState, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Crown, X } from "lucide-react";
+import Link from "next/link";
+import type { MembershipTier } from "@/types";
+
+interface Props {
+  membershipLevel: MembershipTier;
+  triggerAtPct?: number;
+}
+
+/** 智能付费引导 — 免费/白银用户阅读超过50%时底部弹出 */
+export default function SmartPaywallNudge({ membershipLevel, triggerAtPct = 50 }: Props) {
+  const [show, setShow] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
+  // 会员无需引导
+  if (membershipLevel === "gold" || membershipLevel === "diamond") return null;
+
+  useEffect(() => {
+    // 检查是否已关闭过
+    const stored = localStorage.getItem("paywall_nudge_dismissed");
+    if (stored) {
+      const ts = parseInt(stored, 10);
+      // 24小时内不再显示
+      if (Date.now() - ts < 86400000) {
+        setDismissed(true);
+        return;
+      }
+    }
+
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !dismissed) {
+          setShow(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0 }
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [dismissed, membershipLevel]);
+
+  const handleDismiss = () => {
+    setShow(false);
+    setDismissed(true);
+    localStorage.setItem("paywall_nudge_dismissed", Date.now().toString());
+  };
+
+  const getUpgradeTier = (): string => {
+    if (membershipLevel === "free") return "黄金";
+    if (membershipLevel === "silver") return "黄金";
+    return "黄金";
+  };
+
+  const getUpgradePrice = (): string => {
+    if (membershipLevel === "free") return "¥59/月";
+    return "¥59/月";
+  };
+
+  return (
+    <>
+      {/* 滚动哨兵 */}
+      <div ref={sentinelRef} className="h-1" style={{ marginTop: `${triggerAtPct}vh` }} />
+
+      <AnimatePresence>
+        {show && (
+          <motion.div
+            initial={{ y: 80, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 80, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 200, damping: 24 }}
+            className="paywall-nudge"
+          >
+            <div className="max-w-[1280px] mx-auto px-4">
+              <div className="glass-card-intense p-5 flex items-center justify-between border border-[#F59E0B]/20 bg-gradient-to-r from-[#1A2332] to-[#162030]">
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-full bg-[#F59E0B]/15 flex items-center justify-center shrink-0">
+                    <Crown className="w-5 h-5 text-[#F59E0B]" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-[#F1F5F9]">
+                      喜欢这篇文章？升级{getUpgradeTier()}会员解锁更多深度内容
+                    </p>
+                    <p className="text-xs text-[#94A3B8] mt-0.5">
+                      独家爆料 · 深度解析 · 行业报告 • 7天无理由退款
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 shrink-0">
+                  <Link
+                    href="/member"
+                    className="px-5 py-2.5 bg-gradient-to-r from-[#F59E0B] to-[#D97706] text-white text-sm font-semibold rounded-xl hover:shadow-[0_0_20px_rgba(245,158,11,0.25)] transition-all whitespace-nowrap"
+                  >
+                    仅 {getUpgradePrice()} · 立即升级
+                  </Link>
+                  <button
+                    onClick={handleDismiss}
+                    className="p-2 text-[#64748B] hover:text-[#94A3B8] transition-colors"
+                    aria-label="关闭"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}

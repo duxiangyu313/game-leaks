@@ -202,6 +202,23 @@ async function main() {
         .order("rating", { ascending: false })
         .limit(3),
     ]);
+    // ── 玩家热议: 论坛热帖 ──
+    const { data: hotPosts } = await supabase
+      .from("forum_posts")
+      .select("*")
+      .order("reply_count", { ascending: false })
+      .limit(5);
+    if (hotPosts?.length) cache["hotDiscussions"] = hotPosts;
+
+    // ── 精选评测: 已发售游戏的推荐评测 ──
+    const { data: featuredReviews } = await supabase
+      .from("game_reviews")
+      .select("*")
+      .eq("is_featured", true)
+      .order("created_at", { ascending: false })
+      .limit(3);
+    if (featuredReviews?.length) cache["featuredReviews"] = featuredReviews;
+
     cache["stats"] = {
       games: gamesCount || 0,
       leaks: leaksCount || 0,

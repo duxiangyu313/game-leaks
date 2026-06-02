@@ -36,19 +36,91 @@ export interface Leak {
   commentCount: number;
 }
 
+export type ArticleCategory = 'review' | 'preview' | 'analysis' | 'interview' | 'opinion' | 'leak' | 'news' | 'video';
+export type TemplateType = 'leak' | 'review' | 'analysis' | 'news' | 'standard';
+
 export interface Article {
   id: string;
   title: string;
-  excerpt: string;
+  excerpt?: string;
   content: string;
   coverImage: string;
-  category: 'review' | 'preview' | 'analysis' | 'interview' | 'opinion';
+  category: ArticleCategory;
+  templateType?: TemplateType;
   gameId?: string;
   gameName?: string;
   authorId: string;
+  authorName?: string;
   publishedAt: string;
   readTime: number;
+  wordCount?: number;
   tags: string[];
+  requiredTier: MembershipTier;
+  purchaseCount?: number;
+  credibilityScore?: number;
+  credibilityVotes?: CredibilityVote;
+  videoUrl?: string;
+  status: 'draft' | 'published' | 'scheduled';
+  viewCount?: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+/** 文章模板定义 */
+export interface ArticleTemplateDef {
+  type: TemplateType;
+  sections: TemplateSection[];
+  styles: TemplateStyles;
+}
+
+export interface TemplateSection {
+  id: string;
+  name: string;
+  required: boolean;
+  markdown: string;
+}
+
+export interface TemplateStyles {
+  accentColor: string;
+  heroStyle: 'large' | 'compact' | 'split';
+  showTOC: boolean;
+  showTakeaways: boolean;
+  showHero: boolean;
+}
+
+/** 目录条目 */
+export interface TocEntry {
+  id: string;
+  text: string;
+  level: 2 | 3;
+}
+
+/** 互动计数 */
+export interface InteractionCounts {
+  likes: number;
+  bookmarks: number;
+  shares: number;
+  comments: number;
+  credibility_believe: number;
+  credibility_skeptical: number;
+}
+
+/** 可信度投票 */
+export interface CredibilityVote {
+  believe: number;
+  skeptical: number;
+  userVote?: 'believe' | 'skeptical' | null;
+}
+
+/** 行内评论 */
+export interface InlineComment {
+  id: string;
+  paragraphIndex: number;
+  userId: string;
+  username: string;
+  membership: MembershipTier;
+  content: string;
+  createdAt: string;
 }
 
 export type MembershipTier = 'free' | 'silver' | 'gold' | 'diamond';
@@ -87,4 +159,13 @@ export interface CarouselSlide {
   image: string;
   link: string;
   tag?: string;
+}
+
+/** 文章互动记录 */
+export interface ArticleInteraction {
+  id: string;
+  article_id: string;
+  user_id: string;
+  interaction_type: 'like' | 'bookmark' | 'share' | 'credibility_believe' | 'credibility_skeptical';
+  created_at: string;
 }

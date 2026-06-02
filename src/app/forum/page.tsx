@@ -48,10 +48,11 @@ export default function ForumPage() {
           ))}
         </div>
 
+        <ForumCardsGrid>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {CATEGORIES.map((cat) => (
             <Link key={cat.slug} href={`/forum/${cat.slug}`}
-              className={`glass-card p-6 transition-all duration-200 group bg-gradient-to-br ${cat.bg} hover:bg-[#1E293B]/60 hover:scale-[1.01] hover:shadow-[0_8px_32px_rgba(0,0,0,0.3)] hover:border-[#06B6D4]/20 cursor-pointer`}>
+              className={`glass-card forum-card forum-card-enter forum-card-scroll-glow p-6 bg-gradient-to-br ${cat.bg} hover:bg-[#1E293B]/60 hover:shadow-[0_8px_32px_rgba(0,0,0,0.3)] hover:border-[#06B6D4]/20`}>
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-xl bg-[#1E293B]/60 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-200">
                   <cat.icon className={`w-6 h-6 ${cat.color}`} />
@@ -59,7 +60,7 @@ export default function ForumPage() {
                 <div className="flex-1">
                   <h3 className="text-lg font-bold text-[#F1F5F9] group-hover:text-[#06B6D4] transition-colors">{cat.name}</h3>
                   <p className="text-sm text-[#94A3B8] mt-1">{cat.desc}</p>
-                  <div className="flex items-center gap-4 mt-3 text-xs text-[#64748B]">
+                  <div className="forum-stats flex items-center gap-4 mt-3 text-xs text-[#64748B]">
                     <span>{cat.threads.toLocaleString()} 主题</span>
                     <span>{cat.posts.toLocaleString()} 帖子</span>
                   </div>
@@ -68,6 +69,7 @@ export default function ForumPage() {
             </Link>
           ))}
         </div>
+        </ForumCardsGrid>
       </div>
     </div>
   );

@@ -5,7 +5,7 @@
 import { supabase } from "@/lib/supabase/client";
 
 export type MembershipLevel = "free" | "silver" | "gold" | "diamond";
-export type Visibility = "public" | "silver" | "gold" | "diamond";
+export type Visibility = "free" | "public" | "silver" | "gold" | "diamond";
 
 const LEVEL_RANK: Record<MembershipLevel, number> = { free: 0, silver: 1, gold: 2, diamond: 3 };
 
@@ -41,20 +41,20 @@ export function hasAccess(userLevel: MembershipLevel, requiredLevel: Visibility)
 }
 
 /** 获取可见性对应的会员等级标签 */
-export function getVisibilityLabel(visibility: Visibility): string {
-  const labels: Record<Visibility, string> = { public: "免费", silver: "白银会员", gold: "黄金会员", diamond: "钻石会员" };
+export function getVisibilityLabel(visibility: Visibility | MembershipLevel): string {
+  const labels: Record<string, string> = { public: "免费", free: "免费", silver: "白银会员", gold: "黄金会员", diamond: "钻石会员" };
   return labels[visibility] || visibility;
 }
 
 /** 获取可见性对应的颜色样式 */
-export function getVisibilityColor(visibility: Visibility): string {
-  const colors: Record<Visibility, string> = { public: "text-[#64748B]", silver: "text-[#94A3B8]", gold: "text-[#F59E0B]", diamond: "text-[#22D3EE]" };
+export function getVisibilityColor(visibility: Visibility | MembershipLevel): string {
+  const colors: Record<string, string> = { public: "text-[#64748B]", free: "text-[#64748B]", silver: "text-[#94A3B8]", gold: "text-[#F59E0B]", diamond: "text-[#22D3EE]" };
   return colors[visibility] || "";
 }
 
 /** 获取可见性对应的背景样式 */
-export function getVisibilityBg(visibility: Visibility): string {
-  const bgs: Record<Visibility, string> = { public: "bg-[#64748B]/10", silver: "bg-[#94A3B8]/10", gold: "bg-[#F59E0B]/10", diamond: "bg-[#22D3EE]/10" };
+export function getVisibilityBg(visibility: Visibility | MembershipLevel): string {
+  const bgs: Record<string, string> = { public: "bg-[#64748B]/10", free: "bg-[#64748B]/10", silver: "bg-[#94A3B8]/10", gold: "bg-[#F59E0B]/10", diamond: "bg-[#22D3EE]/10" };
   return bgs[visibility] || "";
 }
 
