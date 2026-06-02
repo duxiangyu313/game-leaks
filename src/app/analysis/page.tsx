@@ -60,7 +60,7 @@ export default function AnalysisPage() {
                   )}
                   <span className="text-xs text-[#64748B] flex items-center gap-1 ml-auto"><Clock className="w-3 h-3" />{new Date(a.created_at).toLocaleDateString("zh-CN")}</span>
                 </div>
-                <Link href={`/analysis`}><h3 className="text-lg font-bold text-[#F1F5F9] mb-2 hover:text-[#06B6D4] transition-colors">{a.title}</h3></Link>
+                <Link href={`/articles/detail?id=${a.id}`}><h3 className="text-lg font-bold text-[#F1F5F9] mb-2 hover:text-[#06B6D4] transition-colors">{a.title}</h3></Link>
                 <p className="text-sm text-[#94A3B8] line-clamp-2">{a.content?.slice(0, 150)}</p>
                 <div className="flex flex-wrap gap-1.5 mt-3">
                   {a.tags?.map((t: string) => <span key={t} className="text-[10px] text-[#64748B] bg-[#1E293B]/40 px-2 py-0.5 rounded">{t}</span>)}

@@ -12,6 +12,8 @@ const NAV_LINKS = [
   { href: "/leaks", label: "爆料专区" },
   { href: "/analysis", label: "深度解析" },
   { href: "/forum", label: "论坛" },
+  { href: "/submit", label: "匿名投稿" },
+  { href: "/claim", label: "激活码" },
   { href: "/member", label: "会员中心" },
 ];
 

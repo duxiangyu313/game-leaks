@@ -64,7 +64,7 @@ export default function LatestLeaks() {
               <span className="text-xs text-[#64748B] flex items-center gap-1"><Eye className="w-3 h-3" /> {leak.viewCount?.toLocaleString()}</span>
             </div>
             {leak.gameName && <span className="text-xs text-[#06B6D4] font-medium">{leak.gameName}</span>}
-            <Link href={`/leaks`}><h3 className="text-lg font-semibold text-[#F1F5F9] mt-1 mb-2 group-hover:text-[#06B6D4] transition-colors">{leak.title}</h3></Link>
+            <h3 className="text-lg font-semibold text-[#F1F5F9] mt-1 mb-2 group-hover:text-[#06B6D4] transition-colors">{leak.title}</h3>
             <p className="text-sm text-[#94A3B8] line-clamp-2 mb-3">{leak.summary}</p>
             <div className="flex items-center justify-between text-xs text-[#64748B]">
               <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {leak.publishedAt}</span>

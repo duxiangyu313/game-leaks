@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && node scripts/fix-rsc.js build_out",
+    "build": "next build && node scripts/fix-rsc.js build_out && node scripts/generate-sitemap.js build_out && echo \"User-agent: *\nAllow: /\nSitemap: https://news.guoyouwenduji.cc/sitemap.xml\" > build_out/robots.txt",
     "start": "next start",
     "lint": "eslint"
   },

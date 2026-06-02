@@ -37,7 +37,7 @@ export default function VideoSection() {
             const bvMatch = v.content?.match(/bvid=(BV[a-zA-Z0-9]+)/);
             const bvid = bvMatch ? bvMatch[1] : null;
             return (
-              <Link key={v.id} href={`/analysis`} className="glass-card block p-4 group hover:border-[#E94560]/20 transition-all">
+              <Link key={v.id} href={`/articles/detail?id=${v.id}`} className="glass-card block p-4 group hover:border-[#E94560]/20 transition-all">
                 <div className="w-full aspect-video rounded-lg bg-[#1E293B] mb-3 flex items-center justify-center border border-[rgba(30,41,59,0.4)] group-hover:border-[#E94560]/20 transition-all relative overflow-hidden">
                   <Play className="w-8 h-8 text-[#E94560] group-hover:scale-110 transition-transform" />
                 </div>
