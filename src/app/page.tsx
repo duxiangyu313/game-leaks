@@ -5,6 +5,7 @@ import HeroCarousel from "@/components/HeroCarousel";
 import LatestLeaks from "@/components/LatestLeaks";
 import HotGames from "@/components/HotGames";
 import UpcomingGames from "@/components/UpcomingGames";
+import VideoSection from "@/components/VideoSection";
 import MemberPromo from "@/components/MemberPromo";
 
 export default function Home() {
@@ -35,6 +36,9 @@ export default function Home() {
       <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-16">
         <UpcomingGames />
       </div>
+
+      {/* Videos */}
+      <div className="pt-16"><VideoSection /></div>
 
       {/* Member Promo */}
       <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-16 pb-20">

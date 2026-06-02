@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import ClientLayout from "@/components/ClientLayout";
 
 export const metadata: Metadata = {
   title: "国游爆料 · 国产3A游戏资讯平台",
@@ -9,17 +10,15 @@ export const metadata: Metadata = {
   keywords: "国产3A,游戏爆料,黑神话悟空,影之刃零,归唐,湮灭之潮,国产游戏",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="zh-CN" className="h-full">
       <body className="min-h-full flex flex-col">
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <ClientLayout>
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </ClientLayout>
       </body>
     </html>
   );
