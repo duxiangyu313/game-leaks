@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, Zap } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/lib/supabase/client";
+import { useCachedQuery } from "@/lib/data-cache";
 
 interface Slide { id: string; title: string; subtitle: string; link: string; tag: string; }
 
@@ -16,13 +17,12 @@ const MOCK_SLIDES: Slide[] = [
 ];
 
 export default function HeroCarousel() {
-  const [slides, setSlides] = useState<Slide[]>([]);
-  const [loading, setLoading] = useState(true);
   const [current, setCurrent] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
-  useEffect(() => {
-    supabase
+  const { data: slides, loading } = useCachedQuery<Slide[]>(
+    "hero",
+    () => supabase
       .from("leaks")
       .select("id, title, summary, game_name, credibility, published_at")
       .eq("status", "published")
@@ -30,19 +30,19 @@ export default function HeroCarousel() {
       .limit(4)
       .then(({ data, error }) => {
         if (!error && data && data.length > 0) {
-          setSlides(data.map((l: any) => ({
+          return data.map((l: any) => ({
             id: l.id,
             title: l.title,
             subtitle: l.summary?.slice(0, 80) + (l.summary?.length > 80 ? "..." : ""),
             link: "/leaks/",
             tag: l.credibility === "confirmed" ? "✅ 已确认" : l.credibility === "likely" ? "🔍 高可信" : "📢 传闻",
-          })));
-        } else {
-          setSlides(MOCK_SLIDES);
+          }));
         }
-        setLoading(false);
-      });
-  }, []);
+        return MOCK_SLIDES;
+      }),
+    MOCK_SLIDES,
+    "hero"
+  );
 
   const next = useCallback(() => setCurrent(prev => (prev + 1) % Math.max(slides.length, 1)), [slides]);
   const prev = useCallback(() => setCurrent(prev => (prev - 1 + Math.max(slides.length, 1)) % Math.max(slides.length, 1)), [slides]);

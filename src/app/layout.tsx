@@ -26,6 +26,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="zh-CN" className="h-full">
       <head>
+        {/* 🔗 预连接 Supabase — 省去 DNS+SSL 握手延迟 (~200ms) */}
+        <link rel="dns-prefetch" href="https://gumpxfxbxxyljikaizsh.supabase.co" />
+        <link rel="preconnect" href="https://gumpxfxbxxyljikaizsh.supabase.co" crossOrigin="anonymous" />
         <WebsiteSchema />
         <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
       </head>

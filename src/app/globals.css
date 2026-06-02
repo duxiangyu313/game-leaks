@@ -47,6 +47,8 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 ::-webkit-scrollbar { width: 6px }
@@ -84,4 +86,64 @@ body {
   background: linear-gradient(135deg, #22D3EE, #06B6D4);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+/* ═══════════════════════════════════════════
+   论坛板块卡片 · 交互增强
+   ═══════════════════════════════════════════ */
+
+/* —— 入场动画：逐张渐入 —— */
+.forum-card-enter {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: forum-card-in 0.5s ease-out forwards;
+}
+@keyframes forum-card-in {
+  to { opacity: 1; transform: translateY(0); }
+}
+.forum-card-enter:nth-child(1) { animation-delay: 0s; }
+.forum-card-enter:nth-child(2) { animation-delay: 0.08s; }
+.forum-card-enter:nth-child(3) { animation-delay: 0.16s; }
+.forum-card-enter:nth-child(4) { animation-delay: 0.24s; }
+
+/* —— 按压反馈（桌面+移动端） —— */
+.forum-card:active {
+  transform: scale(0.98) !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25) !important;
+  transition: transform 0.08s ease-out, box-shadow 0.08s ease-out !important;
+}
+/* 抬起回弹 — 正常态 transition 接管 */
+.forum-card {
+  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out, border-color 0.2s, background-color 0.2s !important;
+}
+/* hover 保留原有微升但不放大 */
+.forum-card:hover {
+  transform: translateY(-2px);
+}
+
+/* —— 键盘 Tab 焦点高亮环 —— */
+.forum-card:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #06B6D4, 0 0 0 4px rgba(6,182,212,0.25);
+  border-color: #06B6D4 !important;
+}
+
+/* —— 光标手型统一 —— */
+.forum-card,
+.forum-card * {
+  cursor: pointer;
+}
+
+/* —— 统计数字悬浮微动 —— */
+.forum-card .forum-stats {
+  transition: transform 0.2s ease-out, color 0.2s ease-out;
+}
+.forum-card:hover .forum-stats {
+  transform: translateY(-2px);
+  color: #94A3B8; /* 亮度小幅提亮，从 #64748B → #94A3B8 */
+}
+
+/* —— 滚动渐进提亮（transition 预置，JS 控制） —— */
+.forum-card-scroll-glow {
+  transition: background-color 0.6s ease-out, box-shadow 0.6s ease-out;
 }

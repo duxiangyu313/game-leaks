@@ -42,7 +42,15 @@
     "deploy/types/**/*.ts",
     "deploy/dev/types/**/*.ts",
     "build_out/types/**/*.ts",
-    "build_out/dev/types/**/*.ts"
+    "build_out/dev/types/**/*.ts",
+    "out/types/**/*.ts",
+    "out/dev/types/**/*.ts",
+    "publish/types/**/*.ts",
+    "publish/dev/types/**/*.ts",
+    "release/types/**/*.ts",
+    "release/dev/types/**/*.ts",
+    "live/types/**/*.ts",
+    "live/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",

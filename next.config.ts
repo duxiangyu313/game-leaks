@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "export",
-  distDir: "build_out",
+  distDir: "live",
   images: { unoptimized: true },
   trailingSlash: true,
   generateBuildId: async () => "v" + Date.now(),

@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Calendar, Timer } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
+import { useCachedQuery } from "@/lib/data-cache";
 import type { Game } from "@/types";
 
 const MOCK: Game[] = [
@@ -15,11 +15,9 @@ const MOCK: Game[] = [
 ];
 
 export default function UpcomingGames() {
-  const [games, setGames] = useState<Game[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    supabase
+  const { data: games, loading } = useCachedQuery<Game[]>(
+    "upcoming",
+    () => supabase
       .from("games")
       .select("*")
       .in("status", ["announced", "in-dev", "beta"])
@@ -27,13 +25,13 @@ export default function UpcomingGames() {
       .limit(4)
       .then(({ data, error }) => {
         if (!error && data && data.length > 0) {
-          setGames(data.map((g: any) => ({ ...g, releaseDate: g.release_date, hypeScore: g.hype_score })));
-        } else {
-          setGames(MOCK);
+          return data.map((g: any) => ({ ...g, releaseDate: g.release_date, hypeScore: g.hype_score }));
         }
-        setLoading(false);
-      });
-  }, []);
+        return MOCK;
+      }),
+    MOCK,
+    "upcoming"
+  );
 
   if (loading) return (
     <section>

@@ -9,12 +9,12 @@ import { supabase } from "@/lib/supabase/client";
 const NAV_LINKS = [
   { href: "/", label: "首页" },
   { href: "/games", label: "游戏库" },
-  { href: "/leaks", label: "爆料专区" },
-  { href: "/analysis", label: "深度解析" },
+  { href: "/leaks", label: "爆料" },
+  { href: "/analysis", label: "解析" },
   { href: "/forum", label: "论坛" },
-  { href: "/submit", label: "匿名投稿" },
-  { href: "/claim", label: "激活码" },
-  { href: "/member", label: "会员中心" },
+  { href: "/calendar", label: "日历" },
+  { href: "/videos", label: "视频" },
+  { href: "/member", label: "会员" },
 ];
 
 export default function Navbar() {

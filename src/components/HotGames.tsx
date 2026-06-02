@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { TrendingUp, Star } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
+import { useCachedQuery } from "@/lib/data-cache";
 import type { Game } from "@/types";
 
-// Mock数据作为fallback
 const MOCK: (Game & { rank: number })[] = [
   { id: "1", rank: 1, title: "黑神话：悟空", developer: "游戏科学", publisher: "游戏科学", genre: ["动作RPG","神话"], platforms: ["PC","PS5"], releaseDate: "2024-08-20", status: "released", description: "国产3A开山之作", rating: 9.5, hypeScore: 98, cover: "", createdAt: "", updatedAt: "" },
   { id: "2", rank: 2, title: "影之刃零", developer: "灵游坊", publisher: "灵游坊", genre: ["动作RPG","武侠"], platforms: ["PC","PS5"], releaseDate: "2026-09-09", status: "announced", description: "暗黑武侠功夫朋克", hypeScore: 95, cover: "", createdAt: "", updatedAt: "" },
@@ -16,11 +15,9 @@ const MOCK: (Game & { rank: number })[] = [
 ];
 
 export default function HotGames() {
-  const [games, setGames] = useState<(Game & { rank: number })[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    supabase
+  const { data: games, loading } = useCachedQuery<(Game & { rank: number })[]>(
+    "hotGames",
+    () => supabase
       .from("games")
       .select("*")
       .neq("status", "delayed")
@@ -28,13 +25,13 @@ export default function HotGames() {
       .limit(4)
       .then(({ data, error }) => {
         if (!error && data && data.length > 0) {
-          setGames(data.map((g: any, i: number) => ({ ...g, rank: i + 1, hypeScore: g.hype_score, releaseDate: g.release_date })));
-        } else {
-          setGames(MOCK); // fallback to mock data
+          return data.map((g: any, i: number) => ({ ...g, rank: i + 1, hypeScore: g.hype_score, releaseDate: g.release_date }));
         }
-        setLoading(false);
-      });
-  }, []);
+        return MOCK;
+      }),
+    MOCK,
+    "hotGames"
+  );
 
   if (loading) return (
     <section>

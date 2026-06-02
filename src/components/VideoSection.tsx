@@ -1,26 +1,23 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase/client";
+import { useCachedQuery } from "@/lib/data-cache";
 import { Play, Clock } from "lucide-react";
 import Link from "next/link";
 
 export default function VideoSection() {
-  const [videos, setVideos] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    supabase
+  const { data: videos, loading } = useCachedQuery<any[]>(
+    "videos",
+    () => supabase
       .from("articles")
       .select("*")
       .eq("category", "video")
       .eq("status", "published")
       .order("created_at", { ascending: false })
-      .then(({ data }) => {
-        setVideos(data || []);
-        setLoading(false);
-      });
-  }, []);
+      .then(({ data }) => data || []),
+    [],
+    "videos"
+  );
 
   if (loading || videos.length === 0) return null;
 

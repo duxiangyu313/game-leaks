@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Flame, Eye, Clock, ArrowRight } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
+import { useCachedQuery } from "@/lib/data-cache";
 import type { Leak } from "@/types";
 
 const MOCK: Leak[] = [
@@ -15,11 +15,9 @@ const MOCK: Leak[] = [
 ];
 
 export default function LatestLeaks() {
-  const [leaks, setLeaks] = useState<Leak[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    supabase
+  const { data: leaks, loading } = useCachedQuery<Leak[]>(
+    "leaks",
+    () => supabase
       .from("leaks")
       .select("*")
       .eq("status", "published")
@@ -27,13 +25,13 @@ export default function LatestLeaks() {
       .limit(4)
       .then(({ data, error }) => {
         if (!error && data && data.length > 0) {
-          setLeaks(data.map((l: any) => ({ ...l, gameId: l.id, publishedAt: l.published_at, viewCount: l.view_count, commentCount: l.comment_count || 0, gameName: l.game_name })));
-        } else {
-          setLeaks(MOCK);
+          return data.map((l: any) => ({ ...l, gameId: l.id, publishedAt: l.published_at, viewCount: l.view_count, commentCount: l.comment_count || 0, gameName: l.game_name }));
         }
-        setLoading(false);
-      });
-  }, []);
+        return MOCK;
+      }),
+    MOCK,
+    "leaks"
+  );
 
   if (loading) return (
     <section>

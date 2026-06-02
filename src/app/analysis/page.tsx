@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { BookOpen, PenLine, Users, TrendingUp, Clock, ArrowRight } from "lucide-react";
+import { BookOpen, PenLine, Users, TrendingUp, Clock, Lock } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 
 export default function AnalysisPage() {
