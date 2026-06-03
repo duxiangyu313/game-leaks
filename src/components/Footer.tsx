@@ -16,8 +16,9 @@ const FOOTER_LINKS = {
     { label: "广告合作", href: "/advertise" },
   ],
   法律: [
+    { label: "用户协议", href: "/agreement" },
     { label: "隐私政策", href: "/privacy" },
-    { label: "用户协议", href: "/terms" },
+    { label: "免责声明", href: "/disclaimer" },
     { label: "版权声明", href: "/copyright" },
   ],
 };
@@ -36,16 +37,16 @@ export default function Footer() {
               <span className="text-lg font-bold text-[#F1F5F9]">国游爆料</span>
             </div>
             <p className="text-sm text-[#64748B] leading-relaxed max-w-xs">
-              国产3A游戏最新资讯平台。追踪黑神话悟空、影之刃零、归唐、湮灭之潮等国产大作，提供深度解析与玩家社区。
+              国产大作游戏最新资讯平台。追踪黑神话悟空、影之刃零、归唐、湮灭之潮等国产大作，提供深度解析与玩家社区。
             </p>
             <div className="flex gap-3 mt-5">
-              <a href="#" className="p-2 rounded-lg text-[#64748B] hover:text-[#06B6D4] hover:bg-[#1E293B]/50 transition-all">
+              <a href="https://guoyouwenduji.cc" target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg text-[#64748B] hover:text-[#06B6D4] hover:bg-[#1E293B]/50 transition-all" title="主站">
                 <Globe className="w-4 h-4" />
               </a>
-              <a href="#" className="p-2 rounded-lg text-[#64748B] hover:text-[#06B6D4] hover:bg-[#1E293B]/50 transition-all">
+              <a href="https://space.bilibili.com/3546857156380947" target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg text-[#64748B] hover:text-[#06B6D4] hover:bg-[#1E293B]/50 transition-all" title="B站主页">
                 <MessageCircle className="w-4 h-4" />
               </a>
-              <a href="#" className="p-2 rounded-lg text-[#64748B] hover:text-[#06B6D4] hover:bg-[#1E293B]/50 transition-all">
+              <a href="mailto:1852779947@qq.com" className="p-2 rounded-lg text-[#64748B] hover:text-[#06B6D4] hover:bg-[#1E293B]/50 transition-all" title="合作联系">
                 <Mail className="w-4 h-4" />
               </a>
             </div>
@@ -78,7 +79,7 @@ export default function Footer() {
             &copy; 2026 国游爆料 · 版权所有
           </p>
           <p className="text-xs text-[#64748B] flex items-center gap-1.5">
-            Made with <Heart className="w-3 h-3 text-[#EF4444]" /> by 国产3A爱好者社区
+            Made with <Heart className="w-3 h-3 text-[#EF4444]" /> by 国产游戏爱好者社区
           </p>
         </div>
       </div>
