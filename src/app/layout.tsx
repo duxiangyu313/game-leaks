@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ClientLayout from "@/components/ClientLayout";
+import RecoveryRedirect from "@/components/RecoveryRedirect";
 import { WebsiteSchema } from "@/components/StructuredData";
 
 export const metadata: Metadata = {
@@ -46,6 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         } />
       </head>
       <body className="min-h-full flex flex-col">
+        <RecoveryRedirect />
         <ClientLayout>
           <Navbar />
           <main className="flex-1">{children}</main>
