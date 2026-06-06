@@ -45,5 +45,6 @@ site/
 deploy/
 build_out/
 _next/
+!live/_next/
 dist/
 publish/
