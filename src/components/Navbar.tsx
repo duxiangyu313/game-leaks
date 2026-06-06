@@ -3,12 +3,13 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Menu, X, Search, User, Crown, Settings, LogOut } from "lucide-react";
+import { Menu, X, User, Crown, LogOut } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 
 const NAV_LINKS = [
   { href: "/", label: "首页" },
   { href: "/games", label: "游戏库" },
+  { href: "/games/progress", label: "开发进度" },
   { href: "/leaks", label: "爆料" },
   { href: "/analysis", label: "解析" },
   { href: "/forum", label: "论坛" },
@@ -20,7 +21,7 @@ const NAV_LINKS = [
 export default function Navbar() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [searchFocused, setSearchFocused] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 

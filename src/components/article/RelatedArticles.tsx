@@ -10,12 +10,11 @@ import { calculateReadingTime } from "@/lib/article-utils";
 interface Props {
   currentArticleId: string;
   category: string;
-  tags: string[];
   limit?: number;
 }
 
 /** 相关文章推荐 */
-export default function RelatedArticles({ currentArticleId, category, tags, limit = 3 }: Props) {
+export default function RelatedArticles({ currentArticleId, category, limit = 3 }: Props) {
   const [articles, setArticles] = useState<Article[]>([]);
 
   useEffect(() => {
@@ -56,6 +55,7 @@ export default function RelatedArticles({ currentArticleId, category, tags, limi
       <h3 className="text-lg font-bold text-[#F1F5F9] mb-5">相关文章</h3>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {articles.map((a) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Article 联合类型中 required_tier/cover_image 为可选字段
           const isPaid = (a as any).required_tier !== "free";
           const readTime = calculateReadingTime(a.content || "");
           return (
@@ -65,9 +65,12 @@ export default function RelatedArticles({ currentArticleId, category, tags, limi
               className={`glass-card p-4 group transition-all ${isPaid ? "article-card-paid" : ""}`}
             >
               {/* 封面图 */}
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any -- cover_image 为 Supabase 返回字段 */}
               {(a as any).cover_image && (
                 <div className="w-full h-32 rounded-lg overflow-hidden mb-3 bg-[#1E293B]/40">
+                  {/* eslint-disable-next-line @next/next/no-img-element -- static export, @typescript-eslint/no-explicit-any -- Supabase 字段 */}
                   <img
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     src={(a as any).cover_image}
                     alt={a.title}
                     loading="lazy"

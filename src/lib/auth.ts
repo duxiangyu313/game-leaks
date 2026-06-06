@@ -58,12 +58,10 @@ export function getVisibilityBg(visibility: Visibility | MembershipLevel): strin
   return bgs[visibility] || "";
 }
 
-/** 检查是否是管理员 */
+/** 检查是否是管理员（通过 Supabase profiles.membership 判定，diamond = 管理员） */
 export async function isAdmin(): Promise<boolean> {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return false;
-  const adminEmails = (process.env.NEXT_PUBLIC_ADMIN_EMAILS || "").split(",").map(e => e.trim());
-  return adminEmails.includes(user.email || "");
+  const level = await getUserLevel();
+  return level === "diamond";
 }
 
 /** 获取用户需要升级到的等级 */

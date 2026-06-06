@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef } from "react";
 import Link from "next/link";
 import { Lock, Crown } from "lucide-react";
 import type { MembershipTier } from "@/types";
@@ -25,15 +25,12 @@ export default function PaywallBlur({
   blurStartPct = 20,
   membershipLevel,
   requiredTier,
-  articleId,
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [canRead, setCanRead] = useState(true);
 
-  useEffect(() => {
-    const rank: Record<string, number> = { free: 0, silver: 1, gold: 2, diamond: 3 };
-    setCanRead((rank[membershipLevel] || 0) >= (rank[requiredTier] || 0));
-  }, [membershipLevel, requiredTier]);
+  // 派生值：会员等级是否足够阅读
+  const rank: Record<string, number> = { free: 0, silver: 1, gold: 2, diamond: 3 };
+  const canRead = (rank[membershipLevel] || 0) >= (rank[requiredTier] || 0);
 
   // 会员直接渲染全部内容
   if (canRead) return <>{children}</>;

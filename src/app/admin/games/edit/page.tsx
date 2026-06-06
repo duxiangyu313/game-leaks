@@ -65,7 +65,8 @@ function EditForm() {
             <span className="text-sm text-[#64748B]">{uploading?'上传中...':coverUrl?'更换封面':'上传封面'}</span>
             <input type="file" accept="image/*" onChange={handleUpload} className="hidden"/>
           </label>
-          {coverUrl && <img src={coverUrl} alt="封面" className="w-full rounded-xl"/>}
+          {/* eslint-disable-next-line @next/next/no-img-element -- static export */}
+          {coverUrl && <img src={coverUrl} alt="封面" loading="lazy" className="w-full rounded-xl"/>}
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@
 import { useMemo, useState, useCallback } from "react";
 import { Clock, Eye, Tag, Lock } from "lucide-react";
 import type { Article, MembershipTier, InteractionCounts } from "@/types";
-import { calculateReadingTime, calculateWordCount, generateTOC, formatDate, extractImages, slugify } from "@/lib/article-utils";
+import { calculateReadingTime, calculateWordCount, generateTOC, formatDate, extractImages } from "@/lib/article-utils";
 import { getVisibilityLabel } from "@/lib/auth";
 import { getDefaultTemplateType } from "@/lib/markdown";
 
@@ -68,7 +68,8 @@ export default function ArticleTemplate({
       {/* ── Hero 头图 ── */}
       {article.coverImage && (
         <div className={`article-hero ${isPaid ? "article-hero--paid" : ""}`}>
-          <img src={article.coverImage} alt={article.title} />
+          {/* eslint-disable-next-line @next/next/no-img-element -- static export 不使用 next/image 优化 */}
+          <img src={article.coverImage} alt={article.title} loading="lazy" />
         </div>
       )}
 
@@ -183,7 +184,6 @@ export default function ArticleTemplate({
           <RelatedArticles
             currentArticleId={article.id}
             category={article.category}
-            tags={article.tags || []}
           />
         </div>
 

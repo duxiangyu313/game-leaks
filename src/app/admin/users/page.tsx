@@ -12,6 +12,7 @@ const TIERS = [
 ];
 
 export default function UsersPage() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -31,6 +32,7 @@ export default function UsersPage() {
     await supabase.from("admin_logs").insert({ action: "update_user_membership", detail: `${id} -> ${editTier}`, user_id: (await supabase.auth.getUser()).data.user?.id });
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const startEdit = (user: any) => { setEditingId(user.id); setEditTier(user.membership); };
 
   return (

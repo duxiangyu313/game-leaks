@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase/client";
-import { Plus, Pencil, Trash2, Eye, Search, Filter } from "lucide-react";
+import { Plus, Pencil, Trash2, Search } from "lucide-react";
 
 interface Article {
   id: string; title: string; category: string; required_tier: string;
@@ -38,6 +38,7 @@ export default function ArticlesPage() {
   );
 
   const tierLabel = (t: string) =>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ({ free: "免费", silver: "白银", gold: "黄金", diamond: "钻石" } as any)[t] || t;
 
   return (

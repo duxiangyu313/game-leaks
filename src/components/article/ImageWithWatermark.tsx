@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useMemo } from "react";
 import { Download } from "lucide-react";
 
 interface Props {
@@ -12,19 +12,18 @@ interface Props {
 
 /** 图片组件：CSS半透明水印 + 点击放大 */
 export default function ImageWithWatermark({ src, alt, onClick, className = "" }: Props) {
-  const [watermark, setWatermark] = useState("");
-
-  useEffect(() => {
+  const watermark = useMemo(() => {
     // 生成水印文本：用户标识 + 日期
     const uid = "guoyouwenduji";
     const date = new Date().toLocaleDateString("zh-CN");
-    setWatermark(`${uid} | ${date}`);
+    return `${uid} | ${date}`;
   }, []);
 
   if (!src) return null;
 
   return (
     <span className="relative inline-block group max-w-full">
+      {/* eslint-disable-next-line @next/next/no-img-element -- static export */}
       <img
         src={src}
         alt={alt}

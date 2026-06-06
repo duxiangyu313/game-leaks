@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -58,6 +58,7 @@ export default function Lightbox({ images, initialIndex, isOpen, onClose }: Prop
           className="lightbox-image-wrap"
           onClick={(e) => e.stopPropagation()}
         >
+          {/* eslint-disable-next-line @next/next/no-img-element -- static export */}
           <img src={images[current]} alt={`图片 ${current + 1}`} />
         </motion.div>
 

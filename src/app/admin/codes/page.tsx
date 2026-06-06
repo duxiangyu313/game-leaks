@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase/client";
-import { Plus, Trash2, Copy, Gift, Search } from "lucide-react";
+import { Trash2, Copy, Gift } from "lucide-react";
 
 export default function CodesPage() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [codes, setCodes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [gameName, setGameName] = useState("");

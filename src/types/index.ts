@@ -169,3 +169,26 @@ export interface ArticleInteraction {
   interaction_type: 'like' | 'bookmark' | 'share' | 'credibility_believe' | 'credibility_skeptical';
   created_at: string;
 }
+
+/** 游戏开发进度 */
+export interface GameProgress {
+  id: string;
+  name: string;
+  cover_url?: string;
+  developer?: string;
+  publisher?: string;
+  genre?: string;
+  development_stage: '概念阶段' | '原型开发' | 'Alpha测试' | 'Beta测试' | '压盘阶段' | '已发售';
+  estimated_release_date?: string;
+  team_size?: number;
+  last_updated: string;
+  credibility_score: number;
+  public_info: string;
+  silver_info: string;
+  gold_info: string;
+  risk_assessment: string;
+  tags: string[];
+  is_featured: boolean;
+  created_at?: string;
+  updated_at?: string;
+}

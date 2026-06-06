@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase/client";
-import { Plus, Pencil, Trash2, Search, Clock } from "lucide-react";
+import { Plus, Pencil, Trash2, Search } from "lucide-react";
 
 export default function LeaksPage() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [leaks, setLeaks] = useState<any[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);

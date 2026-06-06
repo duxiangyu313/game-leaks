@@ -1,0 +1,23 @@
+[functions.stripe-webhook]
+# Stripe webhook 请求不带 Supabase JWT，必须关闭 JWT 验证
+verify_jwt = false
+
+[functions.stripe-checkout]
+# 用户发起支付，需要 JWT 鉴权
+verify_jwt = true
+
+[functions.stripe-portal]
+# 用户管理订阅，需要 JWT 鉴权
+verify_jwt = true
+
+[functions.upload-presign]
+# 文件上传预签名，需要 JWT 鉴权
+verify_jwt = true
+
+[functions.auto-update]
+# 自动更新定时任务，由 pg_cron 调用，不需要 JWT
+verify_jwt = false
+
+[functions.auth-custom]
+# 自定义注册/登录，自身验证邮箱密码，不需要 JWT
+verify_jwt = false

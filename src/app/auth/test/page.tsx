@@ -15,6 +15,7 @@ export default function AuthTestPage() {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       setResult(error ? "失败: " + error.message : "成功! 用户: " + data.user?.email);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       setResult("异常: " + (e.message || String(e)));
     }

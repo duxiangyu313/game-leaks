@@ -6,7 +6,7 @@ import { supabase } from "@/lib/supabase/client";
 import { ArrowLeft, Save, Upload, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { uploadToR2 } from "@/lib/cloudflare/r2";
-import { generateTemplateMarkdown, formatOneClick, getDefaultTemplateType } from "@/lib/markdown";
+import { getDefaultTemplateType } from "@/lib/markdown";
 import { generateExcerpt } from "@/lib/article-utils";
 import MarkdownEditor from "@/components/admin/MarkdownEditor";
 import TemplateSelector from "@/components/admin/TemplateSelector";

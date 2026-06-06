@@ -25,12 +25,14 @@ export function preprocessMarkdown(content: string): string {
     }
   );
 
-  // ||spoiler text|| → 点击揭示（用 details/summary 实现）
+  // ||spoiler text|| → 点击揭示
   processed = processed.replace(
     /\|\|(.+?)\|\|/g,
     '<span class="spoiler-text cursor-pointer hover:bg-[#F59E0B]/10 px-1 rounded" onclick="this.classList.toggle(\'spoiler-revealed\')">$1</span>'
   );
 
+  // :::chart 块由 ArticleRenderer 直接在 React 端解析渲染（InlineChart），
+  // 这里不做预处理，保留原始 :::chart 语法供 ArticleRenderer 的 block splitter 使用
   return processed;
 }
 

@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabase/client";
 import { Play, Search, Clock } from "lucide-react";
 
 export default function VideosPage() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [videos, setVideos] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -34,9 +35,12 @@ export default function VideosPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filtered.map(v => {
-              const bvMatch = v.content?.match(/bvid=(BV[a-zA-Z0-9]+)/);
+              const bvMatch = v.title?.match(/BV[a-zA-Z0-9]+/) || v.content?.match(/BV[a-zA-Z0-9]+/);
+              const bvid = bvMatch ? bvMatch[0] : null;
+              const href = bvid ? `https://www.bilibili.com/video/${bvid}` : `/articles/detail?id=${v.id}`;
+              const isExternal = !!bvid;
               return (
-                <Link key={v.id} href={`/articles/detail?id=${v.id}`} className="glass-card block group hover:border-[#E94560]/20 transition-all">
+                <Link key={v.id} href={href} target={isExternal ? "_blank" : undefined} rel={isExternal ? "noopener noreferrer" : undefined} className="glass-card block group hover:border-[#E94560]/20 transition-all">
                   <div className="aspect-video rounded-xl bg-[#1E293B] mb-3 flex items-center justify-center border border-[rgba(30,41,59,0.4)] group-hover:border-[#E94560]/20 transition-all relative overflow-hidden">
                     <Play className="w-10 h-10 text-[#E94560] group-hover:scale-110 transition-transform" />
                     {bvMatch && <span className="absolute bottom-2 right-2 text-[10px] text-[#64748B] bg-[#0F172A]/80 px-2 py-0.5 rounded">{bvMatch[1]}</span>}

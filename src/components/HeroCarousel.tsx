@@ -30,6 +30,7 @@ export default function HeroCarousel() {
       .limit(4)
       .then(({ data, error }) => {
         if (!error && data && data.length > 0) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           return data.map((l: any) => ({
             id: l.id,
             title: l.title,

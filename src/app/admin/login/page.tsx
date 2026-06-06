@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { supabase } from "@/lib/supabase/client";
+import { isAdmin } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 import { Shield, Mail, Lock, Loader2 } from "lucide-react";
 
@@ -28,12 +29,11 @@ export default function AdminLoginPage() {
       return;
     }
 
-    // 检查是否是管理员
-    const { data: { session } } = await supabase.auth.getSession();
-    const adminEmails = (process.env.NEXT_PUBLIC_ADMIN_EMAILS || "").split(",").map(e => e.trim());
-    if (!adminEmails.includes(session?.user?.email || "")) {
+    // 通过 Supabase profiles.membership 判定管理员（diamond = 管理员）
+    const admin = await isAdmin();
+    if (!admin) {
       await supabase.auth.signOut();
-      setError("你没有管理员权限");
+      setError("你没有管理员权限（需要钻石会员）");
       setLoading(false);
       return;
     }

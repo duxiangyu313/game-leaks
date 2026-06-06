@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Flame, Eye, Clock, ArrowRight } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import { useCachedQuery } from "@/lib/data-cache";
+import { formatDate } from "@/lib/article-utils";
 import type { Leak } from "@/types";
 
 const MOCK: Leak[] = [
@@ -25,6 +26,7 @@ export default function LatestLeaks() {
       .limit(4)
       .then(({ data, error }) => {
         if (!error && data && data.length > 0) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           return data.map((l: any) => ({ ...l, gameId: l.id, publishedAt: l.published_at, viewCount: l.view_count, commentCount: l.comment_count || 0, gameName: l.game_name }));
         }
         return MOCK;
@@ -54,21 +56,23 @@ export default function LatestLeaks() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {leaks.map((leak, i) => (
-          <motion.article key={leak.id} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }} className="glass-card p-6 cursor-pointer group">
-            <div className="flex items-start justify-between mb-3">
-              <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${leak.credibility === "confirmed" ? "bg-[#10B981]/15 text-[#10B981] border border-[#10B981]/20" : leak.credibility === "likely" ? "bg-[#06B6D4]/15 text-[#06B6D4] border border-[#06B6D4]/20" : "bg-[#F59E0B]/15 text-[#F59E0B] border border-[#F59E0B]/20"}`}>
-                {leak.credibility === "confirmed" ? "已确认" : leak.credibility === "likely" ? "高可信" : "传闻"}
-              </span>
-              <span className="text-xs text-[#64748B] flex items-center gap-1"><Eye className="w-3 h-3" /> {leak.viewCount?.toLocaleString()}</span>
-            </div>
-            {leak.gameName && <span className="text-xs text-[#06B6D4] font-medium">{leak.gameName}</span>}
-            <h3 className="text-lg font-semibold text-[#F1F5F9] mt-1 mb-2 group-hover:text-[#06B6D4] transition-colors">{leak.title}</h3>
-            <p className="text-sm text-[#94A3B8] line-clamp-2 mb-3">{leak.summary}</p>
-            <div className="flex items-center justify-between text-xs text-[#64748B]">
-              <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {leak.publishedAt}</span>
-              <span>💬 {leak.commentCount || 0} 评论</span>
-            </div>
-          </motion.article>
+          <Link key={leak.id} href={`/leaks/detail?id=${leak.id}`} className="block active:scale-[0.98] transition-transform">
+            <motion.article initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }} className="glass-card p-6 cursor-pointer group">
+              <div className="flex items-start justify-between mb-3">
+                <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${leak.credibility === "confirmed" ? "bg-[#10B981]/15 text-[#10B981] border border-[#10B981]/20" : leak.credibility === "likely" ? "bg-[#06B6D4]/15 text-[#06B6D4] border border-[#06B6D4]/20" : "bg-[#F59E0B]/15 text-[#F59E0B] border border-[#F59E0B]/20"}`}>
+                  {leak.credibility === "confirmed" ? "已确认" : leak.credibility === "likely" ? "高可信" : "传闻"}
+                </span>
+                <span className="text-xs text-[#64748B] flex items-center gap-1"><Eye className="w-3 h-3" /> {leak.viewCount?.toLocaleString()}</span>
+              </div>
+              {leak.gameName && <span className="text-xs text-[#06B6D4] font-medium">{leak.gameName}</span>}
+              <h3 className="text-lg font-semibold text-[#F1F5F9] mt-1 mb-2 group-hover:text-[#06B6D4] transition-colors">{leak.title}</h3>
+              <p className="text-sm text-[#94A3B8] line-clamp-2 mb-3">{leak.summary}</p>
+              <div className="flex items-center justify-between text-xs text-[#64748B]">
+                <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {formatDate(leak.publishedAt)}</span>
+                <span>💬 {leak.commentCount || 0} 评论</span>
+              </div>
+            </motion.article>
+          </Link>
         ))}
       </div>
     </section>

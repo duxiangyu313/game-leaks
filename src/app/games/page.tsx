@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Gamepad2, Search, Filter, Star, TrendingUp, Calendar, Loader2 } from "lucide-react";
+import { Gamepad2, Search, Filter, Calendar } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 
 const STATUSES = [
@@ -21,6 +21,7 @@ const SORTS = [
 ];
 
 export default function GamesPage() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [games, setGames] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");

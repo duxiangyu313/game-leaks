@@ -18,7 +18,7 @@ export default function MemberPromo() {
         initial={{ opacity: 0, y: 32 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#1A2332] via-[#162030] to-[#0F172A] border border-[rgba(6,182,212,0.12)] p-8 md:p-12"
+        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#1A2332] via-[#162030] to-[#0F172A] p-8 md:p-12 cyber-border-glow"
       >
         {/* Background glow */}
         <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-[#06B6D4]/5 blur-[80px]" />
@@ -35,7 +35,7 @@ export default function MemberPromo() {
               加入<span className="bg-gradient-to-r from-[#F59E0B] to-[#FBBF24] bg-clip-text text-transparent"> 国游爆料会员 </span>
             </h2>
             <p className="text-[#94A3B8] mb-6 max-w-md">
-              获取独家爆料的优先查看权，参与制作人AMA，享受无广告纯净浏览。每月仅需 ¥19.9。
+              获取独家爆料的优先查看权，参与制作人AMA，享受无广告纯净浏览。白银会员低至 ¥199/年。
             </p>
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
               {BENEFITS.map((b) => (
@@ -50,7 +50,7 @@ export default function MemberPromo() {
               className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#F59E0B] to-[#D97706] text-white font-semibold rounded-xl hover:shadow-[0_0_30px_rgba(245,158,11,0.25)] transition-all"
             >
               <Crown className="w-4 h-4" />
-              立即加入 · ¥19.9/月
+              立即加入 · <span className="cyber-price-pulse inline-block">¥199</span>/年起
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>

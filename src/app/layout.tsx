@@ -31,6 +31,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://gumpxfxbxxyljikaizsh.supabase.co" crossOrigin="anonymous" />
         <WebsiteSchema />
         <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+        {/* 🔒 CSP — 防 XSS，静态导出用 meta 标签实现 */}
+        <meta httpEquiv="Content-Security-Policy" content={
+          "default-src 'self'; " +
+          "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com; " +
+          "style-src 'self' 'unsafe-inline'; " +
+          "img-src 'self' data: https: blob:; " +
+          "connect-src 'self' https://*.supabase.co https://api.stripe.com wss://*.supabase.co; " +
+          "frame-src 'self' https://www.youtube.com https://player.bilibili.com https://js.stripe.com; " +
+          "font-src 'self' https://fonts.gstatic.com; " +
+          "object-src 'none'; " +
+          "base-uri 'self'; " +
+          "form-action 'self' https://api.stripe.com;"
+        } />
       </head>
       <body className="min-h-full flex flex-col">
         <ClientLayout>

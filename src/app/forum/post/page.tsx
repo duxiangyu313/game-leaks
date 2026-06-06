@@ -9,7 +9,9 @@ import { supabase } from "@/lib/supabase/client";
 function PostContent() {
   const params = useSearchParams();
   const id = params.get("id");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [post, setPost] = useState<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [replies, setReplies] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [liked, setLiked] = useState(false);

@@ -10,7 +10,9 @@ function WikiEditContent() {
   const params = useSearchParams();
   const router = useRouter();
   const id = params.get("id");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [game, setGame] = useState<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [wiki, setWiki] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);

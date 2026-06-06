@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAdmin } from "./AdminAuth";
 import {
-  LayoutDashboard, FileText, Flame, Gamepad2, Users, CreditCard,
+  LayoutDashboard, FileText, Flame, Gamepad2, BarChart3, Users, CreditCard,
   LogOut, ChevronLeft, Menu, X, Gift, Shield
 } from "lucide-react";
 import { useState } from "react";
@@ -15,6 +15,7 @@ const NAV_ITEMS = [
   { icon: FileText, label: "文章管理", href: "/admin/articles" },
   { icon: Flame, label: "爆料管理", href: "/admin/leaks" },
   { icon: Gamepad2, label: "游戏管理", href: "/admin/games" },
+  { icon: BarChart3, label: "游戏进度管理", href: "/admin/games/progress" },
   { icon: Users, label: "用户管理", href: "/admin/users" },
   { icon: CreditCard, label: "订单管理", href: "/admin/orders" },
   { icon: Gift, label: "激活码", href: "/admin/codes" },

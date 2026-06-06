@@ -44,3 +44,6 @@ site/
 site/
 deploy/
 build_out/
+_next/
+dist/
+publish/

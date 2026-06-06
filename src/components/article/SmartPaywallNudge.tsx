@@ -14,30 +14,30 @@ interface Props {
 /** 智能付费引导 — 免费/白银用户阅读超过50%时底部弹出 */
 export default function SmartPaywallNudge({ membershipLevel, triggerAtPct = 50 }: Props) {
   const [show, setShow] = useState(false);
-  const [dismissed, setDismissed] = useState(false);
-  const sentinelRef = useRef<HTMLDivElement>(null);
-
-  // 会员无需引导
-  if (membershipLevel === "gold" || membershipLevel === "diamond") return null;
-
-  useEffect(() => {
-    // 检查是否已关闭过
+  const [dismissed, setDismissed] = useState(() => {
+    // 检查是否已关闭过（lazy init，避免 setState in effect）
+    if (typeof window === "undefined") return false;
     const stored = localStorage.getItem("paywall_nudge_dismissed");
     if (stored) {
       const ts = parseInt(stored, 10);
-      // 24小时内不再显示
-      if (Date.now() - ts < 86400000) {
-        setDismissed(true);
-        return;
-      }
+      if (Date.now() - ts < 86400000) return true;
     }
+    return false;
+  });
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
+  // 会员无需引导（hooks 之后才能 early return）
+  const isPremium = membershipLevel === "gold" || membershipLevel === "diamond";
+
+  useEffect(() => {
+    if (isPremium || dismissed) return;
 
     const sentinel = sentinelRef.current;
     if (!sentinel) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !dismissed) {
+        if (entries[0].isIntersecting) {
           setShow(true);
           observer.disconnect();
         }
@@ -47,7 +47,9 @@ export default function SmartPaywallNudge({ membershipLevel, triggerAtPct = 50 }
 
     observer.observe(sentinel);
     return () => observer.disconnect();
-  }, [dismissed, membershipLevel]);
+  }, [isPremium, dismissed]);
+
+  if (isPremium) return null;
 
   const handleDismiss = () => {
     setShow(false);

@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Flame, Zap, TrendingUp, Eye, Clock, ChevronRight } from "lucide-react";
+import { Flame, Zap, TrendingUp, Eye, Clock } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
+import { formatDate } from "@/lib/article-utils";
 
 interface LeakItem {
   id: string; title: string; summary: string; content: string;
@@ -26,6 +27,7 @@ export default function LeaksPage() {
       .then(({ data, error }) => {
         if (!error && data) {
           setLeaks(data);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const confirmed = data.filter((l: any) => l.credibility === "confirmed").length;
           setStats({ today: data.length, week: data.length, confirmed });
         }
@@ -64,8 +66,9 @@ export default function LeaksPage() {
         ) : (
           <div className="space-y-4">
             {leaks.map((leak, i) => (
-              <motion.article key={leak.id} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}
-                className="glass-card p-6 hover:border-[#06B6D4]/20 transition-all">
+              <Link key={leak.id} href={`/leaks/detail?id=${leak.id}`} className="block active:scale-[0.98] transition-transform">
+                <motion.article initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}
+                className="glass-card p-6 hover:border-[#06B6D4]/20 transition-all cursor-pointer">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${
@@ -82,10 +85,11 @@ export default function LeaksPage() {
                 <h3 className="text-lg font-bold text-[#F1F5F9] mb-2">{leak.title}</h3>
                 <p className="text-sm text-[#94A3B8] mb-3">{leak.summary}</p>
                 <div className="flex items-center justify-between text-xs text-[#64748B]">
-                  <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{leak.published_at}</span>
+                  <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{formatDate(leak.published_at)}</span>
                   <span>来源: {leak.source}</span>
                 </div>
               </motion.article>
+              </Link>
             ))}
             {leaks.length === 0 && (
               <div className="text-center py-16 text-[#64748B]">暂无爆料</div>

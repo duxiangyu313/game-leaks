@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase/client";
-import { Search, CheckCircle, XCircle, Clock, DollarSign } from "lucide-react";
+import { CheckCircle, XCircle, Clock } from "lucide-react";
 
 export default function OrdersPage() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [orders, setOrders] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [refunds, setRefunds] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<"orders" | "refunds">("orders");

@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { supabase } from "@/lib/supabase/client";
 import { useCachedQuery } from "@/lib/data-cache";
-import { TrendingUp, Flame, Eye, MessageSquare } from "lucide-react";
+import { Flame } from "lucide-react";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const MOCK_TOPICS: any[] = [
   { type: "leak", title: "归唐SGF 2026实机首曝", heat: 98, game_name: "归唐", id: "h1" },
   { type: "article", title: "影之刃零全BOSS战分析", heat: 85, game_name: "影之刃零", id: "h2" },
@@ -15,6 +16,7 @@ const MOCK_TOPICS: any[] = [
 ];
 
 export default function HotTopics() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: topics, loading } = useCachedQuery<any[]>(
     "topics",
     () => Promise.all([
@@ -23,10 +25,13 @@ export default function HotTopics() {
       supabase.from("game_events").select("*, games(title)").gte("event_date", new Date().toISOString().split("T")[0]).order("event_date").limit(3),
     ]).then(([{ data: leaks }, { data: articles }, { data: events }]) => {
       const items = [
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ...(leaks || []).map((l: any) => ({ type: "leak", ...l, heat: (l.view_count || 0) * 0.7 + 50 })),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ...(articles || []).map((a: any) => ({ type: "article", ...a, heat: 80 })),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ...(events || []).map((e: any) => ({ type: "event", ...e, heat: 60, title: e.title, game_name: e.games?.title })),
-      ].sort((a: any, b: any) => b.heat - a.heat).slice(0, 6);
+      ].sort((a: any, b: any) => b.heat - a.heat).slice(0, 6); // eslint-disable-line @typescript-eslint/no-explicit-any
       return items.length > 0 ? items : MOCK_TOPICS;
     }),
     MOCK_TOPICS,
@@ -49,7 +54,7 @@ export default function HotTopics() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {topics.map((t, i) => (
-          <Link key={`${t.type}-${t.id}`} href={t.type === "article" ? `/articles/detail?id=${t.id}` : t.type === "leak" ? `/leaks` : `/games/detail?id=${t.game_id}`}
+          <Link key={`${t.type}-${t.id}`} href={t.type === "article" ? `/articles/detail?id=${t.id}` : t.type === "leak" ? `/leaks/detail?id=${t.id}` : `/games/detail?id=${t.game_id}`}
             className="glass-card p-4 flex items-center gap-4 group hover:border-[#06B6D4]/20 transition-all">
             <span className={`text-2xl font-black shrink-0 w-10 text-center ${i === 0 ? "text-[#F59E0B]" : i === 1 ? "text-[#F59E0B]/70" : i === 2 ? "text-[#D97706]" : "text-[#64748B]"}`}>{i + 1}</span>
             <div className="flex-1 min-w-0">

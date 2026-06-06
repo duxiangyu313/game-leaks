@@ -13,6 +13,7 @@ const LABELS: Record<string, string> = {
 };
 
 export default function CalendarPage() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [events, setEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [month, setMonth] = useState(new Date().getMonth());
@@ -28,7 +29,6 @@ export default function CalendarPage() {
   }, [month, year]);
 
   const filtered = filter === "all" ? events : events.filter(e => e.event_type === filter);
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
 
   return (
     <div className="pt-20 pb-20">

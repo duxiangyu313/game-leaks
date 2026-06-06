@@ -2,25 +2,30 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase/client";
-import { CheckCircle, XCircle, Eye, Loader2 } from "lucide-react";
+import { CheckCircle, XCircle, Loader2 } from "lucide-react";
 
 const TIERS = ["free", "silver", "gold", "diamond"];
 
 export default function SubmissionsPage() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [subs, setSubs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [selected, setSelected] = useState<any>(null);
   const [note, setNote] = useState("");
   const [reward, setReward] = useState("silver");
-
-  useEffect(() => {
-    loadSubs();
-  }, []);
 
   const loadSubs = async () => {
     const { data } = await supabase.from("anonymous_submissions").select("*").order("created_at", { ascending: false });
     setSubs(data || []); setLoading(false);
   };
+
+  useEffect(() => {
+    supabase.from("anonymous_submissions").select("*").order("created_at", { ascending: false }).then(({ data }) => {
+      setSubs(data || []);
+      setLoading(false);
+    });
+  }, []);
 
   const handleReview = async (id: string, status: "approved" | "rejected") => {
     const userId = (await supabase.auth.getUser()).data.user?.id;

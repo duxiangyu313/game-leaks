@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
@@ -8,7 +8,7 @@ import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
 import { atomOneDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { ExternalLink } from "lucide-react";
 import ImageWithWatermark from "./ImageWithWatermark";
-import VideoEmbed from "./VideoEmbed";
+import InlineChart from "./InlineChart";
 import { slugify, extractImages } from "@/lib/article-utils";
 import { preprocessMarkdown } from "@/lib/markdown";
 
@@ -18,21 +18,83 @@ interface Props {
   onImageClick?: (src: string, index: number) => void;
 }
 
-/**
- * 富文本 Markdown 渲染器
- * react-markdown + remark-gfm + rehype-raw + 自定义组件映射
- */
-export default function ArticleRenderer({ content, canRead, onImageClick }: Props) {
-  const [allImages, setAllImages] = useState<string[]>([]);
-  const [spoilerRevealed, setSpoilerRevealed] = useState<Record<number, boolean>>({});
+interface ChartBlock {
+  type: "bar" | "timeline" | "comparison";
+  title?: string;
+  data: { label: string; value: number; color?: string; max?: number }[];
+}
 
-  // 预处理内容
-  const processedContent = preprocessMarkdown(content || "");
+function parseChartBlock(body: string): ChartBlock | null {
+  // body: "bar title: xxx | a: 1 | b: 2"
+  const parts = body.trim().split(/\s*\|\s*/);
+  const first = parts[0].trim();
+  const spaceIdx = first.indexOf(" ");
+  let type: string;
+  let restParts: string[];
 
-  // 收集所有图片
-  useState(() => {
-    setAllImages(extractImages(content || ""));
-  });
+  if (spaceIdx > 0) {
+    type = first.substring(0, spaceIdx);
+    // check if "title:" is part of first segment
+    const afterType = first.substring(spaceIdx + 1).trim();
+    if (afterType) restParts = [afterType, ...parts.slice(1)];
+    else restParts = parts.slice(1);
+  } else {
+    type = first;
+    restParts = parts.slice(1);
+  }
+
+  if (!["bar", "timeline", "comparison"].includes(type)) return null;
+
+  const chartType = type as ChartBlock["type"];
+  let title: string | undefined;
+  const data: ChartBlock["data"] = [];
+
+  for (const seg of restParts) {
+    const s = seg.trim();
+    if (!s) continue;
+    if (s.startsWith("title:")) {
+      title = s.replace("title:", "").trim();
+    } else if (chartType === "comparison" && s.includes(";")) {
+      const [label, v, m] = s.split(";");
+      data.push({ label: label.trim(), value: Number(v) || 0, max: Number(m) || undefined });
+    } else if (s.includes(":")) {
+      const idx = s.indexOf(":");
+      const label = s.substring(0, idx).trim();
+      const v = s.substring(idx + 1).trim();
+      data.push({ label, value: Number(v) || 0 });
+    }
+  }
+
+  if (data.length === 0) return null;
+  return { type: chartType, title, data };
+}
+
+export default function ArticleRenderer({ content, onImageClick }: Props) {
+  const allImages = useMemo(() => extractImages(content || ""), [content]);
+
+  // 把 :::chart 块从 markdown 中拆出来
+  const blocks = useMemo(() => {
+    const raw = content || "";
+    const result: (string | ChartBlock)[] = [];
+    const regex = /:::chart\s+([\s\S]*?):::/g;
+    let lastIdx = 0;
+    let match: RegExpExecArray | null;
+
+    while ((match = regex.exec(raw)) !== null) {
+      // text before this chart block
+      if (match.index > lastIdx) {
+        result.push(raw.substring(lastIdx, match.index));
+      }
+      const parsed = parseChartBlock(match[1]);
+      if (parsed) result.push(parsed);
+      lastIdx = match.index + match[0].length;
+    }
+    // remaining text
+    if (lastIdx < raw.length) {
+      result.push(raw.substring(lastIdx));
+    }
+    return result.length > 0 ? result : [raw];
+  }, [content]);
 
   const handleImageClick = useCallback(
     (src: string) => {
@@ -43,126 +105,75 @@ export default function ArticleRenderer({ content, canRead, onImageClick }: Prop
     [allImages, onImageClick]
   );
 
-  const toggleSpoiler = useCallback((idx: number) => {
-    setSpoilerRevealed((prev) => ({ ...prev, [idx]: !prev[idx] }));
-  }, []);
+  const mdComponents = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    h2: ({ children, ...props }: any) => {
+      const text = extractTextContent(children);
+      return <h2 id={slugify(text)} {...props}>{children}</h2>;
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    h3: ({ children, ...props }: any) => {
+      const text = extractTextContent(children);
+      return <h3 id={slugify(text)} {...props}>{children}</h3>;
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    img: ({ src, alt }: any) => {
+      if (!src) return null;
+      return <ImageWithWatermark src={src as string} alt={alt || ""} onClick={() => handleImageClick(src as string)} />;
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    a: ({ href, children }: any) => (
+      <a href={href} target="_blank" rel="noopener noreferrer">{children}<ExternalLink className="w-3 h-3 inline ml-0.5" /></a>
+    ),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    blockquote: ({ children }: any) => <blockquote>{children}</blockquote>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    code: ({ className, children, ...props }: any) => {
+      const match = /language-(\w+)/.exec(className || "");
+      if (!match && !className) return <code {...props}>{children}</code>;
+      const codeStr = String(children).replace(/\n$/, "");
+      return (
+        <SyntaxHighlighter style={atomOneDark} language={match?.[1] || "text"} PreTag="div"
+          customStyle={{ background: "#1A2332", borderRadius: "12px", border: "1px solid rgba(30,41,59,0.8)", padding: "16px", fontSize: "14px" }}>
+          {codeStr}
+        </SyntaxHighlighter>
+      );
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    p: ({ children }: any) => <p className="paragraph-hover-zone">{children}</p>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    table: ({ children }: any) => <div className="overflow-x-auto"><table>{children}</table></div>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ul: ({ children }: any) => <ul>{children}</ul>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ol: ({ children }: any) => <ol>{children}</ol>,
+    hr: () => <hr />,
+  };
 
   return (
     <div className="article-content">
-      <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeRaw]}
-        components={{
-          // 标题
-          h2: ({ children, ...props }) => {
-            const text = extractTextContent(children);
-            const id = slugify(text);
-            return (
-              <h2 id={id} {...props}>
-                {children}
-              </h2>
-            );
-          },
-          h3: ({ children, ...props }) => {
-            const text = extractTextContent(children);
-            const id = slugify(text);
-            return (
-              <h3 id={id} {...props}>
-                {children}
-              </h3>
-            );
-          },
-
-          // 图片
-          img: ({ src, alt }) => {
-            if (!src) return null;
-            const srcStr = src as string;
-            return (
-              <ImageWithWatermark
-                src={srcStr}
-                alt={alt || ""}
-                onClick={() => handleImageClick(srcStr)}
-              />
-            );
-          },
-
-          // 链接
-          a: ({ href, children }) => (
-            <a href={href} target="_blank" rel="noopener noreferrer">
-              {children}
-              <ExternalLink className="w-3 h-3 inline ml-0.5" />
-            </a>
-          ),
-
-          // 引用块
-          blockquote: ({ children }) => (
-            <blockquote>{children}</blockquote>
-          ),
-
-          // 代码
-          code: ({ className, children, ...props }) => {
-            const match = /language-(\w+)/.exec(className || "");
-            const codeStr = String(children).replace(/\n$/, "");
-
-            // 行内代码
-            if (!match && !className) {
-              return <code {...props}>{children}</code>;
-            }
-
-            // 代码块
-            return (
-              <SyntaxHighlighter
-                style={atomOneDark}
-                language={match ? match[1] : "text"}
-                PreTag="div"
-                customStyle={{
-                  background: "#1A2332",
-                  borderRadius: "12px",
-                  border: "1px solid rgba(30,41,59,0.8)",
-                  padding: "16px",
-                  fontSize: "14px",
-                }}
-              >
-                {codeStr}
-              </SyntaxHighlighter>
-            );
-          },
-
-          // 段落
-          p: ({ children }) => {
-            // 检测自定义元素：spoiler-text
-            return <p className="paragraph-hover-zone">{children}</p>;
-          },
-
-          // 表格
-          table: ({ children }) => (
-            <div className="overflow-x-auto">
-              <table>{children}</table>
-            </div>
-          ),
-
-          // 列表
-          ul: ({ children }) => <ul>{children}</ul>,
-          ol: ({ children }) => <ol>{children}</ol>,
-
-          // 水平线
-          hr: () => <hr />,
-        }}
-      >
-        {processedContent}
-      </ReactMarkdown>
+      {blocks.map((block, i) => {
+        if (typeof block === "string") {
+          const processed = preprocessMarkdown(block);
+          return (
+            <ReactMarkdown key={i} remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={mdComponents}>
+              {processed}
+            </ReactMarkdown>
+          );
+        }
+        return <InlineChart key={i} type={block.type} title={block.title} data={block.data} />;
+      })}
     </div>
   );
 }
 
-/** 从 React children 中提取纯文本 */
 function extractTextContent(children: React.ReactNode): string {
   if (typeof children === "string") return children;
   if (typeof children === "number") return String(children);
   if (Array.isArray(children)) return children.map(extractTextContent).join("");
   if (React.isValidElement(children)) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const props = children.props as any;
+    const props = (children.props as any);
     if (props?.children) return extractTextContent(props.children);
   }
   return "";

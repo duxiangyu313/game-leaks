@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { List } from "lucide-react";
 import type { TocEntry } from "@/types";
 
@@ -13,7 +13,6 @@ interface Props {
 export default function TableOfContents({ items, isPaid }: Props) {
   const [activeId, setActiveId] = useState<string>("");
   const [isOpen, setIsOpen] = useState(false);
-  const headingsRef = useRef<Map<string, IntersectionObserver>>(new Map());
 
   useEffect(() => {
     if (items.length === 0) return;

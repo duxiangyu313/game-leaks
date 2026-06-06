@@ -19,6 +19,7 @@ interface Profile {
 export default function AccountPage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [toast, setToast] = useState("");
   const { manageSubscription } = useStripeCheckout();
 
   useEffect(() => {
@@ -72,12 +73,16 @@ export default function AccountPage() {
   const tier = MEMBERSHIP_TIERS[profile.membership];
   const isActive = profile.subscription_status === "active";
   const daysLeft = profile.subscription_end_date
+    // eslint-disable-next-line react-hooks/purity -- daysLeft 需每次渲染实时计算，Date.now() 的非纯是有意为之
     ? Math.ceil((new Date(profile.subscription_end_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
     : 0;
 
   return (
     <div className="pt-20 pb-20">
       <div className="max-w-2xl mx-auto px-4">
+        {toast && (
+          <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-6 py-3 bg-[#1E293B] border border-[#334155] rounded-xl text-sm text-[#F1F5F9] shadow-2xl" onClick={() => setToast("")}>{toast}</motion.div>
+        )}
         <motion.h1
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -151,19 +156,19 @@ export default function AccountPage() {
           className="grid grid-cols-2 gap-3 mb-8"
         >
           {[
-            { icon: Clock, label: "浏览记录", href: "#" },
-            { icon: CreditCard, label: "支付记录", href: "#" },
-            { icon: Settings, label: "账号设置", href: "#" },
-            { icon: Shield, label: "隐私设置", href: "#" },
+            { icon: Clock, label: "浏览记录" },
+            { icon: CreditCard, label: "支付记录" },
+            { icon: Settings, label: "账号设置" },
+            { icon: Shield, label: "隐私设置" },
           ].map((item) => (
-            <Link
+            <button
               key={item.label}
-              href={item.href}
-              className="glass-card p-4 flex items-center gap-3 hover:border-[#06B6D4]/20 transition-all"
+              onClick={() => setToast(`${item.label}功能即将上线`)}
+              className="glass-card p-4 flex items-center gap-3 hover:border-[#06B6D4]/20 transition-all cursor-pointer active:scale-[0.98] w-full text-left"
             >
               <item.icon className="w-5 h-5 text-[#64748B]" />
               <span className="text-sm text-[#94A3B8]">{item.label}</span>
-            </Link>
+            </button>
           ))}
         </motion.div>
 

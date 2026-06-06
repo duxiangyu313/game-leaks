@@ -2,11 +2,14 @@
 
 import { supabase } from "@/lib/supabase/client";
 import { useCachedQuery } from "@/lib/data-cache";
+import Link from "next/link";
 import { Gamepad2, Flame, Users, TrendingUp, Star, Crown } from "lucide-react";
 
 interface StatsData {
   stats: { games: number; leaks: number; members: number };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   topHype: any[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   topRated: any[];
 }
 
@@ -31,11 +34,16 @@ export default function StatsDashboard() {
       supabase.from("games").select("id", { count: "exact", head: true }),
       supabase.from("leaks").select("id", { count: "exact", head: true }).eq("status", "published"),
       supabase.from("profiles").select("id", { count: "exact", head: true }),
-      supabase.from("games").select("title,hype_score").order("hype_score", { ascending: false }).limit(3),
-      supabase.from("games").select("title,rating").not("rating", "is", null).order("rating", { ascending: false }).limit(3),
-    ]).then(([{ count: games }, { count: leaks }, { count: members }, { data: hype }, { data: rated }]) => {
+      // Fallback: 如果 profiles RLS 阻止匿名计数，尝试 site_stats VIEW
+      supabase.from("site_stats").select("total_members").single(),
+      supabase.from("games").select("id,title,hype_score").order("hype_score", { ascending: false }).limit(3),
+      supabase.from("games").select("id,title,rating").not("rating", "is", null).order("rating", { ascending: false }).limit(3),
+    ]).then(([{ count: games }, { count: leaks }, { count: members }, siteStats, { data: hype }, { data: rated }]) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const siteStatsData = (siteStats as any)?.data;
+      const memberCount = members || siteStatsData?.total_members || 0;
       const result: StatsData = {
-        stats: { games: games || 0, leaks: leaks || 0, members: members || 0 },
+        stats: { games: games || 0, leaks: leaks || 0, members: memberCount },
         topHype: hype || [],
         topRated: rated || [],
       };
@@ -80,26 +88,26 @@ export default function StatsDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <h3 className="text-sm font-semibold text-[#F1F5F9] mb-3 flex items-center gap-2"><Crown className="w-4 h-4 text-[#F59E0B]" />最受期待</h3>
-            {topHype.map((g, i) => (
-              <div key={g.title} className="flex items-center justify-between py-2 border-b border-[rgba(30,41,59,0.3)] last:border-0">
+            {topHype.map((g: any, i: number) => ( // eslint-disable-line @typescript-eslint/no-explicit-any
+              <Link key={g.id || g.title} href={`/games/detail?id=${g.id}`} className="flex items-center justify-between py-2 border-b border-[rgba(30,41,59,0.3)] last:border-0 hover:bg-[#1E293B]/30 transition-colors cursor-pointer">
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-bold text-[#64748B] w-5">#{i + 1}</span>
-                  <span className="text-sm text-[#F1F5F9]">{g.title}</span>
+                  <span className="text-sm text-[#F1F5F9] hover:text-[#06B6D4] transition-colors">{g.title}</span>
                 </div>
                 <span className="text-xs text-[#06B6D4] font-mono">{g.hype_score}%</span>
-              </div>
+              </Link>
             ))}
           </div>
           <div>
             <h3 className="text-sm font-semibold text-[#F1F5F9] mb-3 flex items-center gap-2"><Star className="w-4 h-4 text-[#F59E0B] fill-[#F59E0B]" />评分最高</h3>
-            {topRated.map((g, i) => (
-              <div key={g.title} className="flex items-center justify-between py-2 border-b border-[rgba(30,41,59,0.3)] last:border-0">
+            {topRated.map((g: any, i: number) => ( // eslint-disable-line @typescript-eslint/no-explicit-any
+              <Link key={g.id || g.title} href={`/games/detail?id=${g.id}`} className="flex items-center justify-between py-2 border-b border-[rgba(30,41,59,0.3)] last:border-0 hover:bg-[#1E293B]/30 transition-colors cursor-pointer">
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-bold text-[#64748B] w-5">#{i + 1}</span>
-                  <span className="text-sm text-[#F1F5F9]">{g.title}</span>
+                  <span className="text-sm text-[#F1F5F9] hover:text-[#06B6D4] transition-colors">{g.title}</span>
                 </div>
                 <span className="text-xs text-[#F59E0B] font-mono">{g.rating}</span>
-              </div>
+              </Link>
             ))}
           </div>
         </div>

@@ -53,12 +53,23 @@ export async function uploadToR2(
   file: File,
   onProgress?: (pct: number) => void
 ): Promise<R2UploadResult> {
-  // 通过 API Route 获取预签名 URL
-  const res = await fetch("/api/upload/presign", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ fileName: file.name, contentType: file.type }),
-  });
+  // 从 Supabase 获取当前 session token
+  const { supabase } = await import("../supabase/client");
+  const { data: { session } } = await supabase.auth.getSession();
+  const token = session?.access_token;
+
+  // 通过 Supabase Edge Function 获取预签名 URL（static export 无 API Routes）
+  const res = await fetch(
+    "https://gumpxfxbxxyljikaizsh.supabase.co/functions/v1/upload-presign",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: JSON.stringify({ fileName: file.name, contentType: file.type }),
+    }
+  );
 
   if (!res.ok) throw new Error("获取上传凭证失败");
   const { uploadUrl, publicUrl, key } = await res.json();

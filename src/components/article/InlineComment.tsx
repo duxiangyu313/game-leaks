@@ -3,8 +3,6 @@
 import { useState } from "react";
 import { MessageCircle, Send, Loader2 } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
-import MemberBadge from "./MemberBadge";
-import type { MembershipTier } from "@/types";
 
 interface Props {
   articleId: string;
@@ -16,7 +14,6 @@ export default function InlineComment({ articleId, paragraphIndex }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [comment, setComment] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [userId, setUserId] = useState<string | null>(null);
 
   const handleSubmit = async () => {
     if (!comment.trim()) return;

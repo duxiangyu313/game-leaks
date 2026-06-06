@@ -25,6 +25,7 @@ export default function UpcomingGames() {
       .limit(4)
       .then(({ data, error }) => {
         if (!error && data && data.length > 0) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           return data.map((g: any) => ({ ...g, releaseDate: g.release_date, hypeScore: g.hype_score }));
         }
         return MOCK;

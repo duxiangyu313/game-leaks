@@ -481,3 +481,103 @@ body {
   color: #06B6D4; margin-bottom: 8px;
 }
 .article-summary-card.gold h4 { color: #F59E0B; }
+
+/* ═══════════════════════════════════════════
+   赛博朋克科技特效 · Cyberpunk Effects
+   ═══════════════════════════════════════════ */
+
+/* —— 故障艺术 —— */
+@keyframes cyber-glitch {
+  0%   { transform: translate(0); }
+  20%  { transform: translate(-2px, 1px); }
+  40%  { transform: translate(2px, -1px); }
+  60%  { transform: translate(-1px, 2px); }
+  80%  { transform: translate(1px, -1px); }
+  100% { transform: translate(0); }
+}
+@keyframes cyber-glitch-red {
+  0%   { clip-path: inset(0 0 80% 0); }
+  20%  { clip-path: inset(40% 0 10% 0); }
+  40%  { clip-path: inset(70% 0 5% 0); }
+  60%  { clip-path: inset(10% 0 60% 0); }
+  80%  { clip-path: inset(30% 0 30% 0); }
+  100% { clip-path: inset(0 0 0 0); }
+}
+@keyframes cyber-glitch-cyan {
+  0%   { clip-path: inset(30% 0 30% 0); }
+  20%  { clip-path: inset(10% 0 60% 0); }
+  40%  { clip-path: inset(0 0 80% 0); }
+  60%  { clip-path: inset(50% 0 20% 0); }
+  80%  { clip-path: inset(70% 0 5% 0); }
+  100% { clip-path: inset(0 0 0 0); }
+}
+
+/* —— 金色扫描线 —— */
+@keyframes cyber-scan {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* —— 全息抖动 —— */
+@keyframes hologram-jitter {
+  0%, 100% { transform: translate(0, 0) skew(0deg); }
+  25%  { transform: translate(0.5px, -0.5px) skew(0.1deg); }
+  50%  { transform: translate(-0.5px, 0.3px) skew(-0.1deg); }
+  75%  { transform: translate(0.3px, 0.5px) skew(0.05deg); }
+}
+
+/* —— 边框呼吸发光 —— */
+@keyframes border-breathe {
+  0%, 100% { border-color: rgba(6,182,212,0.4); box-shadow: 0 0 8px rgba(6,182,212,0.1); }
+  50%      { border-color: rgba(6,182,212,0.7); box-shadow: 0 0 20px rgba(6,182,212,0.2); }
+}
+
+/* —— 价格跳动 —— */
+@keyframes price-pulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.05); text-shadow: 0 0 12px rgba(245,158,11,0.5); }
+}
+
+/* —— 光标闪烁 —— */
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0; }
+}
+
+/* —— 网格扫描线 —— */
+@keyframes grid-scan {
+  0%   { background-position: 0 0; }
+  100% { background-position: 0 40px; }
+}
+
+/* 桌面端专用类 */
+@media (min-width: 768px) {
+  .cyber-hologram {
+    animation: hologram-jitter 3s ease-in-out infinite;
+  }
+  .cyber-border-glow {
+    animation: border-breathe 3s ease-in-out infinite;
+  }
+  .cyber-price-pulse {
+    animation: price-pulse 2s ease-in-out infinite;
+  }
+  .cyber-scanline-bg {
+    background-image:
+      linear-gradient(rgba(6,182,212,0.03) 1px, transparent 1px);
+    background-size: 100% 4px;
+    animation: grid-scan 4s linear infinite;
+  }
+}
+
+/* 输入框 cyber 聚焦 */
+.cyber-input:focus {
+  box-shadow: 0 0 0 2px rgba(6,182,212,0.4), 0 0 20px rgba(6,182,212,0.15);
+  border-color: rgba(6,182,212,0.6) !important;
+}
+.cyber-input:focus::after {
+  content: '';
+  display: inline-block; width: 8px; height: 18px;
+  background: #06B6D4;
+  animation: cursor-blink 1s step-end infinite;
+  vertical-align: text-bottom; margin-left: 2px;
+}

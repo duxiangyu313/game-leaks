@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any -- 泛型缓存层，Record<string, any> 为 JSON 数据的合理类型 */
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -80,12 +81,17 @@ export function useCachedQuery<T>(
   fallback: T,
   homepageKey?: string
 ): { data: T; loading: boolean } {
-  const initRef = useRef(false);
+  // 保持 fetcher/homepageKey 在 ref 中，避免 deps 变化导致无限请求
+  const fetcherRef = useRef(fetcher);
+  const homepageKeyRef = useRef(homepageKey);
+  // ref 同步必须在 effect 中进行，避免 render 期间修改 ref
+  useEffect(() => {
+    fetcherRef.current = fetcher;
+    homepageKeyRef.current = homepageKey;
+  });
 
   // 初始化：localStorage > 构建时缓存 > fallback
   const [data, setData] = useState<T>(() => {
-    initRef.current = true;
-
     // 1. localStorage 缓存（回访用户）
     const ls = lsGet<T>(key);
     if (ls.cacheHit && ls.data) {
@@ -113,7 +119,7 @@ export function useCachedQuery<T>(
     let cancelled = false;
 
     // 包装成标准 Promise 以支持 .catch()
-    Promise.resolve(fetcher())
+    Promise.resolve(fetcherRef.current())
       .then((fresh) => {
         if (cancelled) return;
         setData(fresh);
@@ -124,10 +130,10 @@ export function useCachedQuery<T>(
         if (cancelled) return;
         setLoading(false);
         // 回退：如果 homepage 有数据但还没加载，尝试异步获取
-        if (homepageKey && !getHomepageCached(homepageKey)) {
+        if (homepageKeyRef.current && !getHomepageCached(homepageKeyRef.current)) {
           fetchHomepageCache().then((cache) => {
-            if (!cancelled && cache[homepageKey]) {
-              setData(cache[homepageKey] as T);
+            if (!cancelled && cache[homepageKeyRef.current!]) {
+              setData(cache[homepageKeyRef.current!] as T);
             }
           });
         }

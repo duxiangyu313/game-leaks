@@ -3,11 +3,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
-import { ArrowLeft, Save, Eye, Upload, Loader2, Wand2 } from "lucide-react";
+import { ArrowLeft, Save, Upload, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { uploadToR2 } from "@/lib/cloudflare/r2";
-import { generateTemplateMarkdown, formatOneClick, getDefaultTemplateType } from "@/lib/markdown";
-import { generateExcerpt, calculateReadingTime, calculateWordCount } from "@/lib/article-utils";
+import { generateTemplateMarkdown, getDefaultTemplateType } from "@/lib/markdown";
+import { generateExcerpt } from "@/lib/article-utils";
 import MarkdownEditor from "@/components/admin/MarkdownEditor";
 import TemplateSelector from "@/components/admin/TemplateSelector";
 import FormatButton from "@/components/admin/FormatButton";

@@ -3,6 +3,7 @@
 import { useEffect, useState, createContext, useContext } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
+import { isAdmin } from "@/lib/auth";
 import { Loader2 } from "lucide-react";
 
 interface AdminUser {
@@ -18,15 +19,9 @@ const AdminContext = createContext<{ user: AdminUser | null; loading: boolean }>
 
 export const useAdmin = () => useContext(AdminContext);
 
-/** 管理员邮箱白名单 — 只有这些邮箱可以登录后台 */
-const ADMIN_EMAILS = (process.env.NEXT_PUBLIC_ADMIN_EMAILS || "")
-  .split(",")
-  .map((e) => e.trim())
-  .filter(Boolean);
-
 /**
  * 管理员认证守卫 — 包裹整个 /admin 路由
- * 验证用户已登录且邮箱在白名单中
+ * 通过 Supabase profiles.membership 判定（diamond = 管理员），不再暴露邮箱列表
  */
 export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
   const [adminUser, setAdminUser] = useState<AdminUser | null>(null);
@@ -41,10 +36,8 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      const email = session.user.email || "";
-      const isAdmin = ADMIN_EMAILS.includes(email);
-
-      if (!isAdmin) {
+      const admin = await isAdmin();
+      if (!admin) {
         await supabase.auth.signOut();
         router.push("/admin/login?error=unauthorized");
         return;
@@ -52,7 +45,7 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
 
       setAdminUser({
         id: session.user.id,
-        email,
+        email: session.user.email || "",
         role: "admin",
       });
       setLoading(false);

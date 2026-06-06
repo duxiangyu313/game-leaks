@@ -9,14 +9,17 @@ import Link from "next/link";
 function CompareContent() {
   const params = useSearchParams();
   const ids = (params.get("ids") || "").split(",").filter(Boolean).slice(0, 3);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [games, setGames] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(ids.length > 0);
+  const idsKey = ids.join(",");
 
   useEffect(() => {
-    if (ids.length === 0) { setLoading(false); return; }
+    if (ids.length === 0) return;
     Promise.all(ids.map(id => supabase.from("games").select("*, game_requirements(*)").eq("id", id).single()))
       .then(results => { setGames(results.map(r => r.data).filter(Boolean)); setLoading(false); });
-  }, [ids.join(",")]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [idsKey]);
 
   const fields = [
     { key: "developer", label: "开发商" },

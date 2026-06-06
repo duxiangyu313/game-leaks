@@ -6,6 +6,7 @@ import Link from "next/link";
 import { MessageSquare, Flame, Clock } from "lucide-react";
 
 export default function HotDiscussions() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: topics, loading } = useCachedQuery<any[]>(
     "hotDiscussions",
     () => supabase
@@ -39,7 +40,7 @@ export default function HotDiscussions() {
         </div>
 
         <div className="space-y-2">
-          {topics.map((t: any, i: number) => (
+          {topics.map((t: any, i: number) => ( // eslint-disable-line @typescript-eslint/no-explicit-any
             <Link
               key={t.id}
               href={`/forum/post?id=${t.id}`}

@@ -1,17 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { CheckCircle, ArrowRight, Home } from "lucide-react";
+import { CheckCircle, ArrowRight } from "lucide-react";
 
 export default function SuccessPage() {
-  const [sessionId, setSessionId] = useState("");
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    setSessionId(params.get("session_id") || "");
-  }, []);
+  const [sessionId] = useState(() => {
+    if (typeof window !== "undefined") {
+      return new URLSearchParams(window.location.search).get("session_id") || "";
+    }
+    return "";
+  });
 
   return (
     <div className="pt-20 pb-20">

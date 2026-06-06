@@ -2,10 +2,11 @@
  * 会员配置 — 客户端安全，不导入 Stripe 服务端库
  */
 
+// Price ID 与 Supabase Edge Function (stripe-checkout) 保持同步
 export const MEMBERSHIP_PRICES = {
-  silver: { monthly: "price_silver_monthly", yearly: "price_silver_yearly" },
-  gold: { monthly: "price_gold_monthly", yearly: "price_gold_yearly" },
-  diamond: { monthly: "price_diamond_monthly", yearly: "price_diamond_yearly" },
+  silver:  { monthly: "price_1TeENpQ9NyBUwMBMVfMk8ww9", yearly: "price_1TeFVKQ9NyBUwMBMrfstRBsO" },
+  gold:    { monthly: "price_1TeFD3Q9NyBUwMBMKDAdmRvr", yearly: "price_1TeFVsQ9NyBUwMBMOXo9f5dC" },
+  diamond: { monthly: "price_1TeFHRQ9NyBUwMBMOYF3290s", yearly: "price_1TeFWIQ9NyBUwMBMZFCQ9i8U" },
 } as const;
 
 export const MEMBERSHIP_TIERS = {

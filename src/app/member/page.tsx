@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Crown, Check, Zap, Star, Shield, MessageCircle, Gift, Users, Clock, Sparkles, ArrowRight, X } from "lucide-react";
+import { Crown, Check, Star, Shield, Gift, Users, Clock, Sparkles, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useStripeCheckout } from "@/hooks/useStripeCheckout";
 import { MEMBERSHIP_TIERS, type MembershipTier } from "@/lib/stripe-config";
@@ -118,7 +118,7 @@ export default function MemberPage() {
                 ) : (
                   <div className="flex items-baseline gap-1 mb-6">
                     <span className="text-sm text-[#64748B]">¥</span>
-                    <span className="text-3xl font-black text-[#F1F5F9]">{price}</span>
+                    <span className={`text-3xl font-black text-[#F1F5F9] ${(tier.key as string) !== "free" ? "cyber-price-pulse inline-block" : ""}`}>{price}</span>
                     <span className="text-sm text-[#64748B]">/{cycle === "monthly" ? "月" : "年"}</span>
                   </div>
                 )}

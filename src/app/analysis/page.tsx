@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { BookOpen, PenLine, Users, TrendingUp, Clock, Lock, Eye, Flame, Newspaper } from "lucide-react";
+import { BookOpen, PenLine, Users, TrendingUp, Clock, Eye, Flame, Newspaper } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import { calculateReadingTime, calculateWordCount, formatDate } from "@/lib/article-utils";
+import PremiumBadge from "@/components/cyber/PremiumBadge";
 
 const CATS = [
   { key: "all", icon: BookOpen, label: "全部", color: "text-[#F1F5F9]" },
@@ -26,6 +27,7 @@ const TIER_FILTERS = [
 ];
 
 export default function AnalysisPage() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [articles, setArticles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeCat, setActiveCat] = useState("all");
@@ -112,7 +114,7 @@ export default function AnalysisPage() {
         ) : (
           <div className="space-y-4">
             {filtered.map((a, i) => {
-              const isPaid = a.required_tier !== "free";
+              const isPaid = (a.required_tier as string) !== "free";
               const readTime = calculateReadingTime(a.content || "");
               const wordCount = calculateWordCount(a.content || "");
 
@@ -131,6 +133,7 @@ export default function AnalysisPage() {
                     {/* 封面图 */}
                     {a.cover_image && (
                       <div className="md:w-48 shrink-0 h-36 md:h-auto overflow-hidden bg-[#1E293B]/40">
+                        {/* eslint-disable-next-line @next/next/no-img-element -- static export */}
                         <img
                           src={a.cover_image}
                           alt={a.title}
@@ -147,10 +150,7 @@ export default function AnalysisPage() {
                           {categoryLabel(a.category)}
                         </span>
                         {isPaid && (
-                          <span className="badge-member-exclusive">
-                            <Lock className="w-2.5 h-2.5" />
-                            {tierLabel(a.required_tier)}可见
-                          </span>
+                          <PremiumBadge tier={a.required_tier as "gold" | "diamond" | "silver"} />
                         )}
                         <span className="text-xs text-[#64748B] flex items-center gap-1 ml-auto">
                           <Clock className="w-3 h-3" />
@@ -220,9 +220,4 @@ function categoryLabel(cat: string): string {
     interview: "访谈", opinion: "观点", leak: "爆料", news: "新闻", video: "视频",
   };
   return map[cat] || cat;
-}
-
-function tierLabel(tier: string): string {
-  const map: Record<string, string> = { silver: "白银", gold: "黄金", diamond: "钻石", free: "免费" };
-  return map[tier] || tier;
 }

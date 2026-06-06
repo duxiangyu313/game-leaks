@@ -2,11 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase/client";
-import { Gift, Copy, Crown, Loader2 } from "lucide-react";
+import { Gift, Crown, Loader2 } from "lucide-react";
 import Link from "next/link";
 
 export default function ClaimPage() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [profile, setProfile] = useState<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [codes, setCodes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [claiming, setClaiming] = useState(false);

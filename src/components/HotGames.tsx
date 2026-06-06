@@ -25,6 +25,7 @@ export default function HotGames() {
       .limit(4)
       .then(({ data, error }) => {
         if (!error && data && data.length > 0) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           return data.map((g: any, i: number) => ({ ...g, rank: i + 1, hypeScore: g.hype_score, releaseDate: g.release_date }));
         }
         return MOCK;

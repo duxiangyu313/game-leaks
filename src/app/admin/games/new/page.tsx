@@ -106,7 +106,8 @@ export default function NewGamePage() {
             <span className="text-sm text-[#64748B]">{uploading?'上传中...':coverUrl?'已上传':'点击上传封面图'}</span>
             <input type="file" accept="image/*" onChange={handleUpload} className="hidden" />
           </label>
-          {coverUrl && <img src={coverUrl} alt="封面预览" className="w-full rounded-xl" />}
+          {/* eslint-disable-next-line @next/next/no-img-element -- static export */}
+          {coverUrl && <img src={coverUrl} alt="封面预览" loading="lazy" className="w-full rounded-xl" />}
         </div>
       </div>
     </div>

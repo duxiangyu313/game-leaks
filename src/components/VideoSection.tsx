@@ -6,6 +6,7 @@ import { Play, Clock } from "lucide-react";
 import Link from "next/link";
 
 export default function VideoSection() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: videos, loading } = useCachedQuery<any[]>(
     "videos",
     () => supabase
@@ -30,13 +31,15 @@ export default function VideoSection() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {videos.map((v) => {
-            // Extract BV from iframe
-            const bvMatch = v.content?.match(/bvid=(BV[a-zA-Z0-9]+)/);
-            const bvid = bvMatch ? bvMatch[1] : null;
+            const bvMatch = v.title?.match(/BV[a-zA-Z0-9]+/) || v.content?.match(/BV[a-zA-Z0-9]+/);
+            const bvid = bvMatch ? bvMatch[0] : null;
+            const href = bvid ? `https://www.bilibili.com/video/${bvid}` : `/articles/detail?id=${v.id}`;
+            const isExternal = !!bvid;
             return (
-              <Link key={v.id} href={`/articles/detail?id=${v.id}`} className="glass-card block p-4 group hover:border-[#E94560]/20 transition-all">
+              <Link key={v.id} href={href} target={isExternal ? "_blank" : undefined} rel={isExternal ? "noopener noreferrer" : undefined} className="glass-card block p-4 group hover:border-[#E94560]/20 transition-all">
                 <div className="w-full aspect-video rounded-lg bg-[#1E293B] mb-3 flex items-center justify-center border border-[rgba(30,41,59,0.4)] group-hover:border-[#E94560]/20 transition-all relative overflow-hidden">
                   <Play className="w-8 h-8 text-[#E94560] group-hover:scale-110 transition-transform" />
+                  {bvid && <span className="absolute bottom-2 right-2 text-[10px] text-[#64748B] bg-[#0F172A]/80 px-2 py-0.5 rounded">{bvid}</span>}
                 </div>
                 <h3 className="text-sm font-semibold text-[#F1F5F9] group-hover:text-[#E94560] transition-colors line-clamp-2">
                   {v.title}

@@ -1,24 +1,22 @@
 "use client";
 
-import { useEffect, useState, Suspense, useRef, useCallback } from "react";
+import { useEffect, useState, Suspense, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase/client";
-import { ArrowLeft, Clock, Tag, Shield, Lock, Crown, Send, Loader2, Eye, Share2, Heart, Bookmark } from "lucide-react";
-import { getUserLevel, hasAccess, getVisibilityLabel, getVisibilityColor, getVisibilityBg, getUpgradeTier, type MembershipLevel, type Visibility } from "@/lib/auth";
-import { calculateReadingTime, calculateWordCount, formatDate, generateTOC } from "@/lib/article-utils";
+import { ArrowLeft, Send, Loader2 } from "lucide-react";
+import { getUserLevel, type MembershipLevel, type Visibility } from "@/lib/auth";
+import { calculateReadingTime, calculateWordCount } from "@/lib/article-utils";
 
-import ArticleTemplate from "@/components/article/ArticleTemplate";
-import ReadStats from "@/components/article/ReadStats";
-import LikeButton from "@/components/article/LikeButton";
-import BookmarkButton from "@/components/article/BookmarkButton";
-import ShareButton from "@/components/article/ShareButton";
 import type { InteractionCounts } from "@/types";
+import ArticleTemplate from "@/components/article/ArticleTemplate";
 
 function DetailContent() {
   const params = useSearchParams();
   const id = params.get("id");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [article, setArticle] = useState<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [comments, setComments] = useState<any[]>([]);
   const [userLevel, setUserLevel] = useState<MembershipLevel>("free");
   const [loading, setLoading] = useState(true);
@@ -31,6 +29,16 @@ function DetailContent() {
   const [userLiked, setUserLiked] = useState(false);
   const [userBookmarked, setUserBookmarked] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  // ── SEO: 客户端更新 document.title 和 meta description ──
+  useEffect(() => {
+    if (!article) return;
+    document.title = `${article.title} · 国游爆料`;
+    const desc = article.summary || article.title || "";
+    let meta = document.querySelector("meta[name='description']");
+    if (meta) { meta.setAttribute("content", desc); }
+    else { meta = document.createElement("meta"); meta.setAttribute("name", "description"); meta.setAttribute("content", desc); document.head.appendChild(meta); }
+  }, [article]);
 
   useEffect(() => {
     if (!id) return;
@@ -133,6 +141,7 @@ function DetailContent() {
     const { data } = await supabase.from("post_comments").insert({
       article_id: id, user_id: user.id, content: commentText
     }).select().single();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (data) setComments((prev: any[]) => [data, ...prev]);
     setCommentText("");
     setSubmittingComment(false);
@@ -218,7 +227,7 @@ function DetailContent() {
         <div className="glass-card p-4 mb-6">
           <textarea
             value={commentText}
-            onChange={(e: any) => setCommentText(e.target.value)}
+            onChange={(e) => setCommentText(e.target.value)}
             placeholder="写下你的评论..."
             rows={3}
             className="w-full px-4 py-2.5 rounded-xl bg-[#1E293B]/40 border border-[rgba(30,41,59,0.6)] text-[#F1F5F9] placeholder-[#64748B] text-sm outline-none resize-y mb-3"
@@ -238,6 +247,7 @@ function DetailContent() {
           <p className="text-[#64748B] text-center py-8">暂无评论，来抢沙发吧</p>
         )}
         <div className="space-y-4">
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           {comments.map((c: any) => (
             <div key={c.id} className="glass-card p-4">
               <div className="flex items-center justify-between mb-2">

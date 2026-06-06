@@ -179,6 +179,7 @@ async function main() {
       { count: gamesCount },
       { count: leaksCount },
       { count: membersCount },
+      siteStats,
       { data: hypeData },
       { data: ratedData },
     ] = await Promise.all([
@@ -190,6 +191,11 @@ async function main() {
       supabase
         .from("profiles")
         .select("id", { count: "exact", head: true }),
+      // Fallback: 尝试 site_stats VIEW 获取 member count
+      supabase
+        .from("site_stats")
+        .select("total_members")
+        .single(),
       supabase
         .from("games")
         .select("title,hype_score")
@@ -219,10 +225,11 @@ async function main() {
       .limit(3);
     if (featuredReviews?.length) cache["featuredReviews"] = featuredReviews;
 
+    const memberCount = membersCount || (siteStats?.total_members ?? 0);
     cache["stats"] = {
       games: gamesCount || 0,
       leaks: leaksCount || 0,
-      members: membersCount || 0,
+      members: memberCount,
       topHype: hypeData || [],
       topRated: ratedData || [],
     };
