@@ -102,7 +102,16 @@ export default function AuthPage() {
             {loading ? "处理中..." : mode === "login" ? "登录" : "注册"}
           </button>
 
-          <p style={{ fontSize: 14, color: "#64748B", textAlign: "center", marginTop: 24 }}>
+          {mode === "login" && (
+            <p style={{ textAlign: "center", marginTop: 16, marginBottom: 0 }}>
+              <a href="/auth/forgot-password"
+                style={{ color: "#06B6D4", fontSize: 14, textDecoration: "underline", cursor: "pointer", transition: "color 0.2s" }}>
+                忘记密码？
+              </a>
+            </p>
+          )}
+
+          <p style={{ fontSize: 14, color: "#64748B", textAlign: "center", marginTop: mode === "login" ? 8 : 24 }}>
             {mode === "login" ? "还没有账号？" : "已有账号？"}
             <button onClick={() => { setMode(mode === "login" ? "register" : "login"); setError(""); }}
               style={{ color: "#06B6D4", cursor: "pointer", fontWeight: 500, marginLeft: 4, background: "none", border: "none", fontSize: 14, padding: 0, textDecoration: "underline" }}>
