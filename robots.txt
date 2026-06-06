@@ -1,3 +1,8 @@
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /auth/
+Disallow: /account/
+Disallow: /api/
+
 Sitemap: https://news.guoyouwenduji.cc/sitemap.xml
