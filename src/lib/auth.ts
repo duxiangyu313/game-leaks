@@ -58,10 +58,14 @@ export function getVisibilityBg(visibility: Visibility | MembershipLevel): strin
   return bgs[visibility] || "";
 }
 
-/** 检查是否是管理员（通过 Supabase profiles.membership 判定，diamond = 管理员） */
+/** 检查是否是管理员（diamond 等级 或 邮箱白名单） */
 export async function isAdmin(): Promise<boolean> {
   const level = await getUserLevel();
-  return level === "diamond";
+  if (level === "diamond") return true;
+  // fallback: 白名单邮箱
+  const { data: { user } } = await supabase.auth.getUser();
+  const adminEmails = (process.env.NEXT_PUBLIC_ADMIN_EMAILS || "").split(",").map(e => e.trim().toLowerCase());
+  return !!(user?.email && adminEmails.includes(user.email.toLowerCase()));
 }
 
 /** 获取用户需要升级到的等级 */
