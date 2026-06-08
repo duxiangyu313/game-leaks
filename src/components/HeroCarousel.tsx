@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { ChevronLeft, ChevronRight, Zap } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/lib/supabase/client";
@@ -78,7 +78,7 @@ export default function HeroCarousel() {
             )}
             <h2 className="text-3xl md:text-5xl font-bold text-[#F1F5F9] mb-4 leading-tight">{slide.title}</h2>
             <p className="text-base md:text-lg text-[#94A3B8] mb-8 max-w-lg leading-relaxed">{slide.subtitle}</p>
-            <Link href={slide.link} className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#06B6D4] to-[#0891B2] text-white font-medium rounded-xl hover:shadow-[0_0_30px_rgba(6,182,212,0.3)] transition-all">查看详情 <ChevronRight className="w-4 h-4" /></Link>
+            <LinkNoPrefetch href={slide.link} className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#06B6D4] to-[#0891B2] text-white font-medium rounded-xl hover:shadow-[0_0_30px_rgba(6,182,212,0.3)] transition-all">查看详情 <ChevronRight className="w-4 h-4" /></LinkNoPrefetch>
           </div>
         </motion.div>
       </AnimatePresence>

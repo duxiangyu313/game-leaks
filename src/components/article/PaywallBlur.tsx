@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { Lock, Crown } from "lucide-react";
 import type { MembershipTier } from "@/types";
 import { getVisibilityLabel, getUpgradeTier } from "@/lib/auth";
@@ -79,13 +79,13 @@ export default function PaywallBlur({
         <p className="text-sm text-[#94A3B8] mb-5">
           你当前的会员等级：{membershipLevel === "free" ? "普通用户" : getVisibilityLabel(membershipLevel)}
         </p>
-        <Link
+        <LinkNoPrefetch
           href="/member"
           className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#F59E0B] to-[#D97706] text-white font-semibold rounded-xl hover:shadow-[0_0_24px_rgba(245,158,11,0.25)] transition-all"
         >
           <Crown className="w-4 h-4" />
           升级到{upgradeLabel}
-        </Link>
+        </LinkNoPrefetch>
       </div>
     </div>
   );

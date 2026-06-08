@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { Lock, Crown, ArrowRight } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import { MEMBERSHIP_TIERS, type MembershipTier } from "@/lib/stripe-config";
@@ -77,14 +77,14 @@ export default function MembershipGate({ requiredTier, children, fallback }: Pro
       <p className="text-sm text-[#94A3B8] mb-6 max-w-md mx-auto">
         升级会员即可解锁此内容，获取独家爆料与深度解析
       </p>
-      <Link
+      <LinkNoPrefetch
         href="/member"
         className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#F59E0B] to-[#D97706] text-white font-semibold rounded-xl hover:shadow-[0_0_24px_rgba(245,158,11,0.25)] transition-all"
       >
         <Crown className="w-4 h-4" />
         立即升级
         <ArrowRight className="w-4 h-4" />
-      </Link>
+      </LinkNoPrefetch>
     </div>
   );
 }

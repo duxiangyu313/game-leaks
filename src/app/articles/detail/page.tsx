@@ -2,7 +2,7 @@
 
 import { useEffect, useState, Suspense, useRef } from "react";
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { supabase } from "@/lib/supabase/client";
 import { ArrowLeft, Send, Loader2 } from "lucide-react";
 import { getUserLevel, type MembershipLevel, type Visibility } from "@/lib/auth";
@@ -165,7 +165,7 @@ function DetailContent() {
   if (!article) return (
     <div className="pt-20 pb-20 text-center text-[#64748B]">
       <p className="text-lg mb-2">文章未找到</p>
-      <Link href="/analysis" className="text-[#06B6D4] text-sm hover:underline">返回文章列表</Link>
+      <LinkNoPrefetch href="/analysis" className="text-[#06B6D4] text-sm hover:underline">返回文章列表</LinkNoPrefetch>
     </div>
   );
 
@@ -179,9 +179,9 @@ function DetailContent() {
 
       {/* 返回链接 */}
       <div className="max-w-3xl mx-auto px-4 md:px-6 mb-6">
-        <Link href="/analysis" className="inline-flex items-center gap-2 text-sm text-[#64748B] hover:text-[#F1F5F9] transition-colors">
+        <LinkNoPrefetch href="/analysis" className="inline-flex items-center gap-2 text-sm text-[#64748B] hover:text-[#F1F5F9] transition-colors">
           <ArrowLeft className="w-4 h-4" /> 返回文章列表
-        </Link>
+        </LinkNoPrefetch>
       </div>
 
       {/* 文章主体 — 使用新模板系统 */}

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { Flame, Zap, TrendingUp, Eye, Clock } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import { formatDate } from "@/lib/article-utils";
@@ -66,7 +66,7 @@ export default function LeaksPage() {
         ) : (
           <div className="space-y-4">
             {leaks.map((leak, i) => (
-              <Link key={leak.id} href={`/leaks/detail?id=${leak.id}`} className="block active:scale-[0.98] transition-transform">
+              <LinkNoPrefetch key={leak.id} href={`/leaks/detail?id=${leak.id}`} className="block active:scale-[0.98] transition-transform">
                 <motion.article initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}
                 className="glass-card p-6 hover:border-[#06B6D4]/20 transition-all cursor-pointer">
                 <div className="flex items-start justify-between mb-3">
@@ -89,7 +89,7 @@ export default function LeaksPage() {
                   <span>来源: {leak.source}</span>
                 </div>
               </motion.article>
-              </Link>
+              </LinkNoPrefetch>
             ))}
             {leaks.length === 0 && (
               <div className="text-center py-16 text-[#64748B]">暂无爆料</div>

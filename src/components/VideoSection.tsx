@@ -3,7 +3,7 @@
 import { supabase } from "@/lib/supabase/client";
 import { useCachedQuery } from "@/lib/data-cache";
 import { Play, Clock } from "lucide-react";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 
 export default function VideoSection() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -36,7 +36,7 @@ export default function VideoSection() {
             const href = bvid ? `https://www.bilibili.com/video/${bvid}` : `/articles/detail?id=${v.id}`;
             const isExternal = !!bvid;
             return (
-              <Link key={v.id} href={href} target={isExternal ? "_blank" : undefined} rel={isExternal ? "noopener noreferrer" : undefined} className="glass-card block p-4 group hover:border-[#E94560]/20 transition-all">
+              <LinkNoPrefetch key={v.id} href={href} target={isExternal ? "_blank" : undefined} rel={isExternal ? "noopener noreferrer" : undefined} className="glass-card block p-4 group hover:border-[#E94560]/20 transition-all">
                 <div className="w-full aspect-video rounded-lg bg-[#1E293B] mb-3 flex items-center justify-center border border-[rgba(30,41,59,0.4)] group-hover:border-[#E94560]/20 transition-all relative overflow-hidden">
                   <Play className="w-8 h-8 text-[#E94560] group-hover:scale-110 transition-transform" />
                   {bvid && <span className="absolute bottom-2 right-2 text-[10px] text-[#64748B] bg-[#0F172A]/80 px-2 py-0.5 rounded">{bvid}</span>}
@@ -47,7 +47,7 @@ export default function VideoSection() {
                 <p className="text-xs text-[#64748B] mt-2 flex items-center gap-1">
                   <Clock className="w-3 h-3" /> {new Date(v.created_at).toLocaleDateString("zh-CN")}
                 </p>
-              </Link>
+              </LinkNoPrefetch>
             );
           })}
         </div>

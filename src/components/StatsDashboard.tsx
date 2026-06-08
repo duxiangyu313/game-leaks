@@ -2,7 +2,7 @@
 
 import { supabase } from "@/lib/supabase/client";
 import { useCachedQuery } from "@/lib/data-cache";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { Gamepad2, Flame, Users, TrendingUp, Star, Crown } from "lucide-react";
 
 interface StatsData {
@@ -89,25 +89,25 @@ export default function StatsDashboard() {
           <div>
             <h3 className="text-sm font-semibold text-[#F1F5F9] mb-3 flex items-center gap-2"><Crown className="w-4 h-4 text-[#F59E0B]" />最受期待</h3>
             {topHype.map((g: any, i: number) => ( // eslint-disable-line @typescript-eslint/no-explicit-any
-              <Link key={g.id || g.title} href={`/games/detail?id=${g.id}`} className="flex items-center justify-between py-2 border-b border-[rgba(30,41,59,0.3)] last:border-0 hover:bg-[#1E293B]/30 transition-colors cursor-pointer">
+              <LinkNoPrefetch key={g.id || g.title} href={`/games/detail?id=${g.id}`} className="flex items-center justify-between py-2 border-b border-[rgba(30,41,59,0.3)] last:border-0 hover:bg-[#1E293B]/30 transition-colors cursor-pointer">
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-bold text-[#64748B] w-5">#{i + 1}</span>
                   <span className="text-sm text-[#F1F5F9] hover:text-[#06B6D4] transition-colors">{g.title}</span>
                 </div>
                 <span className="text-xs text-[#06B6D4] font-mono">{g.hype_score}%</span>
-              </Link>
+              </LinkNoPrefetch>
             ))}
           </div>
           <div>
             <h3 className="text-sm font-semibold text-[#F1F5F9] mb-3 flex items-center gap-2"><Star className="w-4 h-4 text-[#F59E0B] fill-[#F59E0B]" />评分最高</h3>
             {topRated.map((g: any, i: number) => ( // eslint-disable-line @typescript-eslint/no-explicit-any
-              <Link key={g.id || g.title} href={`/games/detail?id=${g.id}`} className="flex items-center justify-between py-2 border-b border-[rgba(30,41,59,0.3)] last:border-0 hover:bg-[#1E293B]/30 transition-colors cursor-pointer">
+              <LinkNoPrefetch key={g.id || g.title} href={`/games/detail?id=${g.id}`} className="flex items-center justify-between py-2 border-b border-[rgba(30,41,59,0.3)] last:border-0 hover:bg-[#1E293B]/30 transition-colors cursor-pointer">
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-bold text-[#64748B] w-5">#{i + 1}</span>
                   <span className="text-sm text-[#F1F5F9] hover:text-[#06B6D4] transition-colors">{g.title}</span>
                 </div>
                 <span className="text-xs text-[#F59E0B] font-mono">{g.rating}</span>
-              </Link>
+              </LinkNoPrefetch>
             ))}
           </div>
         </div>

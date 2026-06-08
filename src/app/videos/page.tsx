@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { supabase } from "@/lib/supabase/client";
 import { Play, Search, Clock } from "lucide-react";
 
@@ -40,7 +40,7 @@ export default function VideosPage() {
               const href = bvid ? `https://www.bilibili.com/video/${bvid}` : `/articles/detail?id=${v.id}`;
               const isExternal = !!bvid;
               return (
-                <Link key={v.id} href={href} target={isExternal ? "_blank" : undefined} rel={isExternal ? "noopener noreferrer" : undefined} className="glass-card block group hover:border-[#E94560]/20 transition-all">
+                <LinkNoPrefetch key={v.id} href={href} target={isExternal ? "_blank" : undefined} rel={isExternal ? "noopener noreferrer" : undefined} className="glass-card block group hover:border-[#E94560]/20 transition-all">
                   <div className="aspect-video rounded-xl bg-[#1E293B] mb-3 flex items-center justify-center border border-[rgba(30,41,59,0.4)] group-hover:border-[#E94560]/20 transition-all relative overflow-hidden">
                     <Play className="w-10 h-10 text-[#E94560] group-hover:scale-110 transition-transform" />
                     {bvMatch && <span className="absolute bottom-2 right-2 text-[10px] text-[#64748B] bg-[#0F172A]/80 px-2 py-0.5 rounded">{bvMatch[1]}</span>}
@@ -52,7 +52,7 @@ export default function VideosPage() {
                       {v.required_tier === "silver" ? "白银" : v.required_tier === "gold" ? "黄金" : "钻石"}可见
                     </span>
                   )}
-                </Link>
+                </LinkNoPrefetch>
               );
             })}
           </div>

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Crown, Check, Star, Shield, Gift, Users, Clock, Sparkles, ArrowRight } from "lucide-react";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { useStripeCheckout } from "@/hooks/useStripeCheckout";
 import { MEMBERSHIP_TIERS, type MembershipTier } from "@/lib/stripe-config";
 
@@ -135,12 +135,12 @@ export default function MemberPage() {
 
                 {/* CTA */}
                 {isFree ? (
-                  <Link
+                  <LinkNoPrefetch
                     href="/auth"
                     className="block w-full py-3 rounded-xl text-center font-semibold border border-[rgba(30,41,59,0.6)] text-[#94A3B8] hover:text-[#F1F5F9] hover:border-[#06B6D4]/20 transition-all"
                   >
                     免费注册
-                  </Link>
+                  </LinkNoPrefetch>
                 ) : (
                   <button
                     onClick={() => handleBuy(tier.key)}

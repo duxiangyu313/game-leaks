@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { supabase } from "@/lib/supabase/client";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 
@@ -26,7 +26,7 @@ export default function GamesPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div><h1 className="text-2xl font-bold text-[#F1F5F9]">游戏管理</h1><p className="text-sm text-[#64748B]">共 {games.length} 款</p></div>
-        <Link href="/admin/games/new" className="flex items-center gap-2 px-4 py-2.5 bg-[#06B6D4] text-white text-sm font-semibold rounded-xl"><Plus className="w-4 h-4"/> 添加游戏</Link>
+        <LinkNoPrefetch href="/admin/games/new" className="flex items-center gap-2 px-4 py-2.5 bg-[#06B6D4] text-white text-sm font-semibold rounded-xl"><Plus className="w-4 h-4"/> 添加游戏</LinkNoPrefetch>
       </div>
       {loading ? <div className="animate-pulse space-y-3">{[1,2,3].map(i=><div key={i} className="h-16 bg-[#1E293B]/30 rounded-xl"/>)}</div> : (
         <div className="glass-card overflow-hidden">
@@ -44,7 +44,7 @@ export default function GamesPage() {
                       {g.status==='released'?'已发售':g.status==='announced'?'已公布':'开发中'}</span>
                   </td>
                   <td className="p-3 text-right">
-                    <Link href={`/admin/games/edit?id=${g.id}`} className="p-1.5 rounded text-[#94A3B8] hover:text-[#06B6D4]"><Pencil className="w-3.5 h-3.5"/></Link>
+                    <LinkNoPrefetch href={`/admin/games/edit?id=${g.id}`} className="p-1.5 rounded text-[#94A3B8] hover:text-[#06B6D4]"><Pencil className="w-3.5 h-3.5"/></LinkNoPrefetch>
                     <button onClick={()=>handleDelete(g.id)} className="p-1.5 rounded text-[#94A3B8] hover:text-[#EF4444]"><Trash2 className="w-3.5 h-3.5"/></button>
                   </td>
                 </tr>

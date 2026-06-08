@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { supabase } from "@/lib/supabase/client";
 import { useCachedQuery } from "@/lib/data-cache";
 import { Flame } from "lucide-react";
@@ -54,7 +54,7 @@ export default function HotTopics() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {topics.map((t, i) => (
-          <Link key={`${t.type}-${t.id}`} href={t.type === "article" ? `/articles/detail?id=${t.id}` : t.type === "leak" ? `/leaks/detail?id=${t.id}` : `/games/detail?id=${t.game_id}`}
+          <LinkNoPrefetch key={`${t.type}-${t.id}`} href={t.type === "article" ? `/articles/detail?id=${t.id}` : t.type === "leak" ? `/leaks/detail?id=${t.id}` : `/games/detail?id=${t.game_id}`}
             className="glass-card p-4 flex items-center gap-4 group hover:border-[#06B6D4]/20 transition-all">
             <span className={`text-2xl font-black shrink-0 w-10 text-center ${i === 0 ? "text-[#F59E0B]" : i === 1 ? "text-[#F59E0B]/70" : i === 2 ? "text-[#D97706]" : "text-[#64748B]"}`}>{i + 1}</span>
             <div className="flex-1 min-w-0">
@@ -69,7 +69,7 @@ export default function HotTopics() {
             <div className="flex items-center gap-2 text-xs text-[#64748B] shrink-0">
               <span className="flex items-center gap-1"><Flame className="w-3 h-3 text-[#F59E0B]" />{Math.round(t.heat)}°</span>
             </div>
-          </Link>
+          </LinkNoPrefetch>
         ))}
       </div>
     </section>

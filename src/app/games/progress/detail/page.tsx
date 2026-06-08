@@ -2,7 +2,7 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { supabase } from "@/lib/supabase/client";
 import { ArrowLeft, Calendar, Users, Star, Shield, Clock, Loader2, Globe, Lock, Gamepad2 } from "lucide-react";
 import { getUserLevel, getVisibilityLabel, type MembershipLevel } from "@/lib/auth";
@@ -176,13 +176,13 @@ function DetailContent() {
         <div className="max-w-[1280px] mx-auto px-4 md:px-6 text-center py-20">
           <Shield className="w-16 h-16 text-[#334155] mx-auto mb-4" />
           <p className="text-[#64748B] text-lg">{error || "记录未找到"}</p>
-          <Link
+          <LinkNoPrefetch
             href="/games/progress"
             className="inline-flex items-center gap-2 mt-4 text-[#06B6D4] hover:text-[#22D3EE] transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             返回开发进度列表
-          </Link>
+          </LinkNoPrefetch>
         </div>
       </div>
     );
@@ -194,13 +194,13 @@ function DetailContent() {
     <div className="min-h-screen pt-20 pb-20">
       <div className="max-w-[1280px] mx-auto px-4 md:px-6">
         {/* 返回导航 */}
-        <Link
+        <LinkNoPrefetch
           href="/games/progress"
           className="inline-flex items-center gap-2 text-sm text-[#94A3B8] hover:text-[#06B6D4] transition-colors duration-200 mb-6"
         >
           <ArrowLeft className="w-4 h-4" />
           返回开发进度列表
-        </Link>
+        </LinkNoPrefetch>
 
         {/* ========== 顶部英雄区 ========== */}
         <div className="relative h-64 md:h-80 rounded-2xl overflow-hidden mb-8 bg-[#1E293B]">

@@ -538,6 +538,19 @@ body {
   50%      { transform: scale(1.05); text-shadow: 0 0 12px rgba(245,158,11,0.5); }
 }
 
+/* —— 粒子漂移（CyberParticles 纯 CSS 动画）—— */
+@keyframes particle-drift {
+  0%, 100% { transform: translate(0, 0); opacity: 0.2; }
+  50%      { transform: translate(calc(var(--drift-y, 0px) * 0.3), var(--drift-y, -30px)); opacity: 0.7; }
+}
+
+.animate-particle-drift {
+  animation-name: particle-drift;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  will-change: transform, opacity;
+}
+
 /* —— 光标闪烁 —— */
 @keyframes cursor-blink {
   0%, 100% { opacity: 1; }

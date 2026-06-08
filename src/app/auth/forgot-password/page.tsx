@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { supabase } from "@/lib/supabase/client";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { Mail, ArrowLeft, Loader2, CheckCircle2 } from "lucide-react";
 
 /**
@@ -193,7 +193,7 @@ export default function ForgotPasswordPage() {
                 重新发送
               </button>
 
-              <Link
+              <LinkNoPrefetch
                 href="/auth"
                 style={{
                   display: "inline-flex",
@@ -207,7 +207,7 @@ export default function ForgotPasswordPage() {
               >
                 <ArrowLeft style={{ width: 16, height: 16 }} />
                 返回登录
-              </Link>
+              </LinkNoPrefetch>
             </div>
           ) : (
             /* ====== 邮箱输入表单 ====== */
@@ -300,7 +300,7 @@ export default function ForgotPasswordPage() {
 
               {/* 返回登录 */}
               <div style={{ textAlign: "center", marginTop: 24 }}>
-                <Link
+                <LinkNoPrefetch
                   href="/auth"
                   style={{
                     display: "inline-flex",
@@ -314,7 +314,7 @@ export default function ForgotPasswordPage() {
                 >
                   <ArrowLeft style={{ width: 16, height: 16 }} />
                   返回登录
-                </Link>
+                </LinkNoPrefetch>
               </div>
             </form>
           )}

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { Crown, Check, Zap, Shield, MessageCircle, Gift, ArrowRight } from "lucide-react";
 
 const BENEFITS = [
@@ -45,14 +45,14 @@ export default function MemberPromo() {
                 </li>
               ))}
             </ul>
-            <Link
+            <LinkNoPrefetch
               href="/member"
               className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#F59E0B] to-[#D97706] text-white font-semibold rounded-xl hover:shadow-[0_0_30px_rgba(245,158,11,0.25)] transition-all"
             >
               <Crown className="w-4 h-4" />
               立即加入 · <span className="cyber-price-pulse inline-block">¥199</span>/年起
               <ArrowRight className="w-4 h-4" />
-            </Link>
+            </LinkNoPrefetch>
           </div>
 
           {/* Right: Visual placeholder */}

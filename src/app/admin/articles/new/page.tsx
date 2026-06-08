@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
 import { ArrowLeft, Save, Upload, Loader2 } from "lucide-react";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { uploadToR2 } from "@/lib/cloudflare/r2";
 import { generateTemplateMarkdown, getDefaultTemplateType } from "@/lib/markdown";
 import { generateExcerpt } from "@/lib/article-utils";
@@ -107,9 +107,9 @@ export default function NewArticlePage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <Link href="/admin/articles" className="text-[#64748B] hover:text-[#F1F5F9]">
+          <LinkNoPrefetch href="/admin/articles" className="text-[#64748B] hover:text-[#F1F5F9]">
             <ArrowLeft className="w-5 h-5" />
-          </Link>
+          </LinkNoPrefetch>
           <h1 className="text-2xl font-bold text-[#F1F5F9]">新建文章</h1>
         </div>
         <div className="flex gap-2">

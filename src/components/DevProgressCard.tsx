@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { Calendar, Users, Star, Clock } from "lucide-react";
 import type { GameProgress } from "@/types";
 
@@ -74,7 +74,7 @@ export default function DevProgressCard({ game, compact }: DevProgressCardProps)
   const isNew = isUpdatedThisWeek(game.last_updated);
 
   return (
-    <Link
+    <LinkNoPrefetch
       href={`/games/progress/detail?id=${game.id}`}
       className="glass-card block group h-full hover:-translate-y-1 transition-all duration-200 overflow-hidden"
     >
@@ -157,6 +157,6 @@ export default function DevProgressCard({ game, compact }: DevProgressCardProps)
           </div>
         )}
       </div>
-    </Link>
+    </LinkNoPrefetch>
   );
 }

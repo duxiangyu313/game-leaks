@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { Flame, Eye, Clock, ArrowRight } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import { useCachedQuery } from "@/lib/data-cache";
@@ -52,11 +52,11 @@ export default function LatestLeaks() {
           <h2 className="text-2xl font-bold text-[#F1F5F9]">最新爆料</h2>
           <span className="px-2 py-0.5 text-xs font-semibold bg-[#F59E0B]/15 text-[#F59E0B] rounded-full animate-pulse">LIVE</span>
         </div>
-        <Link href="/leaks" className="flex items-center gap-1.5 text-sm text-[#06B6D4] hover:text-[#22D3EE] transition-colors">全部爆料 <ArrowRight className="w-4 h-4" /></Link>
+        <LinkNoPrefetch href="/leaks" className="flex items-center gap-1.5 text-sm text-[#06B6D4] hover:text-[#22D3EE] transition-colors">全部爆料 <ArrowRight className="w-4 h-4" /></LinkNoPrefetch>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {leaks.map((leak, i) => (
-          <Link key={leak.id} href={`/leaks/detail?id=${leak.id}`} className="block active:scale-[0.98] transition-transform">
+          <LinkNoPrefetch key={leak.id} href={`/leaks/detail?id=${leak.id}`} className="block active:scale-[0.98] transition-transform">
             <motion.article initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }} className="glass-card p-6 cursor-pointer group">
               <div className="flex items-start justify-between mb-3">
                 <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${leak.credibility === "confirmed" ? "bg-[#10B981]/15 text-[#10B981] border border-[#10B981]/20" : leak.credibility === "likely" ? "bg-[#06B6D4]/15 text-[#06B6D4] border border-[#06B6D4]/20" : "bg-[#F59E0B]/15 text-[#F59E0B] border border-[#F59E0B]/20"}`}>
@@ -72,7 +72,7 @@ export default function LatestLeaks() {
                 <span>💬 {leak.commentCount || 0} 评论</span>
               </div>
             </motion.article>
-          </Link>
+          </LinkNoPrefetch>
         ))}
       </div>
     </section>

@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { usePathname } from "next/navigation";
 import { useAdmin } from "./AdminAuth";
 import {
@@ -41,7 +41,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {NAV_ITEMS.map((item) => {
           const active = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href));
           return (
-            <Link
+            <LinkNoPrefetch
               key={item.href}
               href={item.href}
               prefetch={false}
@@ -54,7 +54,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             >
               <item.icon className="w-4.5 h-4.5 shrink-0" />
               {!collapsed && <span>{item.label}</span>}
-            </Link>
+            </LinkNoPrefetch>
           );
         })}
       </nav>

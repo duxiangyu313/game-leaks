@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase/client";
 import { Gift, Crown, Loader2 } from "lucide-react";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 
 export default function ClaimPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -84,7 +84,7 @@ export default function ClaimPage() {
         ) : (
           <div className="glass-card p-6 mb-6 text-center">
             <p className="text-[#94A3B8]">激活码领取仅限钻石会员</p>
-            <Link href="/member" className="inline-block mt-3 text-[#06B6D4] hover:text-[#22D3EE] font-medium">升级会员 →</Link>
+            <LinkNoPrefetch href="/member" className="inline-block mt-3 text-[#06B6D4] hover:text-[#22D3EE] font-medium">升级会员 →</LinkNoPrefetch>
           </div>
         )}
 

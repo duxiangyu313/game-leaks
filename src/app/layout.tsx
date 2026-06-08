@@ -20,6 +20,13 @@ export const metadata: Metadata = {
     siteName: "国游爆料",
     locale: "zh_CN",
     type: "website",
+    images: [{ url: "https://news.guoyouwenduji.cc/og-image.png", width: 1200, height: 630, alt: "国游爆料" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "国游爆料 · 国产3A游戏资讯平台",
+    description: "追踪国产3A大作最新动态。深度解析、独家爆料、游戏评测。",
+    images: ["https://news.guoyouwenduji.cc/og-image.png"],
   },
 };
 

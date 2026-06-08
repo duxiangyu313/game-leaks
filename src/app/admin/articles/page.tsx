@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { supabase } from "@/lib/supabase/client";
 import { Plus, Pencil, Trash2, Search } from "lucide-react";
 
@@ -48,9 +48,9 @@ export default function ArticlesPage() {
           <h1 className="text-2xl font-bold text-[#F1F5F9]">文章管理</h1>
           <p className="text-sm text-[#64748B] mt-1">共 {articles.length} 篇</p>
         </div>
-        <Link href="/admin/articles/new" className="flex items-center gap-2 px-4 py-2.5 bg-[#06B6D4] text-white text-sm font-semibold rounded-xl hover:bg-[#0891B2] transition-all">
+        <LinkNoPrefetch href="/admin/articles/new" className="flex items-center gap-2 px-4 py-2.5 bg-[#06B6D4] text-white text-sm font-semibold rounded-xl hover:bg-[#0891B2] transition-all">
           <Plus className="w-4 h-4" /> 新建文章
-        </Link>
+        </LinkNoPrefetch>
       </div>
 
       <div className="flex gap-3 mb-4">
@@ -86,7 +86,7 @@ export default function ArticlesPage() {
                   <td className="p-3 text-[#64748B] hidden md:table-cell">{a.view_count}</td>
                   <td className="p-3 text-right">
                     <div className="flex items-center justify-end gap-1">
-                      <Link href={`/admin/articles/edit?id=${a.id}`} className="p-1.5 rounded text-[#94A3B8] hover:text-[#06B6D4] hover:bg-[#06B6D4]/10"><Pencil className="w-3.5 h-3.5" /></Link>
+                      <LinkNoPrefetch href={`/admin/articles/edit?id=${a.id}`} className="p-1.5 rounded text-[#94A3B8] hover:text-[#06B6D4] hover:bg-[#06B6D4]/10"><Pencil className="w-3.5 h-3.5" /></LinkNoPrefetch>
                       <button onClick={() => handleDelete(a.id)} className="p-1.5 rounded text-[#94A3B8] hover:text-[#EF4444] hover:bg-[#EF4444]/10"><Trash2 className="w-3.5 h-3.5" /></button>
                     </div>
                   </td>

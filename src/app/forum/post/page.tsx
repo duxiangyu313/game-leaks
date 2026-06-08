@@ -2,7 +2,7 @@
 
 import { Suspense, useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { ArrowLeft, Clock, Eye, MessageSquare, User, ThumbsUp, Share2, Send, Loader2 } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 
@@ -54,7 +54,7 @@ function PostContent() {
   return (
     <div className="pt-20 pb-20">
       <div className="max-w-3xl mx-auto px-4 md:px-6">
-        <Link href="/forum" className="inline-flex items-center gap-2 text-sm text-[#64748B] hover:text-[#F1F5F9] mb-6"><ArrowLeft className="w-4 h-4" />返回论坛</Link>
+        <LinkNoPrefetch href="/forum" className="inline-flex items-center gap-2 text-sm text-[#64748B] hover:text-[#F1F5F9] mb-6"><ArrowLeft className="w-4 h-4" />返回论坛</LinkNoPrefetch>
         <div className="flex items-center gap-2 mb-4 text-xs text-[#64748B]">
           <span className="flex items-center gap-1"><User className="w-3 h-3" />{post.author_name}</span>
           <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{new Date(post.created_at).toLocaleString("zh-CN")}</span>

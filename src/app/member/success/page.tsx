@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { CheckCircle, ArrowRight } from "lucide-react";
 
 export default function SuccessPage() {
@@ -37,18 +37,18 @@ export default function SuccessPage() {
           transition={{ delay: 0.35 }}
           className="flex flex-col sm:flex-row gap-3 justify-center"
         >
-          <Link
+          <LinkNoPrefetch
             href="/leaks"
             className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#06B6D4] to-[#0891B2] text-white font-semibold rounded-xl hover:shadow-[0_0_20px_rgba(6,182,212,0.25)] transition-all"
           >
             查看独家爆料 <ArrowRight className="w-4 h-4" />
-          </Link>
-          <Link
+          </LinkNoPrefetch>
+          <LinkNoPrefetch
             href="/account"
             className="inline-flex items-center gap-2 px-6 py-3 border border-[rgba(30,41,59,0.6)] text-[#94A3B8] hover:text-[#F1F5F9] rounded-xl font-semibold transition-all"
           >
             管理会员
-          </Link>
+          </LinkNoPrefetch>
         </motion.div>
       </div>
     </div>

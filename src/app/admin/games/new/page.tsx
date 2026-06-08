@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
 import { ArrowLeft, Save, Upload, Loader2 } from "lucide-react";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { uploadToR2 } from "@/lib/cloudflare/r2";
 
 export default function NewGamePage() {
@@ -45,7 +45,7 @@ export default function NewGamePage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <Link href="/admin/games" className="text-[#64748B] hover:text-[#F1F5F9]"><ArrowLeft className="w-5 h-5"/></Link>
+          <LinkNoPrefetch href="/admin/games" className="text-[#64748B] hover:text-[#F1F5F9]"><ArrowLeft className="w-5 h-5"/></LinkNoPrefetch>
           <h1 className="text-2xl font-bold text-[#F1F5F9]">添加游戏</h1>
         </div>
         <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 px-4 py-2 bg-[#06B6D4] text-white text-sm font-semibold rounded-xl disabled:opacity-50">

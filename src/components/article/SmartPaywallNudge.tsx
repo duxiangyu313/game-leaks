@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Crown, X } from "lucide-react";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import type { MembershipTier } from "@/types";
 
 interface Props {
@@ -98,12 +98,12 @@ export default function SmartPaywallNudge({ membershipLevel, triggerAtPct = 50 }
                   </div>
                 </div>
                 <div className="flex items-center gap-3 shrink-0">
-                  <Link
+                  <LinkNoPrefetch
                     href="/member"
                     className="px-5 py-2.5 bg-gradient-to-r from-[#F59E0B] to-[#D97706] text-white text-sm font-semibold rounded-xl hover:shadow-[0_0_20px_rgba(245,158,11,0.25)] transition-all whitespace-nowrap"
                   >
                     仅 {getUpgradePrice()} · 立即升级
-                  </Link>
+                  </LinkNoPrefetch>
                   <button
                     onClick={handleDismiss}
                     className="p-2 text-[#64748B] hover:text-[#94A3B8] transition-colors"

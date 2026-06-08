@@ -4,7 +4,7 @@ import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
 import { ArrowLeft, Save, Loader2 } from "lucide-react";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 
 function EditForm() {
   const router = useRouter(); const params = useSearchParams(); const id = params.get("id");
@@ -33,7 +33,7 @@ function EditForm() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3"><Link href="/admin/leaks" className="text-[#64748B] hover:text-[#F1F5F9]"><ArrowLeft className="w-5 h-5"/></Link><h1 className="text-2xl font-bold text-[#F1F5F9]">编辑爆料</h1></div>
+        <div className="flex items-center gap-3"><LinkNoPrefetch href="/admin/leaks" className="text-[#64748B] hover:text-[#F1F5F9]"><ArrowLeft className="w-5 h-5"/></LinkNoPrefetch><h1 className="text-2xl font-bold text-[#F1F5F9]">编辑爆料</h1></div>
         <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 px-4 py-2 bg-[#F59E0B] text-white text-sm font-semibold rounded-xl disabled:opacity-50">{saving?<Loader2 className="w-4 h-4 animate-spin"/>:<Save className="w-4 h-4"/>} 保存</button>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

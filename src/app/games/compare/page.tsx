@@ -4,7 +4,7 @@ import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
 import { ArrowLeft, GitCompare } from "lucide-react";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 
 function CompareContent() {
   const params = useSearchParams();
@@ -45,7 +45,7 @@ function CompareContent() {
   return (
     <div className="pt-20 pb-20">
       <div className="max-w-5xl mx-auto px-4 md:px-6">
-        <Link href="/games" className="inline-flex items-center gap-2 text-sm text-[#64748B] hover:text-[#F1F5F9] mb-6"><ArrowLeft className="w-4 h-4" /> 返回游戏库</Link>
+        <LinkNoPrefetch href="/games" className="inline-flex items-center gap-2 text-sm text-[#64748B] hover:text-[#F1F5F9] mb-6"><ArrowLeft className="w-4 h-4" /> 返回游戏库</LinkNoPrefetch>
         <h1 className="text-3xl font-black text-[#F1F5F9] mb-2 flex items-center gap-3"><GitCompare className="w-8 h-8 text-[#06B6D4]" />游戏对比</h1>
         <p className="text-[#94A3B8] mb-8">共 {games.length} 款游戏</p>
 

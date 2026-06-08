@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { TrendingUp, Star } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import { useCachedQuery } from "@/lib/data-cache";
@@ -50,12 +50,12 @@ export default function HotGames() {
           <TrendingUp className="w-6 h-6 text-[#06B6D4]" />
           <h2 className="text-2xl font-bold text-[#F1F5F9]">热门游戏</h2>
         </div>
-        <Link href="/games" className="text-sm text-[#06B6D4] hover:text-[#22D3EE]">全部游戏 →</Link>
+        <LinkNoPrefetch href="/games" className="text-sm text-[#06B6D4] hover:text-[#22D3EE]">全部游戏 →</LinkNoPrefetch>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {games.map((game, i) => (
           <motion.div key={game.id} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}>
-            <Link href={`/games/detail?id=${game.id}`} className="glass-card block p-4 group h-full">
+            <LinkNoPrefetch href={`/games/detail?id=${game.id}`} className="glass-card block p-4 group h-full">
               <div className="flex items-center justify-between mb-3">
                 <span className={`text-lg font-black ${game.rank === 1 ? "text-[#F59E0B]" : game.rank === 2 ? "text-[#94A3B8]" : game.rank === 3 ? "text-[#D97706]" : "text-[#64748B]"}`}>#{game.rank}</span>
                 {game.rating && <span className="flex items-center gap-1 text-xs text-[#F59E0B]"><Star className="w-3 h-3 fill-[#F59E0B]" />{game.rating}</span>}
@@ -72,7 +72,7 @@ export default function HotGames() {
                 </div>
                 <span className="text-[10px] text-[#64748B]">{game.hypeScore}</span>
               </div>
-            </Link>
+            </LinkNoPrefetch>
           </motion.div>
         ))}
       </div>

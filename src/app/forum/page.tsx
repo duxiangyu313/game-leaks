@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { MessageSquare, Users, TrendingUp, Plus, Gamepad2, Flame, Coffee } from "lucide-react";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import ForumCardsGrid from "@/components/ForumCardsGrid";
 
 export const metadata: Metadata = {
@@ -27,9 +27,9 @@ export default function ForumPage() {
             </div>
             <p className="text-[#94A3B8]">国产3A游戏玩家社区</p>
           </div>
-          <Link href="/forum/new" className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#06B6D4] text-white font-medium rounded-xl hover:bg-[#0891B2] transition-colors">
+          <LinkNoPrefetch href="/forum/new" className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#06B6D4] text-white font-medium rounded-xl hover:bg-[#0891B2] transition-colors">
             <Plus className="w-4 h-4" /> 发布新帖
-          </Link>
+          </LinkNoPrefetch>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
@@ -51,7 +51,7 @@ export default function ForumPage() {
         <ForumCardsGrid>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {CATEGORIES.map((cat) => (
-            <Link key={cat.slug} href={`/forum/${cat.slug}`}
+            <LinkNoPrefetch key={cat.slug} href={`/forum/${cat.slug}`}
               className={`glass-card forum-card forum-card-enter forum-card-scroll-glow p-6 bg-gradient-to-br ${cat.bg} hover:bg-[#1E293B]/60 hover:shadow-[0_8px_32px_rgba(0,0,0,0.3)] hover:border-[#06B6D4]/20`}>
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-xl bg-[#1E293B]/60 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-200">
@@ -66,7 +66,7 @@ export default function ForumPage() {
                   </div>
                 </div>
               </div>
-            </Link>
+            </LinkNoPrefetch>
           ))}
         </div>
         </ForumCardsGrid>

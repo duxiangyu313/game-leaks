@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { motion } from "framer-motion";
 import { BookOpen, PenLine, Users, TrendingUp, Clock, Eye, Flame, Newspaper } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
@@ -129,7 +129,7 @@ export default function AnalysisPage() {
                     isPaid ? "article-card-paid" : "hover:border-[#06B6D4]/20"
                   }`}
                 >
-                  <Link href={`/articles/detail?id=${a.id}`} className="flex flex-col md:flex-row">
+                  <LinkNoPrefetch href={`/articles/detail?id=${a.id}`} className="flex flex-col md:flex-row">
                     {/* 封面图 */}
                     {a.cover_image && (
                       <div className="md:w-48 shrink-0 h-36 md:h-auto overflow-hidden bg-[#1E293B]/40">
@@ -199,7 +199,7 @@ export default function AnalysisPage() {
                         </div>
                       )}
                     </div>
-                  </Link>
+                  </LinkNoPrefetch>
                 </motion.article>
               );
             })}

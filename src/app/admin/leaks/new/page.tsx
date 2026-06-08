@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
 import { ArrowLeft, Save, Loader2 } from "lucide-react";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 
 export default function NewLeakPage() {
   const router = useRouter();
@@ -36,7 +36,7 @@ export default function NewLeakPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <Link href="/admin/leaks" className="text-[#64748B] hover:text-[#F1F5F9]"><ArrowLeft className="w-5 h-5" /></Link>
+          <LinkNoPrefetch href="/admin/leaks" className="text-[#64748B] hover:text-[#F1F5F9]"><ArrowLeft className="w-5 h-5" /></LinkNoPrefetch>
           <h1 className="text-2xl font-bold text-[#F1F5F9]">新建爆料</h1>
         </div>
         <div className="flex gap-2">

@@ -2,7 +2,7 @@
 
 import { Suspense, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { supabase } from "@/lib/supabase/client";
 import { ArrowLeft, Save, Loader2, Check } from "lucide-react";
 
@@ -94,9 +94,9 @@ function WikiEditContent() {
     <div className="pt-20 pb-20">
       <div className="max-w-3xl mx-auto px-4 md:px-6">
         <div className="flex items-center gap-3 mb-6">
-          <Link href={`/games/detail?id=${id}`} className="text-[#64748B] hover:text-[#F1F5F9]">
+          <LinkNoPrefetch href={`/games/detail?id=${id}`} className="text-[#64748B] hover:text-[#F1F5F9]">
             <ArrowLeft className="w-5 h-5" />
-          </Link>
+          </LinkNoPrefetch>
           <h1 className="text-2xl font-bold text-[#F1F5F9]">编辑百科 · {game.title}</h1>
         </div>
 

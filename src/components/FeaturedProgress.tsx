@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { TrendingUp } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import { useCachedQuery } from "@/lib/data-cache";
@@ -91,13 +91,13 @@ export default function FeaturedProgress() {
             </p>
           </div>
         </div>
-        <Link
+        <LinkNoPrefetch
           href="/games/progress"
           className="flex items-center gap-1 text-sm text-[#06B6D4] hover:text-[#22D3EE] transition-colors duration-200 group"
         >
           查看全部
           <span className="group-hover:translate-x-0.5 transition-transform duration-200">→</span>
-        </Link>
+        </LinkNoPrefetch>
       </div>
 
       {/* 加载态 */}

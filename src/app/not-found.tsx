@@ -1,4 +1,4 @@
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 
 export default function NotFound() {
   return (
@@ -10,12 +10,12 @@ export default function NotFound() {
           你访问的页面不存在或已被移除。可能是链接过期，或者地址输入有误。
         </p>
         <div className="flex items-center justify-center gap-4">
-          <Link href="/" className="px-6 py-2.5 bg-[#06B6D4] text-white text-sm font-medium rounded-xl hover:bg-[#0891B2] transition-all">
+          <LinkNoPrefetch href="/" className="px-6 py-2.5 bg-[#06B6D4] text-white text-sm font-medium rounded-xl hover:bg-[#0891B2] transition-all">
             返回首页
-          </Link>
-          <Link href="/games" className="px-6 py-2.5 bg-[#1E293B] text-[#F1F5F9] text-sm font-medium rounded-xl hover:bg-[#1E293B]/80 transition-all">
+          </LinkNoPrefetch>
+          <LinkNoPrefetch href="/games" className="px-6 py-2.5 bg-[#1E293B] text-[#F1F5F9] text-sm font-medium rounded-xl hover:bg-[#1E293B]/80 transition-all">
             浏览游戏库
-          </Link>
+          </LinkNoPrefetch>
         </div>
       </div>
     </div>

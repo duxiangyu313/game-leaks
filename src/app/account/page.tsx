@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { User, Crown, Clock, CreditCard, Settings, LogOut, Shield, AlertTriangle } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import { useStripeCheckout } from "@/hooks/useStripeCheckout";
@@ -59,12 +59,12 @@ export default function AccountPage() {
           <User className="w-16 h-16 text-[#64748B] mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-[#F1F5F9] mb-3">请先登录</h1>
           <p className="text-[#94A3B8] mb-6">登录后可查看和管理你的会员信息</p>
-          <Link
+          <LinkNoPrefetch
             href="/auth"
             className="inline-flex px-6 py-3 bg-gradient-to-r from-[#06B6D4] to-[#0891B2] text-white font-semibold rounded-xl"
           >
             去登录
-          </Link>
+          </LinkNoPrefetch>
         </div>
       </div>
     );
@@ -137,12 +137,12 @@ export default function AccountPage() {
                 </button>
               )}
               {profile.membership === "free" && (
-                <Link
+                <LinkNoPrefetch
                   href="/member"
                   className="px-4 py-2 text-sm font-medium bg-gradient-to-r from-[#F59E0B] to-[#D97706] text-white rounded-lg"
                 >
                   升级会员
-                </Link>
+                </LinkNoPrefetch>
               )}
             </div>
           </div>

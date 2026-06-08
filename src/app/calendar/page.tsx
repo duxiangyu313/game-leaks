@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { supabase } from "@/lib/supabase/client";
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Clock } from "lucide-react";
 
@@ -62,7 +62,7 @@ export default function CalendarPage() {
         ) : (
           <div className="space-y-3">
             {filtered.map(e => (
-              <Link key={e.id} href={e.game_id ? `/games/detail?id=${e.game_id}` : "#"} className="glass-card p-4 flex items-center gap-4 group hover:border-[#06B6D4]/20 transition-all">
+              <LinkNoPrefetch key={e.id} href={e.game_id ? `/games/detail?id=${e.game_id}` : "#"} className="glass-card p-4 flex items-center gap-4 group hover:border-[#06B6D4]/20 transition-all">
                 <div className="text-center shrink-0 w-16">
                   <div className="text-2xl font-black text-[#F1F5F9]">{new Date(e.event_date).getDate()}</div>
                   <div className="text-xs text-[#64748B]">{new Date(e.event_date).toLocaleDateString("zh-CN", { weekday: "short" })}</div>
@@ -77,7 +77,7 @@ export default function CalendarPage() {
                   {e.description && <p className="text-xs text-[#64748B] mt-1">{e.description}</p>}
                 </div>
                 <Clock className="w-4 h-4 text-[#64748B] shrink-0" />
-              </Link>
+              </LinkNoPrefetch>
             ))}
           </div>
         )}

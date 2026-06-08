@@ -2,7 +2,7 @@
 
 import { supabase } from "@/lib/supabase/client";
 import { useCachedQuery } from "@/lib/data-cache";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { MessageSquare, Flame, Clock } from "lucide-react";
 
 export default function HotDiscussions() {
@@ -36,12 +36,12 @@ export default function HotDiscussions() {
             <h2 className="text-2xl font-bold text-[#F1F5F9]">玩家热议</h2>
             <span className="px-2 py-0.5 text-xs font-semibold bg-[#E94560]/15 text-[#E94560] rounded-full animate-pulse">HOT</span>
           </div>
-          <Link href="/forum" className="text-sm text-[#06B6D4] hover:text-[#22D3EE] transition-colors">进入论坛 →</Link>
+          <LinkNoPrefetch href="/forum" className="text-sm text-[#06B6D4] hover:text-[#22D3EE] transition-colors">进入论坛 →</LinkNoPrefetch>
         </div>
 
         <div className="space-y-2">
           {topics.map((t: any, i: number) => ( // eslint-disable-line @typescript-eslint/no-explicit-any
-            <Link
+            <LinkNoPrefetch
               key={t.id}
               href={`/forum/post?id=${t.id}`}
               className="glass-card p-4 flex items-center gap-4 group hover:border-[#E94560]/15 transition-all"
@@ -72,7 +72,7 @@ export default function HotDiscussions() {
                   {t.view_count?.toLocaleString()} 浏览
                 </span>
               </div>
-            </Link>
+            </LinkNoPrefetch>
           ))}
         </div>
       </div>

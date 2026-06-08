@@ -2,7 +2,7 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { motion } from "framer-motion";
 import { ArrowLeft, Eye, Clock, Shield, AlertTriangle } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
@@ -56,7 +56,7 @@ function LeakDetailContent() {
         <div className="max-w-lg mx-auto px-4 text-center">
           <AlertTriangle className="w-16 h-16 text-[#F59E0B] mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-[#F1F5F9] mb-3">未找到此爆料</h1>
-          <Link href="/leaks" className="text-[#06B6D4] hover:underline">返回爆料列表</Link>
+          <LinkNoPrefetch href="/leaks" className="text-[#06B6D4] hover:underline">返回爆料列表</LinkNoPrefetch>
         </div>
       </div>
     );
@@ -81,7 +81,7 @@ function LeakDetailContent() {
         <div className="max-w-lg mx-auto px-4 text-center">
           <AlertTriangle className="w-16 h-16 text-[#F59E0B] mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-[#F1F5F9] mb-3">未找到此爆料</h1>
-          <Link href="/leaks" className="text-[#06B6D4] hover:underline">返回爆料列表</Link>
+          <LinkNoPrefetch href="/leaks" className="text-[#06B6D4] hover:underline">返回爆料列表</LinkNoPrefetch>
         </div>
       </div>
     );
@@ -90,9 +90,9 @@ function LeakDetailContent() {
   return (
     <div className="pt-24 pb-20">
       <div className="max-w-3xl mx-auto px-4">
-        <Link href="/leaks" className="inline-flex items-center gap-2 text-sm text-[#94A3B8] hover:text-[#F1F5F9] mb-6 transition-colors">
+        <LinkNoPrefetch href="/leaks" className="inline-flex items-center gap-2 text-sm text-[#94A3B8] hover:text-[#F1F5F9] mb-6 transition-colors">
           <ArrowLeft className="w-4 h-4" /> 返回爆料列表
-        </Link>
+        </LinkNoPrefetch>
 
         <motion.article initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
           <div className="flex items-center gap-3 mb-4">
@@ -112,7 +112,7 @@ function LeakDetailContent() {
 
           <div className="flex flex-wrap items-center gap-4 text-sm text-[#64748B] mb-8 pb-8 border-b border-[#1E293B]/40">
             {leak.gameName && (
-              <Link href={`/games/detail?id=${leak.gameId}`} className="text-[#06B6D4] hover:underline font-medium">{leak.gameName}</Link>
+              <LinkNoPrefetch href={`/games/detail?id=${leak.gameId}`} className="text-[#06B6D4] hover:underline font-medium">{leak.gameName}</LinkNoPrefetch>
             )}
             <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> {formatDate(leak.publishedAt)}</span>
             <span className="flex items-center gap-1"><Eye className="w-4 h-4" /> {leak.viewCount?.toLocaleString()} 阅读</span>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { supabase } from "@/lib/supabase/client";
 import { Plus, Pencil, Trash2, Search } from "lucide-react";
 
@@ -27,9 +27,9 @@ export default function LeaksPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div><h1 className="text-2xl font-bold text-[#F1F5F9]">爆料管理</h1><p className="text-sm text-[#64748B]">共 {leaks.length} 条</p></div>
-        <Link href="/admin/leaks/new" className="flex items-center gap-2 px-4 py-2.5 bg-[#06B6D4] text-white text-sm font-semibold rounded-xl hover:bg-[#0891B2]">
+        <LinkNoPrefetch href="/admin/leaks/new" className="flex items-center gap-2 px-4 py-2.5 bg-[#06B6D4] text-white text-sm font-semibold rounded-xl hover:bg-[#0891B2]">
           <Plus className="w-4 h-4" /> 新建爆料
-        </Link>
+        </LinkNoPrefetch>
       </div>
       <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#1E293B]/40 border border-[rgba(30,41,59,0.6)] mb-4">
         <Search className="w-4 h-4 text-[#64748B]" />
@@ -56,7 +56,7 @@ export default function LeaksPage() {
                   </td>
                   <td className="p-3 text-[#94A3B8] hidden md:table-cell">{l.game_name||'-'}</td>
                   <td className="p-3 text-right">
-                    <Link href={`/admin/leaks/edit?id=${l.id}`} className="p-1.5 rounded text-[#94A3B8] hover:text-[#06B6D4]"><Pencil className="w-3.5 h-3.5"/></Link>
+                    <LinkNoPrefetch href={`/admin/leaks/edit?id=${l.id}`} className="p-1.5 rounded text-[#94A3B8] hover:text-[#06B6D4]"><Pencil className="w-3.5 h-3.5"/></LinkNoPrefetch>
                     <button onClick={()=>handleDelete(l.id)} className="p-1.5 rounded text-[#94A3B8] hover:text-[#EF4444]"><Trash2 className="w-3.5 h-3.5"/></button>
                   </td>
                 </tr>

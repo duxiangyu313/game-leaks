@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { supabase } from "@/lib/supabase/client";
 import { Clock, Lock } from "lucide-react";
 import type { Article } from "@/types";
@@ -59,7 +59,7 @@ export default function RelatedArticles({ currentArticleId, category, limit = 3 
           const isPaid = (a as any).required_tier !== "free";
           const readTime = calculateReadingTime(a.content || "");
           return (
-            <Link
+            <LinkNoPrefetch
               key={a.id}
               href={`/articles/detail?id=${a.id}`}
               className={`glass-card p-4 group transition-all ${isPaid ? "article-card-paid" : ""}`}
@@ -96,7 +96,7 @@ export default function RelatedArticles({ currentArticleId, category, limit = 3 
                 <Clock className="w-3 h-3" />
                 {readTime} 分钟阅读
               </span>
-            </Link>
+            </LinkNoPrefetch>
           );
         })}
       </div>

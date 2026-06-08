@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Send, Loader2 } from "lucide-react";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { supabase } from "@/lib/supabase/client";
 
 const CATEGORIES = [
@@ -50,9 +50,9 @@ export default function NewPostPage() {
     <div className="pt-20 pb-20">
       <div className="max-w-2xl mx-auto px-4 md:px-6">
         <div className="flex items-center gap-3 mb-6">
-          <Link href="/forum" className="text-[#64748B] hover:text-[#F1F5F9]">
+          <LinkNoPrefetch href="/forum" className="text-[#64748B] hover:text-[#F1F5F9]">
             <ArrowLeft className="w-5 h-5" />
-          </Link>
+          </LinkNoPrefetch>
           <h1 className="text-2xl font-bold text-[#F1F5F9]">发布新帖</h1>
         </div>
 

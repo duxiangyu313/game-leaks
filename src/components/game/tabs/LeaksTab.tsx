@@ -1,4 +1,4 @@
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 
 interface LeaksTabProps {
   leaks: any[];
@@ -22,7 +22,7 @@ export default function LeaksTab({ leaks }: LeaksTabProps) {
   return (
     <div className="space-y-4">
       {leaks.map(l => (
-        <Link key={l.id} href={`/leaks/detail?id=${l.id}`} className="block active:scale-[0.98] transition-transform">
+        <LinkNoPrefetch key={l.id} href={`/leaks/detail?id=${l.id}`} className="block active:scale-[0.98] transition-transform">
           <div className="glass-card p-5 cursor-pointer hover:border-[#06B6D4]/20 transition-all">
             <div className="flex items-center gap-2 mb-2">
               <span className={`text-xs px-2 py-0.5 rounded-full ${credibilityColor(l.credibility)}`}>
@@ -33,7 +33,7 @@ export default function LeaksTab({ leaks }: LeaksTabProps) {
             <h4 className="font-bold text-[#F1F5F9] mb-1">{l.title}</h4>
             <p className="text-sm text-[#94A3B8]">{l.summary}</p>
           </div>
-        </Link>
+        </LinkNoPrefetch>
       ))}
     </div>
   );

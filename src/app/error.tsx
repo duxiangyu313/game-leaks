@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 
 interface ErrorPageProps {
   error: Error & { digest?: string };
@@ -28,9 +28,9 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
           <button onClick={reset} className="px-6 py-2.5 bg-[#06B6D4] text-white text-sm font-medium rounded-xl hover:bg-[#0891B2] transition-all">
             重试
           </button>
-          <Link href="/" className="px-6 py-2.5 bg-[#1E293B] text-[#F1F5F9] text-sm font-medium rounded-xl hover:bg-[#1E293B]/80 transition-all">
+          <LinkNoPrefetch href="/" className="px-6 py-2.5 bg-[#1E293B] text-[#F1F5F9] text-sm font-medium rounded-xl hover:bg-[#1E293B]/80 transition-all">
             返回首页
-          </Link>
+          </LinkNoPrefetch>
         </div>
       </div>
     </div>

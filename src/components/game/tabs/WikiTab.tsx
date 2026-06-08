@@ -1,4 +1,4 @@
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { BookOpen, Sparkles, User, Image, Zap, FileText, Plus, Edit3 } from "lucide-react";
 import CrosshairIcon from "@/components/game/CrosshairIcon";
 
@@ -13,9 +13,9 @@ export default function WikiTab({ gameId, wiki }: WikiTabProps) {
       <div className="text-center py-12">
         <FileText className="w-12 h-12 text-[#64748B] mx-auto mb-4" />
         <p className="text-[#64748B] mb-4">暂无百科信息</p>
-        <Link href={`/games/wiki/edit?id=${gameId}`} className="inline-flex items-center gap-2 px-5 py-2.5 text-sm bg-[#06B6D4] text-white rounded-xl hover:bg-[#0891B2] transition-all">
+        <LinkNoPrefetch href={`/games/wiki/edit?id=${gameId}`} className="inline-flex items-center gap-2 px-5 py-2.5 text-sm bg-[#06B6D4] text-white rounded-xl hover:bg-[#0891B2] transition-all">
           <Plus className="w-4 h-4" />创建百科
-        </Link>
+        </LinkNoPrefetch>
       </div>
     );
   }
@@ -48,9 +48,9 @@ export default function WikiTab({ gameId, wiki }: WikiTabProps) {
         </div>
       )}
       <div className="text-center pt-4 border-t border-[rgba(30,41,59,0.3)]">
-        <Link href={`/games/wiki/edit?id=${gameId}`} className="inline-flex items-center gap-2 px-5 py-2.5 text-sm bg-[#06B6D4]/10 text-[#06B6D4] rounded-xl hover:bg-[#06B6D4]/20 transition-all">
+        <LinkNoPrefetch href={`/games/wiki/edit?id=${gameId}`} className="inline-flex items-center gap-2 px-5 py-2.5 text-sm bg-[#06B6D4]/10 text-[#06B6D4] rounded-xl hover:bg-[#06B6D4]/20 transition-all">
           <Edit3 className="w-4 h-4" />编辑百科（管理员审核后发布）
-        </Link>
+        </LinkNoPrefetch>
       </div>
     </div>
   );

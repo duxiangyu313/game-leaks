@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { XCircle, ArrowRight } from "lucide-react";
 
 export default function CancelPage() {
@@ -17,12 +17,12 @@ export default function CancelPage() {
         </motion.div>
         <h1 className="text-3xl font-black text-[#F1F5F9] mb-3">支付已取消</h1>
         <p className="text-[#94A3B8] mb-8">没有产生任何扣费。如有问题请随时联系客服。</p>
-        <Link
+        <LinkNoPrefetch
           href="/member"
           className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#06B6D4] to-[#0891B2] text-white font-semibold rounded-xl hover:shadow-[0_0_20px_rgba(6,182,212,0.2)] transition-all"
         >
           返回会员页 <ArrowRight className="w-4 h-4" />
-        </Link>
+        </LinkNoPrefetch>
       </div>
     </div>
   );

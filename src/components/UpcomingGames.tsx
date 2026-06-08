@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
+import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { Calendar, Timer } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import { useCachedQuery } from "@/lib/data-cache";
@@ -50,12 +50,12 @@ export default function UpcomingGames() {
           <Calendar className="w-6 h-6 text-[#10B981]" />
           <h2 className="text-2xl font-bold text-[#F1F5F9]">即将发售</h2>
         </div>
-        <Link href="/games" className="text-sm text-[#06B6D4] hover:text-[#22D3EE] transition-colors">全部 →</Link>
+        <LinkNoPrefetch href="/games" className="text-sm text-[#06B6D4] hover:text-[#22D3EE] transition-colors">全部 →</LinkNoPrefetch>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {games.map((game, i) => (
           <motion.div key={game.id} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}>
-            <Link href={`/games/detail?id=${game.id}`} className="glass-card block p-5 group h-full relative overflow-hidden">
+            <LinkNoPrefetch href={`/games/detail?id=${game.id}`} className="glass-card block p-5 group h-full relative overflow-hidden">
               <div className="absolute top-0 left-4 right-4 h-[1px] bg-gradient-to-r from-transparent via-[#10B981]/30 to-transparent group-hover:via-[#10B981]/60 transition-all" />
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs text-[#10B981] font-medium flex items-center gap-1"><Timer className="w-3 h-3" />{game.releaseDate || "待定"}</span>
@@ -66,7 +66,7 @@ export default function UpcomingGames() {
               <div className="flex flex-wrap gap-1.5 mt-3">
                 {game.genre?.slice(0, 2).map((g: string) => <span key={g} className="text-[10px] text-[#06B6D4] bg-[#06B6D4]/8 px-2 py-0.5 rounded-full">{g}</span>)}
               </div>
-            </Link>
+            </LinkNoPrefetch>
           </motion.div>
         ))}
       </div>
