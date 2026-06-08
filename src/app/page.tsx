@@ -3,6 +3,7 @@ import HeroWrapper from "@/components/HeroWrapper";
 import FeaturedProgress from "@/components/FeaturedProgress";
 import LastUpdated from "@/components/LastUpdated";
 import LiveSignal from "@/components/LiveSignal";
+import FreeTrialBanner from "@/components/FreeTrialBanner";
 import EmailSubscribe from "@/components/EmailSubscribe";
 import CyberParticles from "@/components/cyber/CyberParticles";
 
@@ -27,6 +28,7 @@ export default function Home() {
       </div>
 
       <div className="relative z-10">
+        <FreeTrialBanner />
         {/* 英雄区 */}
         <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-4 md:pt-6">
           <HeroWrapper />
