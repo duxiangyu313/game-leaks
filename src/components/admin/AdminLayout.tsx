@@ -15,11 +15,8 @@ const NAV_ITEMS = [
   { icon: FileText, label: "文章管理", href: "/admin/articles" },
   { icon: Flame, label: "爆料管理", href: "/admin/leaks" },
   { icon: Gamepad2, label: "游戏管理", href: "/admin/games" },
-  { icon: BarChart3, label: "游戏进度管理", href: "/admin/games/progress" },
   { icon: Users, label: "用户管理", href: "/admin/users" },
   { icon: CreditCard, label: "订单管理", href: "/admin/orders" },
-  { icon: Gift, label: "激活码", href: "/admin/codes" },
-  { icon: Shield, label: "投稿审核", href: "/admin/submissions" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

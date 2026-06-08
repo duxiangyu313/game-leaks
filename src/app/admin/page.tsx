@@ -4,15 +4,19 @@ import { useEffect, useState } from "react";
 import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { useAdmin } from "@/components/admin/AdminAuth";
 import { supabase } from "@/lib/supabase/client";
-import { FileText, Flame, Gamepad2, Users, CreditCard, Eye, TrendingUp, Clock, ArrowRight } from "lucide-react";
+import { FileText, Flame, Gamepad2, Users, CreditCard, Eye, TrendingUp, Clock, ArrowRight, Rocket, CheckCircle, Loader2 } from "lucide-react";
 
 interface Stats { articles: number; leaks: number; games: number; users: number; orders: number; totalViews: number; }
 interface RecentItem { id: string; title: string; type: "article" | "leak"; time: string; status: string; }
+
+const DEPLOY_FN = "https://gumpxfxbxxyljikaizsh.supabase.co/functions/v1/trigger-deploy";
 
 export default function AdminDashboard() {
   const { user } = useAdmin();
   const [stats, setStats] = useState<Stats>({ articles: 0, leaks: 0, games: 0, users: 0, orders: 0, totalViews: 0 });
   const [recent, setRecent] = useState<RecentItem[]>([]);
+  const [deploying, setDeploying] = useState(false);
+  const [deployMsg, setDeployMsg] = useState("");
 
   useEffect(() => {
     async function load() {
@@ -50,6 +54,24 @@ export default function AdminDashboard() {
     { icon: Eye, label: "总浏览", count: stats.totalViews, color: "text-[#EC4899]", bg: "bg-[#EC4899]/10" },
   ];
 
+  const handleDeploy = async () => {
+    setDeploying(true);
+    setDeployMsg("");
+    try {
+      const res = await fetch(DEPLOY_FN, { method: "POST" });
+      const result = await res.json();
+      if (res.ok) {
+        setDeployMsg("部署已触发！约 2 分钟后生效");
+      } else {
+        setDeployMsg(result.error || "触发失败");
+      }
+    } catch {
+      setDeployMsg("网络错误，请稍后重试");
+    }
+    setDeploying(false);
+    setTimeout(() => setDeployMsg(""), 8000);
+  };
+
   const timeAgo = (iso: string) => {
     const m = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
     if (m < 1) return "刚刚";
@@ -78,12 +100,12 @@ export default function AdminDashboard() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Quick actions */}
+        {/* Quick actions + Deploy */}
         <div className="glass-card p-6">
           <h3 className="text-sm font-semibold text-[#F1F5F9] mb-4 flex items-center gap-2">
             <TrendingUp className="w-4 h-4 text-[#06B6D4]" /> 快速操作
           </h3>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-3 mb-4">
             {[
               { label: "发布文章", href: "/admin/articles/new" },
               { label: "发布爆料", href: "/admin/leaks/new" },
@@ -94,6 +116,23 @@ export default function AdminDashboard() {
                 {a.label}
               </LinkNoPrefetch>
             ))}
+          </div>
+          <div className="border-t border-[rgba(30,41,59,0.4)] pt-4">
+            <button
+              onClick={handleDeploy}
+              disabled={deploying}
+              className="w-full py-3 flex items-center justify-center gap-2 bg-[#06B6D4] hover:bg-[#0891B2] disabled:opacity-50 text-white text-sm font-semibold rounded-xl transition-all"
+            >
+              {deploying ? <Loader2 className="w-4 h-4 animate-spin" /> : <Rocket className="w-4 h-4" />}
+              {deploying ? "触发中…" : "重新部署网站"}
+            </button>
+            {deployMsg && (
+              <p className={`text-xs text-center mt-2 flex items-center justify-center gap-1 ${deployMsg.includes("已触发") ? "text-[#10B981]" : "text-[#EF4444]"}`}>
+                {deployMsg.includes("已触发") && <CheckCircle className="w-3 h-3" />}
+                {deployMsg}
+              </p>
+            )}
+            <p className="text-[10px] text-[#475569] text-center mt-2">修改内容后点此按钮，自动构建并部署到线上</p>
           </div>
         </div>
 
