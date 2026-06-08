@@ -4,6 +4,7 @@ import FeaturedProgress from "@/components/FeaturedProgress";
 import LastUpdated from "@/components/LastUpdated";
 import LiveSignal from "@/components/LiveSignal";
 import FreeTrialBanner from "@/components/FreeTrialBanner";
+import MemberStatsBar from "@/components/MemberStatsBar";
 import EmailSubscribe from "@/components/EmailSubscribe";
 import CyberParticles from "@/components/cyber/CyberParticles";
 
@@ -46,7 +47,10 @@ export default function Home() {
           <StatsDashboard />
           <div className="mt-4 flex justify-end"><LastUpdated /></div>
         </div>
-        <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-6 md:pt-12">
+        <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-8 md:pt-12">
+          <MemberStatsBar />
+        </div>
+        <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-6 md:pt-8">
           <EmailSubscribe compact />
         </div>
         <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-8 md:pt-16 pb-12 md:pb-20"><MemberPromo /></div>
