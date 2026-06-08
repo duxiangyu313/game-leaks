@@ -31,13 +31,20 @@ export function useStripeCheckout() {
 
   const manageSubscription = async (customerId: string) => {
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
       const res = await fetch(`${FN_BASE}/stripe-portal`, {
-        method: "POST", headers: { "Content-Type": "application/json" },
+        method: "POST",
+        headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
         body: JSON.stringify({ customerId }),
       });
-      const { url } = await res.json();
-      if (url) window.location.href = url;
-    } catch { alert("无法打开管理页面"); }
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error || "请求失败");
+      if (result.url) window.location.href = result.url;
+      else alert("无法获取管理页面链接");
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : "无法打开管理页面，请稍后重试");
+    }
   };
 
   return { checkout, manageSubscription, loading };
