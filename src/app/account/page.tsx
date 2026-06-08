@@ -1,12 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import LinkNoPrefetch from "@/components/LinkNoPrefetch";
-import { User, Crown, Clock, CreditCard, Settings, LogOut, Shield, AlertTriangle } from "lucide-react";
+import { User, Crown, Clock, CreditCard, Settings, LogOut, Shield, X } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import { useStripeCheckout } from "@/hooks/useStripeCheckout";
 import { MEMBERSHIP_TIERS, type MembershipTier } from "@/lib/stripe-config";
+import BrowsingHistory from "@/components/account/BrowsingHistory";
+import PaymentHistory from "@/components/account/PaymentHistory";
+import AccountSettings from "@/components/account/AccountSettings";
+import PrivacySettings from "@/components/account/PrivacySettings";
 
 interface Profile {
   username: string;
@@ -16,10 +20,19 @@ interface Profile {
   stripe_customer_id: string | null;
 }
 
+type Panel = "history" | "payments" | "settings" | "privacy" | null;
+
+const PANELS: { key: Panel; icon: typeof Clock; label: string }[] = [
+  { key: "history", icon: Clock, label: "浏览记录" },
+  { key: "payments", icon: CreditCard, label: "支付记录" },
+  { key: "settings", icon: Settings, label: "账号设置" },
+  { key: "privacy", icon: Shield, label: "隐私设置" },
+];
+
 export default function AccountPage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
-  const [toast, setToast] = useState("");
+  const [panel, setPanel] = useState<Panel>(null);
   const { manageSubscription } = useStripeCheckout();
 
   useEffect(() => {
@@ -73,16 +86,14 @@ export default function AccountPage() {
   const tier = MEMBERSHIP_TIERS[profile.membership];
   const isActive = profile.subscription_status === "active";
   const daysLeft = profile.subscription_end_date
-    // eslint-disable-next-line react-hooks/purity -- daysLeft 需每次渲染实时计算，Date.now() 的非纯是有意为之
     ? Math.ceil((new Date(profile.subscription_end_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
     : 0;
+
+  const activePanel = PANELS.find((p) => p.key === panel);
 
   return (
     <div className="pt-20 pb-20">
       <div className="max-w-2xl mx-auto px-4">
-        {toast && (
-          <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-6 py-3 bg-[#1E293B] border border-[#334155] rounded-xl text-sm text-[#F1F5F9] shadow-2xl" onClick={() => setToast("")}>{toast}</motion.div>
-        )}
         <motion.h1
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -116,11 +127,6 @@ export default function AccountPage() {
                 <p className="text-sm text-[#94A3B8] flex items-center gap-1.5">
                   <Clock className="w-3.5 h-3.5" />
                   剩余 {daysLeft} 天
-                  {daysLeft <= 7 && (
-                    <span className="flex items-center gap-1 text-[#F59E0B]">
-                      <AlertTriangle className="w-3.5 h-3.5" /> 即将到期
-                    </span>
-                  )}
                 </p>
               )}
               {!isActive && profile.membership === "free" && (
@@ -153,24 +159,51 @@ export default function AccountPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="grid grid-cols-2 gap-3 mb-8"
+          className="grid grid-cols-2 gap-3 mb-6"
         >
-          {[
-            { icon: Clock, label: "浏览记录" },
-            { icon: CreditCard, label: "支付记录" },
-            { icon: Settings, label: "账号设置" },
-            { icon: Shield, label: "隐私设置" },
-          ].map((item) => (
+          {PANELS.map((item) => (
             <button
-              key={item.label}
-              onClick={() => setToast(`${item.label}功能即将上线`)}
-              className="glass-card p-4 flex items-center gap-3 hover:border-[#06B6D4]/20 transition-all cursor-pointer active:scale-[0.98] w-full text-left"
+              key={item.key}
+              onClick={() => setPanel(panel === item.key ? null : item.key)}
+              className={`glass-card p-4 flex items-center gap-3 transition-all cursor-pointer active:scale-[0.98] w-full text-left ${
+                panel === item.key ? "border-[#06B6D4]/30 bg-[#06B6D4]/5" : "hover:border-[#06B6D4]/20"
+              }`}
             >
-              <item.icon className="w-5 h-5 text-[#64748B]" />
-              <span className="text-sm text-[#94A3B8]">{item.label}</span>
+              <item.icon className={`w-5 h-5 ${panel === item.key ? "text-[#06B6D4]" : "text-[#64748B]"}`} />
+              <span className={`text-sm ${panel === item.key ? "text-[#F1F5F9]" : "text-[#94A3B8]"}`}>{item.label}</span>
             </button>
           ))}
         </motion.div>
+
+        {/* Panel content */}
+        <AnimatePresence mode="wait">
+          {activePanel && (
+            <motion.div
+              key={activePanel.key}
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden mb-6"
+            >
+              <div className="glass-card p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <activePanel.icon className="w-5 h-5 text-[#06B6D4]" />
+                    <h2 className="text-lg font-bold text-[#F1F5F9]">{activePanel.label}</h2>
+                  </div>
+                  <button onClick={() => setPanel(null)} className="p-1 text-[#64748B] hover:text-[#F1F5F9] transition-colors">
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+                {panel === "history" && <BrowsingHistory />}
+                {panel === "payments" && <PaymentHistory />}
+                {panel === "settings" && <AccountSettings />}
+                {panel === "privacy" && <PrivacySettings />}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
