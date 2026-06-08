@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { MessageSquare, Users, TrendingUp, Plus, Gamepad2, Flame, Coffee } from "lucide-react";
 import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import ForumCardsGrid from "@/components/ForumCardsGrid";
+import ForumLiveStats from "@/components/ForumLiveStats";
 
 export const metadata: Metadata = {
   title: "论坛 · 国游爆料",
@@ -26,6 +27,7 @@ export default function ForumPage() {
               <h1 className="text-3xl font-bold text-[#F1F5F9]">论坛</h1>
             </div>
             <p className="text-[#94A3B8]">国产3A游戏玩家社区</p>
+            <div className="mt-3"><ForumLiveStats /></div>
           </div>
           <LinkNoPrefetch href="/forum/new" className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#06B6D4] text-white font-medium rounded-xl hover:bg-[#0891B2] transition-colors">
             <Plus className="w-4 h-4" /> 发布新帖
