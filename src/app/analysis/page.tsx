@@ -49,14 +49,17 @@ export default function AnalysisPage() {
   const filtered = articles.filter((a) => {
     if (activeCat !== "all" && a.category !== activeCat) return false;
     if (activeTier !== "all" && a.required_tier !== activeTier) return false;
+    // 过滤掉视频分类（视频在 /videos 展示）
+    if (a.category === "video") return false;
     return true;
   });
 
-  // 分类计数
+  // 分类计数（排除视频）
+  const displayArticles = articles.filter(a => a.category !== "video");
   const catCounts: Record<string, number> = {};
   CATS.forEach((cat) => {
-    if (cat.key === "all") catCounts[cat.key] = articles.length;
-    else catCounts[cat.key] = articles.filter((a) => a.category === cat.key).length;
+    if (cat.key === "all") catCounts[cat.key] = displayArticles.length;
+    else catCounts[cat.key] = displayArticles.filter((a) => a.category === cat.key).length;
   });
 
   return (
