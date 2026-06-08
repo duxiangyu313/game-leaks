@@ -1,18 +1,26 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Crown, Check, Star, Shield, Gift, Users, Clock, Sparkles, ArrowRight } from "lucide-react";
 import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { useStripeCheckout } from "@/hooks/useStripeCheckout";
 import { MEMBERSHIP_TIERS, type MembershipTier } from "@/lib/stripe-config";
+import { supabase } from "@/lib/supabase/client";
 
 type BillingCycle = "monthly" | "yearly";
 
 export default function MemberPage() {
   const [cycle, setCycle] = useState<BillingCycle>("yearly");
   const [selectedTier, setSelectedTier] = useState<MembershipTier | null>(null);
+  const [memberCount, setMemberCount] = useState(0);
   const { checkout, loading } = useStripeCheckout();
+
+  useEffect(() => {
+    supabase.from("profiles").select("id", { count: "exact", head: true }).then(({ count }) => {
+      if (count) setMemberCount(count);
+    });
+  }, []);
 
   const handleBuy = async (tier: MembershipTier) => {
     setSelectedTier(tier);
@@ -36,7 +44,7 @@ export default function MemberPage() {
           className="text-center mb-6"
         >
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F59E0B]/10 border border-[#F59E0B]/20 text-[#F59E0B] text-xs font-semibold mb-4">
-            <Sparkles className="w-3.5 h-3.5" /> 已有 1,280+ 会员加入
+            <Sparkles className="w-3.5 h-3.5" /> 已有 {memberCount || "—"} 位会员加入
           </div>
           <h1 className="text-4xl md:text-5xl font-black text-[#F1F5F9] mb-3">
             选择你的<span className="bg-gradient-to-r from-[#F59E0B] via-[#FBBF24] to-[#F59E0B] bg-clip-text text-transparent"> 会员等级</span>
