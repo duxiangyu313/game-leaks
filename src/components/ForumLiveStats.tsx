@@ -14,18 +14,17 @@ function getSessionId(): string {
   return id!;
 }
 
-export default function ForumLiveStats() {
+export default function ForumLiveStats({ large }: { large?: boolean }) {
   const [online, setOnline] = useState(0);
   const [members, setMembers] = useState(0);
+  const [todayPosts, setTodayPosts] = useState(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
 
   useEffect(() => {
     const sessionId = getSessionId();
 
-    // 心跳：每 60 秒上报一次
     const heartbeat = async () => {
       try {
-        // Upsert: update if session exists, insert if new
         const { data: existing } = await supabase
           .from("active_visitors")
           .select("id")
@@ -37,28 +36,23 @@ export default function ForumLiveStats() {
         } else {
           await supabase.from("active_visitors").insert({ session_id: sessionId, last_seen: new Date().toISOString() });
         }
-      } catch {
-        // table not ready yet
-      }
+      } catch { /* table not ready */ }
     };
 
-    // 查询在线人数
     const fetchStats = async () => {
       try {
         const fiveMinAgo = new Date(Date.now() - 5 * 60000).toISOString();
-        const { count: onlineCount } = await supabase
-          .from("active_visitors")
-          .select("id", { count: "exact", head: true })
-          .gte("last_seen", fiveMinAgo);
-        if (onlineCount !== null) setOnline(onlineCount);
+        const today = new Date().toISOString().split("T")[0];
 
-        const { count: memberCount } = await supabase
-          .from("profiles")
-          .select("id", { count: "exact", head: true });
-        if (memberCount !== null) setMembers(memberCount);
-      } catch {
-        // silent
-      }
+        const [{ count: o }, { count: m }, { count: tp }] = await Promise.all([
+          supabase.from("active_visitors").select("id", { count: "exact", head: true }).gte("last_seen", fiveMinAgo),
+          supabase.from("profiles").select("id", { count: "exact", head: true }),
+          supabase.from("forum_posts").select("id", { count: "exact", head: true }).gte("created_at", today),
+        ]);
+        if (o !== null) setOnline(o);
+        if (m !== null) setMembers(m);
+        if (tp !== null) setTodayPosts(tp);
+      } catch { /* silent */ }
     };
 
     heartbeat();
@@ -66,6 +60,29 @@ export default function ForumLiveStats() {
     intervalRef.current = setInterval(() => { heartbeat(); fetchStats(); }, 60000);
     return () => clearInterval(intervalRef.current);
   }, []);
+
+  if (large) {
+    const stats = [
+      { icon: Users, label: "在线用户", count: online, color: "text-[#10B981]", bg: "from-[#10B981]/10 to-[#059669]/5" },
+      { icon: UserCheck, label: "注册会员", count: members, color: "text-[#06B6D4]", bg: "from-[#06B6D4]/10 to-[#0891B2]/5" },
+      { icon: MessageCircle, label: "今日帖子", count: todayPosts, color: "text-[#F59E0B]", bg: "from-[#F59E0B]/10 to-[#D97706]/5" },
+    ];
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {stats.map((s) => (
+          <div key={s.label} className="glass-card p-6 flex items-center gap-4 bg-gradient-to-br" style={{ backgroundImage: `linear-gradient(to bottom right, var(--tw-gradient-stops))` }}>
+            <div className={`w-12 h-12 rounded-xl bg-[#1E293B]/60 flex items-center justify-center`}>
+              <s.icon className={`w-6 h-6 ${s.color}`} />
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-[#F1F5F9] tabular-nums">{s.count.toLocaleString()}</div>
+              <div className="text-sm text-[#94A3B8]">{s.label}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="flex items-center gap-4 text-xs text-[#94A3B8]">
