@@ -30,6 +30,7 @@ export function useStripeCheckout() {
   };
 
   const manageSubscription = async (customerId: string) => {
+    setLoading(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token;
@@ -40,11 +41,15 @@ export function useStripeCheckout() {
       });
       const result = await res.json();
       if (!res.ok) throw new Error(result.error || "请求失败");
-      if (result.url) window.location.href = result.url;
-      else alert("无法获取管理页面链接");
+      if (result.url) {
+        // Stripe门户在海外，国内加载慢是正常的，直接跳转
+        window.open(result.url, "_blank");
+      } else {
+        alert("无法获取管理页面链接");
+      }
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : "无法打开管理页面，请稍后重试");
-    }
+      alert(err instanceof Error ? err.message : "Stripe门户暂时不可用，请稍后重试或联系客服");
+    } finally { setLoading(false); }
   };
 
   return { checkout, manageSubscription, loading };

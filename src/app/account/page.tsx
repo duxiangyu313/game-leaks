@@ -33,7 +33,7 @@ export default function AccountPage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [panel, setPanel] = useState<Panel>(null);
-  const { manageSubscription } = useStripeCheckout();
+  const { manageSubscription, loading: subLoading } = useStripeCheckout();
 
   useEffect(() => {
     async function load() {
@@ -134,12 +134,13 @@ export default function AccountPage() {
               )}
             </div>
             <div className="flex gap-2">
-              {isActive && (
+              {isActive && profile.stripe_customer_id && (
                 <button
                   onClick={() => manageSubscription(profile.stripe_customer_id!)}
-                  className="px-4 py-2 text-sm font-medium border border-[rgba(30,41,59,0.6)] text-[#94A3B8] rounded-lg hover:text-[#F1F5F9] hover:border-[#06B6D4]/20 transition-all"
+                  disabled={subLoading}
+                  className="px-4 py-2 text-sm font-medium border border-[rgba(30,41,59,0.6)] text-[#94A3B8] rounded-lg hover:text-[#F1F5F9] hover:border-[#06B6D4]/20 transition-all disabled:opacity-50"
                 >
-                  管理订阅
+                  {subLoading ? "跳转中…" : "管理订阅"}
                 </button>
               )}
               {profile.membership === "free" && (
