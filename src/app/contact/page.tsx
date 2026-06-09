@@ -95,7 +95,7 @@ export default function ContactPage() {
               </div>
             </div>
             <div className="flex flex-wrap gap-3 ml-[52px]">
-              <a href="https://space.bilibili.com/" target="_blank" rel="noopener noreferrer"
+              <a href="https://space.bilibili.com/3546857156380947" target="_blank" rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#FB7299]/10 text-[#FB7299] text-sm font-medium hover:bg-[#FB7299]/20 transition-all">
                 B站：国游温度计
               </a>
