@@ -97,7 +97,7 @@ export default function ResetPasswordPage() {
         if (cancelled) return;
 
         if (sessionError) {
-          console.error("Session check error:", sessionError);
+          if (process.env.NODE_ENV === "development") console.error("Session check error:", sessionError);
           setSessionError("重置链接无效或已过期，请重新申请重置密码");
           setCheckingSession(false);
           return;

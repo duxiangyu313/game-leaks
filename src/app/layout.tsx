@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import ClientLayout from "@/components/ClientLayout";
 import RecoveryRedirect from "@/components/RecoveryRedirect";
 import { WebsiteSchema } from "@/components/StructuredData";
+import { Analytics } from "@/components/Analytics";
 
 export const metadata: Metadata = {
   title: { default: "国游爆料 · 国产3A游戏资讯平台", template: "%s · 国游爆料" },
@@ -38,6 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="dns-prefetch" href="https://gumpxfxbxxyljikaizsh.supabase.co" />
         <link rel="preconnect" href="https://gumpxfxbxxyljikaizsh.supabase.co" crossOrigin="anonymous" />
         <WebsiteSchema />
+        <Analytics />
         <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
         {/* 🔒 CSP — 防 XSS，静态导出用 meta 标签实现 */}
         <meta httpEquiv="Content-Security-Policy" content={

@@ -10,7 +10,10 @@ interface ErrorPageProps {
 
 export default function ErrorPage({ error, reset }: ErrorPageProps) {
   useEffect(() => {
-    console.error("Page error:", error);
+    if (process.env.NODE_ENV === "development") {
+      console.error("Page error:", error);
+    }
+    // TODO: 接入生产环境错误上报（如 Sentry / 百度统计JS异常监控）
   }, [error]);
 
   return (
