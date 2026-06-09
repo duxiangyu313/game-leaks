@@ -1,2 +1,2 @@
 :HL["/_next/static/chunks/3pv0633oshubo.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":20,"slots":{"children":{"name":"admin","param":null,"prefetchHints":0,"slots":{"children":{"name":"games","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}}}},"staleTime":300,"buildId":"v1780982542316"}
+0:{"tree":{"name":"","param":null,"prefetchHints":20,"slots":{"children":{"name":"admin","param":null,"prefetchHints":0,"slots":{"children":{"name":"games","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}}}},"staleTime":300,"buildId":"v1780986609422"}
