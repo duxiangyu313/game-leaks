@@ -30,6 +30,11 @@ export default function Home() {
 
       <div className="relative z-10">
         <FreeTrialBanner />
+        {/* 邮件订阅 — 首页顶部 */}
+        <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-4 md:pt-6">
+          <EmailSubscribe compact />
+        </div>
+
         {/* 英雄区 */}
         <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-4 md:pt-6">
           <HeroWrapper />
@@ -49,9 +54,6 @@ export default function Home() {
         </div>
         <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-8 md:pt-12">
           <MemberStatsBar />
-        </div>
-        <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-6 md:pt-8">
-          <EmailSubscribe compact />
         </div>
         <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-8 md:pt-16 pb-12 md:pb-20"><MemberPromo /></div>
       </div>
