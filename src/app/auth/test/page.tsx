@@ -4,8 +4,8 @@ import { useState } from "react";
 import { supabase } from "@/lib/supabase/client";
 
 export default function AuthTestPage() {
-  const [email, setEmail] = useState("1852779947@qq.com");
-  const [password, setPassword] = useState("yuyu1852779947");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
 
