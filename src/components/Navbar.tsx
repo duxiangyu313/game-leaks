@@ -14,6 +14,7 @@ const NAV_LINKS = [
   { href: "/leaks", label: "爆料" },
   { href: "/analysis", label: "解析" },
   { href: "/forum", label: "论坛" },
+  { href: "/submit", label: "投稿" },
   { href: "/calendar", label: "日历" },
   { href: "/videos", label: "视频" },
   { href: "/member", label: "会员" },

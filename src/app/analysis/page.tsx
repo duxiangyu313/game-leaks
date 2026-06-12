@@ -21,7 +21,7 @@ const CATS = [
 const TIER_FILTERS = [
   { key: "all", label: "全部" },
   { key: "free", label: "免费", color: "text-[#64748B]" },
-  { key: "silver", label: "白银", color: "text-[#94A3B8]" },
+ 
   { key: "gold", label: "黄金", color: "text-[#F59E0B]" },
   { key: "diamond", label: "钻石", color: "text-[#22D3EE]" },
 ];
@@ -153,7 +153,7 @@ export default function AnalysisPage() {
                           {categoryLabel(a.category)}
                         </span>
                         {isPaid && (
-                          <PremiumBadge tier={a.required_tier as "gold" | "diamond" | "silver"} />
+                          <PremiumBadge tier={(a.required_tier as "gold" | "diamond") || "gold"} />
                         )}
                         <span className="text-xs text-[#64748B] flex items-center gap-1 ml-auto">
                           <Clock className="w-3 h-3" />

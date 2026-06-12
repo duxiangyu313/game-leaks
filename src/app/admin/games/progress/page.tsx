@@ -24,7 +24,7 @@ export default function AdminGameProgressPage() {
   const [form, setForm] = useState({
     name: "", cover_url: "", developer: "", publisher: "", genre: "",
     development_stage: "概念阶段", estimated_release_date: "", team_size: 0,
-    credibility_score: 5, public_info: "", silver_info: "", gold_info: "",
+    credibility_score: 5, public_info: "", diamond_info: "", gold_info: "",
     risk_assessment: "", tags: "", is_featured: false,
   });
 
@@ -76,7 +76,7 @@ export default function AdminGameProgressPage() {
     setForm({
       name: "", cover_url: "", developer: "", publisher: "", genre: "",
       development_stage: "概念阶段", estimated_release_date: "", team_size: 0,
-      credibility_score: 5, public_info: "", silver_info: "", gold_info: "",
+      credibility_score: 5, public_info: "", diamond_info: "", gold_info: "",
       risk_assessment: "", tags: "", is_featured: false,
     });
     setShowForm(true);
@@ -90,7 +90,7 @@ export default function AdminGameProgressPage() {
       publisher: r.publisher || "", genre: r.genre || "",
       development_stage: r.development_stage, estimated_release_date: r.estimated_release_date || "",
       team_size: r.team_size || 0, credibility_score: r.credibility_score,
-      public_info: r.public_info, silver_info: r.silver_info, gold_info: r.gold_info,
+      public_info: r.public_info || "", diamond_info: r.diamond_info || "", gold_info: r.gold_info,
       risk_assessment: r.risk_assessment, tags: (r.tags || []).join(", "),
       is_featured: r.is_featured,
     });
@@ -111,7 +111,7 @@ export default function AdminGameProgressPage() {
       team_size: form.team_size || null,
       credibility_score: form.credibility_score,
       public_info: form.public_info,
-      silver_info: form.silver_info,
+      diamond_info: form.diamond_info,
       gold_info: form.gold_info,
       risk_assessment: form.risk_assessment,
       tags: form.tags.split(",").map((t) => t.trim()).filter(Boolean),
@@ -524,7 +524,7 @@ export default function AdminGameProgressPage() {
               {/* 富文本区域 */}
               {[
                 { key: "public_info", label: "公开信息" },
-                { key: "silver_info", label: "白银会员信息" },
+                { key: "diamond_info", label: "钻石会员信息" },
                 { key: "gold_info", label: "黄金会员信息" },
                 { key: "risk_assessment", label: "风险评估" },
               ].map(({ key, label }) => (

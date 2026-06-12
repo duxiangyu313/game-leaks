@@ -36,7 +36,7 @@ export interface Leak {
   commentCount: number;
 }
 
-export type ArticleCategory = 'review' | 'preview' | 'analysis' | 'interview' | 'opinion' | 'leak' | 'news' | 'video';
+export type ArticleCategory = 'review' | 'preview' | 'analysis' | 'interview' | 'opinion' | 'leak' | 'news' | 'video' | 'misc';
 export type TemplateType = 'leak' | 'review' | 'analysis' | 'news' | 'standard';
 
 export interface Article {
@@ -56,6 +56,11 @@ export interface Article {
   wordCount?: number;
   tags: string[];
   requiredTier: MembershipTier;
+  contentLevel?: ContentLevel;
+  isUgc?: boolean;
+  creatorId?: string;
+  revenueSplit?: number;
+  canDeleteAfter?: string;
   purchaseCount?: number;
   credibilityScore?: number;
   credibilityVotes?: CredibilityVote;
@@ -123,7 +128,9 @@ export interface InlineComment {
   createdAt: string;
 }
 
-export type MembershipTier = 'free' | 'silver' | 'gold' | 'diamond';
+export type MembershipTier = 'free' | 'gold' | 'diamond';
+export type ContentLevel = 'free' | 'gold' | 'diamond';
+export type PayoutMethod = 'alipay' | 'wechat';
 
 export interface UserProfile {
   id: string;
@@ -131,24 +138,32 @@ export interface UserProfile {
   username: string;
   avatar?: string;
   membership: MembershipTier;
-  subscriptionStatus: 'active' | 'past_due' | 'canceled' | 'inactive';
+  subscriptionStatus: 'active' | 'past_due' | 'canceled' | 'inactive' | 'trialing';
   subscriptionEndDate?: string;
   stripeCustomerId?: string;
   stripeSubscriptionId?: string;
   joinedAt: string;
   bookmarks: string[];
   following: string[];
+  referralCode?: string;
+  referrerId?: string;
+  revenueBalance?: number;
+  totalEarned?: number;
+  banned?: boolean;
 }
 
 export interface Payment {
   id: string;
   userId: string;
-  stripeSessionId: string;
+  stripeSessionId?: string;
+  alipayTradeNo?: string;
   amount: number;
   currency: string;
   tier: MembershipTier;
   billingCycle: 'monthly' | 'yearly';
   status: 'pending' | 'completed' | 'refunded' | 'failed';
+  paymentMethod: 'stripe' | 'alipay' | 'wechat';
+  relatedReferralId?: string;
   createdAt: string;
 }
 
@@ -184,11 +199,47 @@ export interface GameProgress {
   last_updated: string;
   credibility_score: number;
   public_info: string;
-  silver_info: string;
   gold_info: string;
+  diamond_info?: string;
   risk_assessment: string;
   tags: string[];
   is_featured: boolean;
   created_at?: string;
   updated_at?: string;
+}
+
+// ═══ UGC 系统类型 ═══
+export interface UgcSubmission {
+  id: string; userId: string; title: string; content: string;
+  coverImage?: string; category: ArticleCategory; contentLevel: ContentLevel;
+  gameName?: string; gameId?: string; tags: string[];
+  status: 'pending' | 'approved' | 'rejected' | 'revision';
+  reviewerId?: string; reviewNote?: string; revenueSplit?: number;
+  submittedAt: string; reviewedAt?: string;
+}
+export interface UgcContent {
+  id: string; submissionId?: string; userId: string; title: string; content: string;
+  coverImage?: string; category: string; contentLevel: ContentLevel;
+  gameName?: string; gameId?: string; tags: string[];
+  viewCount: number; likeCount: number; commentCount: number;
+  publishedAt: string; canDeleteAfter?: string;
+}
+export interface RevenueRecord {
+  id: string; contentId: string; contentType: 'ugc' | 'article' | 'leak';
+  creatorId: string; amount: number; revenueType: 'ad_share' | 'subscription_share' | 'bonus';
+  settlementMonth?: string; settlementStatus: 'pending' | 'settled' | 'withdrawn';
+  settlementSplit?: number; notes?: string; createdAt: string;
+}
+export interface WithdrawalRequest {
+  id: string; userId: string; amount: number; method: PayoutMethod;
+  accountInfo: string; realName?: string;
+  status: 'pending' | 'approved' | 'rejected' | 'paid';
+  adminId?: string; adminNote?: string; processedAt?: string; createdAt: string;
+}
+export interface ReferralRecord {
+  id: string; referrerId: string; invitedUserId?: string; referralCode: string;
+  rewardDays: number; rewardApplied: boolean; invitedAt: string; rewardExpiresAt?: string;
+}
+export interface PlatformSetting {
+  key: string; value: Record<string, unknown>; updatedAt: string;
 }

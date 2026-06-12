@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useAdmin } from "./AdminAuth";
 import {
   LayoutDashboard, FileText, Flame, Gamepad2, BarChart3, Users, CreditCard,
-  LogOut, ChevronLeft, Menu, X, Gift, Shield
+  LogOut, ChevronLeft, Menu, X, Gift, Shield, Send, DollarSign, Wallet
 } from "lucide-react";
 import { useState } from "react";
 import { supabase } from "@/lib/supabase/client";
@@ -14,9 +14,12 @@ const NAV_ITEMS = [
   { icon: LayoutDashboard, label: "控制台", href: "/admin" },
   { icon: FileText, label: "文章管理", href: "/admin/articles" },
   { icon: Flame, label: "爆料管理", href: "/admin/leaks" },
+  { icon: Send, label: "UGC 审核", href: "/admin/submissions" },
   { icon: Gamepad2, label: "游戏管理", href: "/admin/games" },
   { icon: Users, label: "用户管理", href: "/admin/users" },
   { icon: CreditCard, label: "订单管理", href: "/admin/orders" },
+  { icon: DollarSign, label: "收益管理", href: "/admin/revenue" },
+  { icon: Wallet, label: "提现审核", href: "/admin/withdrawals" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

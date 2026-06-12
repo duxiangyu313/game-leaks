@@ -30,7 +30,7 @@ export default function TrialPage() {
     const trialEnd = new Date(Date.now() + 3 * 86400000).toISOString();
     const { error: updateErr } = await supabase.from("profiles").upsert({
       id: data.user.id,
-      membership: "silver",
+      membership: "gold",
       subscription_status: "trialing",
       subscription_end_date: trialEnd,
     }, { onConflict: "id" });

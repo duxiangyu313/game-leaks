@@ -1,0 +1,47 @@
+"use client";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase/client";
+import { Loader2, TrendingUp, Users, DollarSign } from "lucide-react";
+
+export default function RevenuePage() {
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState({ totalRevenue: 0, creatorCount: 0, pendingPayout: 0 });
+
+  useEffect(() => {(async () => {
+    const { data: records } = await supabase.from("revenue_records").select("amount, settlement_status");
+    if (records) {
+      const total = records.reduce((s: number, r: any) => s + (r.amount || 0), 0);
+      const pending = records.filter((r: any) => r.settlement_status === "pending").reduce((s: number, r: any) => s + (r.amount || 0), 0);
+      setStats({ totalRevenue: total, creatorCount: 0, pendingPayout: pending });
+    }
+    const { count } = await supabase.from("profiles").select("id", { count: "exact", head: true }).gt("revenue_balance", 0);
+    if (count) setStats(s => ({ ...s, creatorCount: count }));
+    setLoading(false);
+  })();}, []);
+
+  return (
+    <div>
+      <div className="mb-6"><h1 className="text-2xl font-bold text-[#F1F5F9]">收益管理</h1><p className="text-sm text-[#64748B] mt-1">创作者收益概览 · 月度结算</p></div>
+      {loading ? <div className="flex justify-center py-20"><Loader2 className="w-6 h-6 animate-spin text-[#3B82F6]" /></div> : (
+        <>
+          <div className="grid grid-cols-3 gap-4 mb-8">
+            {[{ icon: DollarSign, color: "text-[#10B981]", label: "累计收益", val: `¥${(stats.totalRevenue / 100).toFixed(2)}` },
+              { icon: Users, color: "text-[#3B82F6]", label: "创作者", val: String(stats.creatorCount) },
+              { icon: TrendingUp, color: "text-[#F59E0B]", label: "待结算", val: `¥${(stats.pendingPayout / 100).toFixed(2)}` }]
+              .map(s => (
+                <div key={s.label} className="glass-card p-5">
+                  <div className="flex items-center gap-2 text-sm text-[#64748B] mb-1"><s.icon className={`w-4 h-4 ${s.color}`} />{s.label}</div>
+                  <div className="text-2xl font-bold text-[#F1F5F9]">{s.val}</div>
+                </div>
+              ))}
+          </div>
+          <div className="glass-card p-8 text-center">
+            <TrendingUp className="w-10 h-10 text-[#64748B] mx-auto mb-3 opacity-40" />
+            <p className="text-[#64748B] text-sm">收益计算引擎将在每月 1 号自动运行。</p>
+            <p className="text-[#475569] text-xs mt-1">免费 100%广告 · 黄金 25%会员 · 钻石 40%（分3月）</p>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}

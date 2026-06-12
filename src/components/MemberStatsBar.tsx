@@ -13,7 +13,7 @@ export default function MemberStatsBar() {
     supabase
       .from("articles")
       .select("id", { count: "exact", head: true })
-      .in("required_tier", ["silver", "gold", "diamond"])
+      .in("required_tier", ["gold", "diamond"])
       .eq("status", "published")
       .then(({ count }) => { if (count) setArticleCount(count); });
   }, []);

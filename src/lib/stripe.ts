@@ -12,9 +12,8 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 /* ── 会员价格配置 ── */
 export const MEMBERSHIP_PRICES = {
-  silver:  { monthly: "price_1TeENpQ9NyBUwMBMVfMk8ww9", yearly: "price_1TeFVKQ9NyBUwMBMrfstRBsO" },
-  gold:    { monthly: "price_1TeFD3Q9NyBUwMBMKDAdmRvr", yearly: "price_1TeFVsQ9NyBUwMBMOXo9f5dC" },
-  diamond: { monthly: "price_1TeFHRQ9NyBUwMBMOYF3290s", yearly: "price_1TeFWIQ9NyBUwMBMZFCQ9i8U" },
+  gold:    { monthly: "price_1ThRsgQ9NyBUwMBMt0b5WkXA", yearly: "price_1ThRtDQ9NyBUwMBMSpWF4J6Y" },
+  diamond: { monthly: "price_1ThRtcQ9NyBUwMBMY5BWeUnh", yearly: "price_1ThRtrQ9NyBUwMBMY3VpweNz" },
 } as const;
 
 // MEMBERSHIP_TIERS 和 MembershipTier 类型统一从 stripe-config.ts 导出

@@ -6,7 +6,7 @@ import { Search, Crown, Shield, Save } from "lucide-react";
 
 const TIERS = [
   { value: "free", label: "普通用户" },
-  { value: "silver", label: "白银会员" },
+
   { value: "gold", label: "黄金会员" },
   { value: "diamond", label: "钻石会员" },
 ];
@@ -64,7 +64,7 @@ export default function UsersPage() {
                         {TIERS.map(t=><option key={t.value} value={t.value}>{t.label}</option>)}
                       </select>
                     ):(
-                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 text-[10px] rounded-full ${u.membership==='diamond'?'bg-[#22D3EE]/10 text-[#22D3EE]':u.membership==='gold'?'bg-[#F59E0B]/10 text-[#F59E0B]':u.membership==='silver'?'bg-[#94A3B8]/10 text-[#94A3B8]':'bg-[#64748B]/10 text-[#64748B]'}`}>
+                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 text-[10px] rounded-full ${u.membership==='diamond'?'bg-[#3B82F6]/10 text-[#3B82F6]':u.membership==='gold'?'bg-[#F59E0B]/10 text-[#F59E0B]':'bg-[#64748B]/10 text-[#64748B]'}`}>
                         {u.membership==='diamond'?<Crown className="w-3 h-3"/>:<Shield className="w-3 h-3"/>} {TIERS.find(t=>t.value===u.membership)?.label||u.membership}
                       </span>
                     )}

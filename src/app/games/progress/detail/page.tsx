@@ -331,13 +331,13 @@ function DetailContent() {
           </h2>
           <PaywallBlur
             membershipLevel={userLevel}
-            requiredTier="silver"
+            requiredTier="gold"
             articleId={game.id}
             blurStartPct={30}
           >
             <div
               className="prose prose-invert prose-sm max-w-none text-[#94A3B8] leading-relaxed"
-              dangerouslySetInnerHTML={{ __html: simpleMarkdown(game.silver_info) }}
+              dangerouslySetInnerHTML={{ __html: simpleMarkdown(game.gold_info) }}
             />
           </PaywallBlur>
         </section>

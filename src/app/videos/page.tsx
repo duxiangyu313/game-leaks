@@ -49,7 +49,7 @@ export default function VideosPage() {
                   <p className="text-xs text-[#64748B] mt-2 flex items-center gap-1"><Clock className="w-3 h-3" /> {new Date(v.created_at).toLocaleDateString("zh-CN")}</p>
                   {v.required_tier !== "free" && v.required_tier !== "public" && (
                     <span className="inline-block mt-2 text-[10px] px-2 py-0.5 rounded-full bg-[#F59E0B]/10 text-[#F59E0B]">
-                      {v.required_tier === "silver" ? "白银" : v.required_tier === "gold" ? "黄金" : "钻石"}可见
+                      {v.required_tier === "gold" ? "黄金" : "钻石"}可见
                     </span>
                   )}
                 </LinkNoPrefetch>

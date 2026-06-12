@@ -29,7 +29,7 @@ export default function PaywallBlur({
   const containerRef = useRef<HTMLDivElement>(null);
 
   // 派生值：会员等级是否足够阅读
-  const rank: Record<string, number> = { free: 0, silver: 1, gold: 2, diamond: 3 };
+  const rank: Record<string, number> = { free: 0, gold: 1, diamond: 2 };
   const canRead = (rank[membershipLevel] || 0) >= (rank[requiredTier] || 0);
 
   // 会员直接渲染全部内容

@@ -59,8 +59,7 @@ export default function SmartPaywallNudge({ membershipLevel, triggerAtPct = 50 }
 
   const getUpgradeTier = (): string => {
     if (membershipLevel === "free") return "黄金";
-    if (membershipLevel === "silver") return "黄金";
-    return "黄金";
+    return "钻石";
   };
 
   const getUpgradePrice = (): string => {

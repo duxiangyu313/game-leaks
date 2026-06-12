@@ -16,7 +16,7 @@ import type { TemplateType } from "@/types";
 
 const TIERS = [
   { value: "free", label: "免费可见" },
-  { value: "silver", label: "白银及以上" },
+
   { value: "gold", label: "黄金及以上" },
   { value: "diamond", label: "仅钻石" },
 ];
