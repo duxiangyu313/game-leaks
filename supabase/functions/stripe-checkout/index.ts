@@ -13,12 +13,12 @@ const supabase = createClient(
 );
 
 const PRICES: Record<string, Record<string, string>> = {
+  // TODO: 在 Stripe 后台创建 ¥29 月付 Price 后替换此 ID
   gold:    { monthly: "price_1ThRsgQ9NyBUwMBMt0b5WkXA", yearly: "price_1ThRtDQ9NyBUwMBMSpWF4J6Y" },
   diamond: { monthly: "price_1ThRtcQ9NyBUwMBMY5BWeUnh", yearly: "price_1ThRtrQ9NyBUwMBMY3VpweNz" },
 };
 
 const FIRST_MONTH_COUPONS: Record<string, { id: string; name: string; percent_off: number }> = {
-  gold:    { id: "first_month_gold",    name: "黄金首月5折", percent_off: 50 },
   diamond: { id: "first_month_diamond", name: "钻石首月5折", percent_off: 50 },
 };
 
