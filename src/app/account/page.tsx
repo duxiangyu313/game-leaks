@@ -33,6 +33,16 @@ export default function AccountPage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [panel, setPanel] = useState<Panel>(null);
+  const [daysLeft, setDaysLeft] = useState(0);
+
+  useEffect(() => {
+    const endDate = profile?.subscription_end_date;
+    if (!endDate) return;
+    const compute = () => setDaysLeft(Math.ceil((new Date(endDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24)));
+    compute();
+    const interval = setInterval(compute, 60000);
+    return () => clearInterval(interval);
+  }, [profile?.subscription_end_date]);
   const { manageSubscription, loading: subLoading } = useStripeCheckout();
 
   useEffect(() => {
@@ -85,10 +95,6 @@ export default function AccountPage() {
 
   const tier = MEMBERSHIP_TIERS[profile.membership];
   const isActive = profile.subscription_status === "active";
-  const daysLeft = profile.subscription_end_date
-    ? Math.ceil((new Date(profile.subscription_end_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
-    : 0;
-
   const activePanel = PANELS.find((p) => p.key === panel);
 
   return (

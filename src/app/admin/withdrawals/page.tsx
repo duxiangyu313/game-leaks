@@ -13,6 +13,7 @@ export default function WithdrawalsPage() {
     const { data } = await supabase.from("withdrawal_requests").select("*").order("created_at", { ascending: false });
     setRequests((data || []) as WithdrawalRequest[]); setLoading(false);
   }, []);
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { load(); }, [load]);
 
   const act = async (id: string, status: "approved" | "rejected" | "paid") => {

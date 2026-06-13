@@ -20,6 +20,7 @@ export default function SubmissionsPage() {
     setSubs((data || []) as UgcSubmission[]); setLoading(false);
   }, []);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { load(); }, [load]);
 
   const handleReview = async (id: string, status: "approved" | "rejected") => {

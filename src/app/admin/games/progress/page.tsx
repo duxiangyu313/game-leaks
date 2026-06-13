@@ -4,7 +4,7 @@ import { useEffect, useState, useMemo } from "react";
 import { supabase } from "@/lib/supabase/client";
 import {
   Plus, Pencil, Trash2, Search, X, Save, Loader2, CheckSquare,
-  Square, ChevronDown, ChevronUp, BarChart3
+  Square, BarChart3
 } from "lucide-react";
 import type { GameProgress } from "@/types";
 
@@ -46,6 +46,7 @@ export default function AdminGameProgressPage() {
       });
   };
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { loadData(); }, []);
 
   // 筛选

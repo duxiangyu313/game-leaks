@@ -29,6 +29,7 @@ export default function LeaksPage() {
     setLoading(false);
   }, [search, cred, page]);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { load(); }, [load]);
 
   const handleDelete = async (id: string) => {

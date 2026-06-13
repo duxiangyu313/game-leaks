@@ -15,7 +15,7 @@ export default function MembershipGate({ requiredTier, contentLevel, children, f
   useEffect(() => { (async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) { setTier("free"); setLoading(false); return; }
-    const { data: p } = await supabase.from("profiles").select("membership, subscription_end_date, banned").eq("id", user.id).single();
+    const { data: p } = await supabase.from("profiles").select("membership, subscription_end_date, banned").eq("id", user.id).maybeSingle();
     if (p?.banned) { setTier("free"); setLoading(false); return; }
     if (p?.subscription_end_date) {
       const end = new Date(p.subscription_end_date);

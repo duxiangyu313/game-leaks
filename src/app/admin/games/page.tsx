@@ -25,6 +25,8 @@ export default function GamesPage() {
     setLoading(false);
   }, [search, page]);
 
+  // load() triggers setState via async supabase call — intentional data-fetching pattern
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { load(); }, [load]);
 
   const handleDelete = async (id: string) => {

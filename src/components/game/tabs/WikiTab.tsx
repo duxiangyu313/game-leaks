@@ -1,5 +1,5 @@
 import LinkNoPrefetch from "@/components/LinkNoPrefetch";
-import { BookOpen, Sparkles, User, Image, Zap, FileText, Plus, Edit3 } from "lucide-react";
+import { BookOpen, Sparkles, User, Image as ImageIcon, Zap, FileText, Plus, Edit3 } from "lucide-react";
 import CrosshairIcon from "@/components/game/CrosshairIcon";
 
 interface WikiTabProps {
@@ -40,7 +40,7 @@ export default function WikiTab({ gameId, wiki }: WikiTabProps) {
       )}
       <WikiSection title="角色介绍" icon={<User className="w-5 h-5 text-[#10B981]" />} data={parseJSON(wiki.characters)} renderItem={(c: any) => ({ name: c.name, desc: c.desc })} />
       <WikiSection title="武器装备" icon={<CrosshairIcon className="w-5 h-5 text-[#E94560]" />} data={parseJSON(wiki.weapons)} renderItem={(w: any) => ({ name: w.name, desc: w.desc, badge: w.type })} />
-      <WikiSection title="地图区域" icon={<Image className="w-5 h-5 text-[#8B5CF6]" />} data={parseJSON(wiki.maps)} renderItem={(m: any) => ({ name: m.name, desc: m.desc })} />
+      <WikiSection title="地图区域" icon={<ImageIcon className="w-5 h-5 text-[#8B5CF6]" />} data={parseJSON(wiki.maps)} renderItem={(m: any) => ({ name: m.name, desc: m.desc })} />
       {wiki.developer_notes && (
         <div>
           <h3 className="text-lg font-bold text-[#F1F5F9] mb-3 flex items-center gap-2"><Zap className="w-5 h-5 text-[#F59E0B]" />开发秘闻</h3>

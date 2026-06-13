@@ -29,6 +29,8 @@ export default function ArticlesPage() {
     setLoading(false);
   }, [search, status, page]);
 
+  // load() triggers setState via async supabase call — intentional data-fetching pattern
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { load(); }, [load]);
 
   const handleDelete = async (id: string) => {
@@ -47,7 +49,7 @@ export default function ArticlesPage() {
 
   const toggleSelect = (id: string) => {
     const next = new Set(selected);
-    next.has(id) ? next.delete(id) : next.add(id);
+    if (next.has(id)) { next.delete(id); } else { next.add(id); }
     setSelected(next);
   };
 

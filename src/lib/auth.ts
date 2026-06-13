@@ -14,7 +14,7 @@ export async function getUserLevel(): Promise<MembershipLevel> {
   if (!user) return "free";
   const { data: profile } = await supabase
     .from("profiles").select("membership, subscription_end_date, banned")
-    .eq("id", user.id).single();
+    .eq("id", user.id).maybeSingle();
   if (profile?.banned) return "free";
   const level = (profile?.membership || "free") as MembershipLevel;
   if (profile?.subscription_end_date) {
