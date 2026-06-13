@@ -2,16 +2,15 @@
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/lib/supabase/client";
 import { CheckCircle, XCircle, Loader2, Wallet } from "lucide-react";
-import type { WithdrawalRequest } from "@/types";
 
 export default function WithdrawalsPage() {
-  const [requests, setRequests] = useState<WithdrawalRequest[]>([]);
+  const [requests, setRequests] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [al, setAl] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     const { data } = await supabase.from("withdrawal_requests").select("*").order("created_at", { ascending: false });
-    setRequests((data || []) as WithdrawalRequest[]); setLoading(false);
+    setRequests(data || []); setLoading(false);
   }, []);
   // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { load(); }, [load]);
@@ -22,7 +21,7 @@ export default function WithdrawalsPage() {
     await supabase.from("withdrawal_requests").update({ status, admin_id: uid, processed_at: new Date().toISOString() }).eq("id", id);
     if (status === "paid") {
       const r = requests.find(x => x.id === id);
-      if (r) await supabase.from("revenue_records").update({ settlement_status: "withdrawn" }).eq("creator_id", r.userId);
+      if (r) await supabase.from("revenue_records").update({ settlement_status: "withdrawn" }).eq("creator_id", r.user_id);
     }
     await supabase.from("admin_logs").insert({ action: `withdrawal_${status}`, detail: id, user_id: uid });
     setAl(null); load();
@@ -43,7 +42,7 @@ export default function WithdrawalsPage() {
                 {r.status === "pending" ? "待审核" : r.status === "approved" ? "已批准" : r.status === "paid" ? "已打款" : "已拒绝"}</span>
               <span className="text-sm text-[#94A3B8]">{r.method === "alipay" ? "支付宝" : "微信"}</span>
             </div>
-            <div className="flex items-baseline gap-2"><span className="text-xl font-bold text-[#F1F5F9]">¥{(r.amount / 100).toFixed(2)}</span><span className="text-xs text-[#64748B]">{new Date(r.createdAt).toLocaleDateString("zh-CN")}</span></div>
+            <div className="flex items-baseline gap-2"><span className="text-xl font-bold text-[#F1F5F9]">¥{(r.amount / 100).toFixed(2)}</span><span className="text-xs text-[#64748B]">{new Date(r.created_at).toLocaleDateString("zh-CN")}</span></div>
           </div>
           <div className="flex gap-2">
             {r.status === "pending" && <>

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import LinkNoPrefetch from "@/components/LinkNoPrefetch";
-import { User, Crown, Clock, CreditCard, Settings, LogOut, Shield, X } from "lucide-react";
+import { User, Crown, Clock, CreditCard, Settings, LogOut, Shield, X, ArrowRight, TrendingUp } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import { useStripeCheckout } from "@/hooks/useStripeCheckout";
 import { MEMBERSHIP_TIERS, type MembershipTier } from "@/lib/stripe-config";
@@ -180,6 +180,12 @@ export default function AccountPage() {
               <span className={`text-sm ${panel === item.key ? "text-[#F1F5F9]" : "text-[#94A3B8]"}`}>{item.label}</span>
             </button>
           ))}
+          <LinkNoPrefetch href="/creator"
+            className="glass-card p-4 flex items-center gap-3 transition-all hover:border-[#F59E0B]/30 hover:bg-[#F59E0B]/5 w-full">
+            <TrendingUp className="w-5 h-5 text-[#F59E0B]" />
+            <span className="text-sm text-[#F1F5F9] font-semibold">创作者中心</span>
+            <ArrowRight className="w-4 h-4 text-[#F59E0B] ml-auto" />
+          </LinkNoPrefetch>
         </motion.div>
 
         {/* Panel content */}

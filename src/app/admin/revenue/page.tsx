@@ -1,13 +1,16 @@
 "use client";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase/client";
-import { Loader2, TrendingUp, Users, DollarSign } from "lucide-react";
+import { Loader2, TrendingUp, Users, DollarSign, Play } from "lucide-react";
 
 export default function RevenuePage() {
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({ totalRevenue: 0, creatorCount: 0, pendingPayout: 0 });
+  const [running, setRunning] = useState(false);
+  const [result, setResult] = useState<string | null>(null);
 
-  useEffect(() => {(async () => {
+  const loadStats = async () => {
+    setLoading(true);
     const { data: records } = await supabase.from("revenue_records").select("amount, settlement_status");
     if (records) {
       const total = records.reduce((s: number, r: any) => s + (r.amount || 0), 0);
@@ -17,11 +20,30 @@ export default function RevenuePage() {
     const { count } = await supabase.from("profiles").select("id", { count: "exact", head: true }).gt("revenue_balance", 0);
     if (count) setStats(s => ({ ...s, creatorCount: count }));
     setLoading(false);
-  })();}, []);
+  };
+
+  useEffect(() => { loadStats(); }, []);
+
+  const runCalculation = async () => {
+    setRunning(true); setResult(null);
+    const { data, error } = await supabase.rpc("calculate_revenue");
+    if (error) { setResult(`错误: ${error.message}`); }
+    else if (data) { setResult(`计算完成！生成 ${data.records_created || 0} 条记录，总金额 ¥${((data.total_amount || 0) / 100).toFixed(2)}`); }
+    setRunning(false);
+    loadStats();
+  };
 
   return (
     <div>
-      <div className="mb-6"><h1 className="text-2xl font-bold text-[#F1F5F9]">收益管理</h1><p className="text-sm text-[#64748B] mt-1">创作者收益概览 · 月度结算</p></div>
+      <div className="mb-6 flex items-center justify-between">
+        <div><h1 className="text-2xl font-bold text-[#F1F5F9]">收益管理</h1><p className="text-sm text-[#64748B] mt-1">创作者收益概览 · 月度结算</p></div>
+        <button onClick={runCalculation} disabled={running}
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#10B981]/15 text-[#10B981] text-sm font-semibold hover:bg-[#10B981]/25 disabled:opacity-50 transition-all">
+          {running ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
+          {running ? "计算中..." : "运行月度结算"}
+        </button>
+      </div>
+      {result && <div className="mb-4 px-4 py-3 rounded-lg bg-[#10B981]/10 text-sm text-[#10B981]">{result}</div>}
       {loading ? <div className="flex justify-center py-20"><Loader2 className="w-6 h-6 animate-spin text-[#3B82F6]" /></div> : (
         <>
           <div className="grid grid-cols-3 gap-4 mb-8">
@@ -37,7 +59,7 @@ export default function RevenuePage() {
           </div>
           <div className="glass-card p-8 text-center">
             <TrendingUp className="w-10 h-10 text-[#64748B] mx-auto mb-3 opacity-40" />
-            <p className="text-[#64748B] text-sm">收益计算引擎将在每月 1 号自动运行。</p>
+            <p className="text-[#64748B] text-sm">点击上方"运行月度结算"手动触发，或配置 Supabase Cron 每月 1 号自动执行。</p>
             <p className="text-[#475569] text-xs mt-1">免费 100%广告 · 黄金 25%会员 · 钻石 40%（分3月）</p>
           </div>
         </>
