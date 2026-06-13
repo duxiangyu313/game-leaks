@@ -151,7 +151,7 @@ export default function CreatorCenterPage() {
           available={earnings.available} error={wdError} submitting={wdSubmitting}
           onSubmit={submitWithdrawal} withdrawals={withdrawals} />}
         {tab === "invite" && <InviteTab code={refCode} url={refUrl} count={refCount}
-          copied={copied} onCopy={copyRef} records={refRecords} profile={profile} />}
+          copied={copied} onCopy={copyRef} records={refRecords} />}
       </div>
     </div>
   );
@@ -293,9 +293,9 @@ function WithdrawTab({ form, setForm, min, available, error, submitting, onSubmi
 }
 
 // ── Invite Tab ──
-function InviteTab({ code, url, count, copied, onCopy, records, profile }: {
+function InviteTab({ code, url, count, copied, onCopy, records }: {
   code: string; url: string; count: number; copied: boolean; onCopy: () => void;
-  records: any[]; profile: any;
+  records: any[];
 }) {
   return (
     <div className="grid md:grid-cols-5 gap-8">

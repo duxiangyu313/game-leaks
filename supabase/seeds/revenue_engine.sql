@@ -130,7 +130,12 @@ BEGIN
       to_char(current_date - INTERVAL '2 months', 'YYYY-MM')
     );
 
-  GET DIAGNOSTICS records_created = records_created + ROW_COUNT;
+  DECLARE
+    inserted_count INTEGER;
+  BEGIN
+    GET DIAGNOSTICS inserted_count = ROW_COUNT;
+    records_created := records_created + inserted_count;
+  END;
 
   RETURN QUERY SELECT 'ok'::TEXT, records_created, total_amount;
 END;

@@ -22,6 +22,7 @@ export default function RevenuePage() {
     setLoading(false);
   };
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { loadStats(); }, []);
 
   const runCalculation = async () => {
@@ -59,7 +60,7 @@ export default function RevenuePage() {
           </div>
           <div className="glass-card p-8 text-center">
             <TrendingUp className="w-10 h-10 text-[#64748B] mx-auto mb-3 opacity-40" />
-            <p className="text-[#64748B] text-sm">点击上方"运行月度结算"手动触发，或配置 Supabase Cron 每月 1 号自动执行。</p>
+            <p className="text-[#64748B] text-sm">点击上方 &ldquo;运行月度结算&rdquo; 手动触发，或配置 Supabase Cron 每月 1 号自动执行。</p>
             <p className="text-[#475569] text-xs mt-1">免费 100%广告 · 黄金 25%会员 · 钻石 40%（分3月）</p>
           </div>
         </>
