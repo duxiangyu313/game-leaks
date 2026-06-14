@@ -153,7 +153,7 @@ export default function AnalysisPage() {
                           {categoryLabel(a.category)}
                         </span>
                         {isPaid && (
-                          <PremiumBadge tier={(a.required_tier as "gold" | "diamond") || "gold"} />
+                          <PremiumBadge tier={a.required_tier === "diamond" ? "diamond" : "gold"} />
                         )}
                         <span className="text-xs text-[#64748B] flex items-center gap-1 ml-auto">
                           <Clock className="w-3 h-3" />
