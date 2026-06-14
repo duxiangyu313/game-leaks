@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, Loader2, Upload, X, Globe, Star, Crown, AlertTriangle, FileText, Flame, Gamepad } from "lucide-react";
+import { Send, Loader2, Upload, X, Globe, Star, Crown, AlertTriangle, FileText, Flame, Gamepad, DollarSign, Gift } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import { getUserLevel, canSubmitContent, isColdStart } from "@/lib/auth";
 import type { MembershipLevel } from "@/lib/auth";
@@ -237,6 +237,13 @@ export default function SubmitPage() {
               <Flame className="w-4 h-4 text-[#F59E0B]" />
               <p className="text-xs text-[#F59E0B]">快捷爆料只需填写关键信息，无需长篇大论</p>
             </div>
+            <div className="px-4 py-3 rounded-xl bg-[#10B981]/5 border border-[#10B981]/10 flex items-start gap-3">
+              <DollarSign className="w-4 h-4 text-[#10B981] shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-semibold text-[#10B981]">审核通过可获得现金奖励</p>
+                <p className="text-xs text-[#64748B] mt-1">传闻 ¥3 · 可靠 ¥5 · 确认 ¥10　|　热门追加：1000 浏览 +¥5，5000 浏览 +¥20　|　满 ¥20 可提现</p>
+              </div>
+            </div>
             <div><label className="block text-sm font-medium text-[#94A3B8] mb-1.5">爆料标题 *</label>
               <input type="text" value={leakTitle} onChange={e => setLeakTitle(e.target.value)}
                 placeholder="一句话概括，如：影之刃零新Trailer将于下周发布"
@@ -265,6 +272,13 @@ export default function SubmitPage() {
             <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-[#06B6D4]/5 border border-[#06B6D4]/10">
               <Gamepad className="w-4 h-4 text-[#06B6D4]" />
               <p className="text-xs text-[#06B6D4]">推荐一款尚未收录的游戏，审核通过后将加入游戏库</p>
+            </div>
+            <div className="px-4 py-3 rounded-xl bg-[#8B5CF6]/5 border border-[#8B5CF6]/10 flex items-start gap-3">
+              <Gift className="w-4 h-4 text-[#8B5CF6] shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-semibold text-[#8B5CF6]">审核通过送会员延期</p>
+                <p className="text-xs text-[#64748B] mt-1">提名通过获 +3 天会员延期　|　本月限额 10 人　|　重复提名不发放</p>
+              </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div><label className="block text-sm font-medium text-[#94A3B8] mb-1.5">游戏名称 *</label>
