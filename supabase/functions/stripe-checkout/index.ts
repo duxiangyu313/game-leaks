@@ -54,7 +54,7 @@ serve(async (req) => {
       mode: "subscription", customer_email: user.email, client_reference_id: user.id,
       line_items: [{ price: priceId, quantity: 1 }],
       metadata: { tier, cycle }, subscription_data: { metadata: { tier, userId: user.id } },
-      payment_method_types: ["card", "wechat_pay"],
+      payment_method_types: ["card"],
       success_url: `${origin}/member/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/member/cancel`,
     };
