@@ -18,15 +18,15 @@ INSERT INTO platform_settings (key, value) VALUES ('submission_rewards', '{
   },
   "monthly_budget": 15000,
   "enabled": true
-}') ON CONFLICT (key) DO NOTHING;
+}'::jsonb) ON CONFLICT (key) DO NOTHING;
 
 -- 2. 月度预算追踪（每月 1 号自动重置）
-INSERT INTO platform_settings (key, value) VALUES ('submission_reward_budget', '{
+INSERT INTO platform_settings (key, value) VALUES ('submission_reward_budget', ('{
   "month": "' || to_char(current_date, 'YYYY-MM') || '",
   "spent": 0,
   "leak_count": 0,
   "nomination_count": 0
-}') ON CONFLICT (key) DO NOTHING;
+}')::jsonb) ON CONFLICT (key) DO NOTHING;
 
 -- 3. 核心奖励函数
 CREATE OR REPLACE FUNCTION grant_submission_reward(
