@@ -4,32 +4,36 @@ import { useEffect, useState } from "react";
 import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { useAdmin } from "@/components/admin/AdminAuth";
 import { supabase } from "@/lib/supabase/client";
-import { FileText, Flame, Gamepad2, Users, CreditCard, Eye, TrendingUp, Clock, ArrowRight, Rocket, CheckCircle, Loader2 } from "lucide-react";
+import { FileText, Flame, Gamepad2, Users, CreditCard, Eye, TrendingUp, Clock, ArrowRight, Rocket, CheckCircle, Loader2, Send, Wallet, DollarSign } from "lucide-react";
 
-interface Stats { articles: number; leaks: number; games: number; users: number; orders: number; totalViews: number; }
+interface Stats { articles: number; leaks: number; games: number; users: number; orders: number; totalViews: number; pendingSubs: number; pendingWds: number; revenueTotal: number; }
 interface RecentItem { id: string; title: string; type: "article" | "leak"; time: string; status: string; }
 
 const DEPLOY_FN = "https://gumpxfxbxxyljikaizsh.supabase.co/functions/v1/trigger-deploy";
 
 export default function AdminDashboard() {
   const { user } = useAdmin();
-  const [stats, setStats] = useState<Stats>({ articles: 0, leaks: 0, games: 0, users: 0, orders: 0, totalViews: 0 });
+  const [stats, setStats] = useState<Stats>({ articles: 0, leaks: 0, games: 0, users: 0, orders: 0, totalViews: 0, pendingSubs: 0, pendingWds: 0, revenueTotal: 0 });
   const [recent, setRecent] = useState<RecentItem[]>([]);
   const [deploying, setDeploying] = useState(false);
   const [deployMsg, setDeployMsg] = useState("");
 
   useEffect(() => {
     async function load() {
-      const [a, l, g, u, p, v] = await Promise.all([
+      const [a, l, g, u, p, v, s, w, r] = await Promise.all([
         supabase.from("articles").select("id", { count: "exact", head: true }),
         supabase.from("leaks").select("id", { count: "exact", head: true }),
         supabase.from("games").select("id", { count: "exact", head: true }),
         supabase.from("profiles").select("id", { count: "exact", head: true }),
         supabase.from("payments").select("id", { count: "exact", head: true }),
         supabase.from("leaks").select("view_count").eq("status", "published"),
+        supabase.from("ugc_submissions").select("id", { count: "exact", head: true }).eq("status", "pending"),
+        supabase.from("withdrawal_requests").select("id", { count: "exact", head: true }).eq("status", "pending"),
+        supabase.from("revenue_records").select("amount"),
       ]);
       const totalViews = v.data?.reduce((sum: number, l: { view_count: number }) => sum + (l.view_count || 0), 0) || 0;
-      setStats({ articles: a.count || 0, leaks: l.count || 0, games: g.count || 0, users: u.count || 0, orders: p.count || 0, totalViews });
+      const revenueTotal = r.data?.reduce((sum: number, rec: { amount: number }) => sum + (rec.amount || 0), 0) || 0;
+      setStats({ articles: a.count || 0, leaks: l.count || 0, games: g.count || 0, users: u.count || 0, orders: p.count || 0, totalViews, pendingSubs: s.count || 0, pendingWds: w.count || 0, revenueTotal });
 
       // Recent activity — combine articles and leaks
       const [{ data: recentArticles }, { data: recentLeaks }] = await Promise.all([
@@ -49,6 +53,9 @@ export default function AdminDashboard() {
     { icon: FileText, label: "文章", count: stats.articles, color: "text-[#06B6D4]", bg: "bg-[#06B6D4]/10", href: "/admin/articles" },
     { icon: Flame, label: "爆料", count: stats.leaks, color: "text-[#F59E0B]", bg: "bg-[#F59E0B]/10", href: "/admin/leaks" },
     { icon: Gamepad2, label: "游戏", count: stats.games, color: "text-[#10B981]", bg: "bg-[#10B981]/10", href: "/admin/games" },
+    { icon: Send, label: "待审投稿", count: stats.pendingSubs, color: "text-[#F59E0B]", bg: "bg-[#F59E0B]/10", href: "/admin/submissions", badge: stats.pendingSubs > 0 },
+    { icon: Wallet, label: "待审提现", count: stats.pendingWds, color: "text-[#EF4444]", bg: "bg-[#EF4444]/10", href: "/admin/withdrawals", badge: stats.pendingWds > 0 },
+    { icon: DollarSign, label: "累计收益", count: stats.revenueTotal, color: "text-[#10B981]", bg: "bg-[#10B981]/10", href: "/admin/revenue" },
     { icon: Users, label: "用户", count: stats.users, color: "text-[#22D3EE]", bg: "bg-[#22D3EE]/10", href: "/admin/users" },
     { icon: CreditCard, label: "订单", count: stats.orders, color: "text-[#8B5CF6]", bg: "bg-[#8B5CF6]/10", href: "/admin/orders" },
     { icon: Eye, label: "总浏览", count: stats.totalViews, color: "text-[#EC4899]", bg: "bg-[#EC4899]/10" },
@@ -91,10 +98,14 @@ export default function AdminDashboard() {
       {/* Stats cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
         {cards.map((c) => (
-          <LinkNoPrefetch key={c.label} href={c.href || "#"} className={`${c.bg} rounded-xl p-5 border border-[rgba(30,41,59,0.4)] hover:border-[rgba(6,182,212,0.2)] transition-all block`}>
+          <LinkNoPrefetch key={c.label} href={c.href || "#"} className={`${c.bg} rounded-xl p-5 border border-[rgba(30,41,59,0.4)] hover:border-[rgba(6,182,212,0.2)] transition-all block relative`}>
             <c.icon className={`w-6 h-6 ${c.color} mb-3`} />
-            <div className="text-2xl font-bold text-[#F1F5F9] tabular-nums">{c.count.toLocaleString()}</div>
-            <div className="text-xs text-[#64748B] mt-1">{c.label}</div>
+            <div className="text-2xl font-bold text-[#F1F5F9] tabular-nums">
+              {c.label === "累计收益" ? `¥${(c.count / 100).toFixed(0)}` : c.count.toLocaleString()}
+            </div>
+            <div className="text-xs text-[#64748B] mt-1 flex items-center gap-1.5">{c.label}
+              {(c as any).badge && <span className="w-2 h-2 rounded-full bg-[#EF4444] animate-pulse" />}
+            </div>
           </LinkNoPrefetch>
         ))}
       </div>
@@ -110,9 +121,13 @@ export default function AdminDashboard() {
               { label: "发布文章", href: "/admin/articles/new" },
               { label: "发布爆料", href: "/admin/leaks/new" },
               { label: "添加游戏", href: "/admin/games/new" },
-              { label: "查看用户", href: "/admin/users" },
+              { label: "审核投稿", href: "/admin/submissions", highlight: true },
+              { label: "收益管理", href: "/admin/revenue" },
+              { label: "提现审核", href: "/admin/withdrawals" },
             ].map((a) => (
-              <LinkNoPrefetch key={a.href} href={a.href} className="py-2.5 px-4 text-sm text-center rounded-lg bg-[#1E293B]/40 text-[#94A3B8] hover:text-[#F1F5F9] hover:bg-[#06B6D4]/10 transition-all">
+              <LinkNoPrefetch key={a.href} href={a.href} className={`py-2.5 px-4 text-sm text-center rounded-lg transition-all ${
+                (a as any).highlight ? "bg-[#F59E0B]/10 text-[#F59E0B] hover:bg-[#F59E0B]/20 font-semibold" : "bg-[#1E293B]/40 text-[#94A3B8] hover:text-[#F1F5F9] hover:bg-[#06B6D4]/10"
+              }`}>
                 {a.label}
               </LinkNoPrefetch>
             ))}
