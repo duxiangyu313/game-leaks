@@ -32,6 +32,8 @@ export default function Navbar() {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user || null);
       setLoading(false);
+    }).catch(() => {
+      setLoading(false); // Supabase 不可用时确保 loading 状态结束
     });
 
     // Listen for auth changes

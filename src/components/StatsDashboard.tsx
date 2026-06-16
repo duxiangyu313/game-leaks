@@ -14,7 +14,7 @@ interface StatsData {
 }
 
 const MOCK_STATS: StatsData = {
-  stats: { games: 8, leaks: 12, members: 128 },
+  stats: { games: 37, leaks: 30, members: 1 },
   topHype: [
     { title: "黑神话：悟空", hype_score: 98 },
     { title: "影之刃零", hype_score: 95 },

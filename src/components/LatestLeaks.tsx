@@ -27,7 +27,7 @@ export default function LatestLeaks() {
       .then(({ data, error }) => {
         if (!error && data && data.length > 0) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          return data.map((l: any) => ({ ...l, gameId: l.id, publishedAt: l.published_at, viewCount: l.view_count, commentCount: l.comment_count || 0, gameName: l.game_name }));
+          return data.map((l: any) => ({ ...l, gameId: l.game_id, publishedAt: l.published_at, viewCount: l.view_count, commentCount: l.comment_count || 0, gameName: l.game_name }));
         }
         return MOCK;
       }),

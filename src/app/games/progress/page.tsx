@@ -8,6 +8,31 @@ import type { GameProgress } from "@/types";
 
 const STAGES = ["全部", "概念阶段", "原型开发", "Alpha测试", "Beta测试", "压盘阶段", "已发售"] as const;
 
+// 静态回退数据（Supabase 不可用时使用）
+const MOCK: GameProgress[] = [
+  {
+    id: "mock-1", name: "归唐", developer: "网易雷火·临安24",
+    development_stage: "概念阶段", credibility_score: 8,
+    estimated_release_date: "2027", last_updated: "2026-06-12T00:00:00Z",
+    genre: "动作冒险", public_info: "", diamond_info: "", gold_info: "",
+    risk_assessment: "", tags: [], is_featured: true,
+  },
+  {
+    id: "mock-2", name: "失落之魂", developer: "Ultizero Games",
+    development_stage: "压盘阶段", credibility_score: 10,
+    estimated_release_date: "2026 Q3", last_updated: "2026-06-15T00:00:00Z",
+    genre: "动作RPG", public_info: "", diamond_info: "", gold_info: "",
+    risk_assessment: "", tags: [], is_featured: true,
+  },
+  {
+    id: "mock-3", name: "黑神话：悟空", developer: "游戏科学",
+    development_stage: "已发售", credibility_score: 10,
+    estimated_release_date: "2024-08-20", last_updated: "2026-06-15T00:00:00Z",
+    genre: "动作RPG", public_info: "", diamond_info: "", gold_info: "",
+    risk_assessment: "", tags: [], is_featured: true,
+  },
+];
+
 const SORTS = [
   { value: "updated", label: "最近更新" },
   { value: "release", label: "预计发售" },
@@ -24,12 +49,20 @@ export default function GameProgressListPage() {
   const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
-    supabase
-      .from("game_progress")
-      .select("*")
-      .order("last_updated", { ascending: false })
-      .then(({ data, error }) => {
-        if (!error && data) setGames(data as GameProgress[]);
+    Promise.resolve(
+      supabase
+        .from("game_progress")
+        .select("*")
+        .order("last_updated", { ascending: false })
+    ).then(({ data, error }) => {
+        if (!error && data && data.length > 0) {
+          setGames(data as GameProgress[]);
+        } else {
+          setGames(MOCK);
+        }
+        setLoading(false);
+      }).catch(() => {
+        setGames(MOCK);
         setLoading(false);
       });
   }, []);

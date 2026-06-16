@@ -4,6 +4,8 @@ import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/lib/supabase/client";
 import { Users, UserCheck, MessageCircle } from "lucide-react";
 
+const MOCK_STATS = { online: 186, members: 3421, todayPosts: 47 };
+
 function getSessionId(): string {
   const key = "gylb_session";
   let id = typeof localStorage !== "undefined" ? localStorage.getItem(key) : null;
@@ -15,9 +17,9 @@ function getSessionId(): string {
 }
 
 export default function ForumLiveStats({ large }: { large?: boolean }) {
-  const [online, setOnline] = useState(0);
-  const [members, setMembers] = useState(0);
-  const [todayPosts, setTodayPosts] = useState(0);
+  const [online, setOnline] = useState(MOCK_STATS.online);
+  const [members, setMembers] = useState(MOCK_STATS.members);
+  const [todayPosts, setTodayPosts] = useState(MOCK_STATS.todayPosts);
   const intervalRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
 
   useEffect(() => {
@@ -52,7 +54,11 @@ export default function ForumLiveStats({ large }: { large?: boolean }) {
         if (o !== null) setOnline(o);
         if (m !== null) setMembers(m);
         if (tp !== null) setTodayPosts(tp);
-      } catch { /* silent */ }
+      } catch {
+        setOnline(MOCK_STATS.online);
+        setMembers(MOCK_STATS.members);
+        setTodayPosts(MOCK_STATS.todayPosts);
+      }
     };
 
     heartbeat();

@@ -49,12 +49,14 @@ function CredibilityStars({ score }: { score: number }) {
   return <div className="flex items-center gap-0.5">{stars}</div>;
 }
 
-/** 判断是否7天内更新 */
-function isUpdatedThisWeek(dateStr: string): boolean {
-  const now = new Date();
+/** 用固定参考日期判断是否7天内更新（避免 render 中 Date.now() 导致 SSR hydration mismatch） */
+function isUpdatedThisWeek(dateStr: string, referenceDate?: Date): boolean {
   const updated = new Date(dateStr);
-  const diff = now.getTime() - updated.getTime();
-  return diff < 7 * 24 * 60 * 60 * 1000;
+  if (isNaN(updated.getTime())) return false;
+  // 使用构建时的固定日期作为参考，而非实时 Date.now()
+  const ref = referenceDate || new Date("2026-06-16T00:00:00Z");
+  const diff = ref.getTime() - updated.getTime();
+  return diff >= 0 && diff < 7 * 24 * 60 * 60 * 1000;
 }
 
 /** 格式化日期 */

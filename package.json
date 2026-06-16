@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "prebuild": "node scripts/build-cache.js",
-    "postbuild": "node scripts/fix-rsc.js live && node scripts/generate-sitemap.js live && touch live/.nojekyll",
+    "postbuild": "node scripts/fix-rsc.js live2 && node scripts/generate-sitemap.js live2 && touch live2/.nojekyll",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"

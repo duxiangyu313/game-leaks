@@ -41,7 +41,7 @@ function LeakDetailContent() {
     supabase.from("leaks").select("*").eq("id", id).single()
       .then(({ data, error }) => {
         if (!error && data) {
-          setLeak({ ...data, gameId: data.id, publishedAt: data.published_at, viewCount: data.view_count, commentCount: data.comment_count || 0, gameName: data.game_name } as Leak);
+          setLeak({ ...data, gameId: data.game_id, publishedAt: data.published_at, viewCount: data.view_count, commentCount: data.comment_count || 0, gameName: data.game_name } as Leak);
         } else {
           setLeak(MOCK[id] || null);
         }

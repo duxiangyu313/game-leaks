@@ -66,8 +66,8 @@ function lsSet(key: string, data: any) {
 
 /**
  * 三层缓存查询 Hook
- * 1. localStorage 缓存 → 毫秒级返回，用于回访用户
- * 2. 构建时 JSON → 秒级返回，用于首访用户
+ * 1. 构建时 JSON → 秒级返回，用于首访用户（SSR/CSR 一致，避免 hydration mismatch）
+ * 2. localStorage 缓存 → 客户端 mount 后异步恢复，用于回访用户
  * 3. Supabase 实时数据 → 后台静默更新
  *
  * @param key     唯一缓存键
@@ -90,33 +90,34 @@ export function useCachedQuery<T>(
     homepageKeyRef.current = homepageKey;
   });
 
-  // 初始化：localStorage > 构建时缓存 > fallback
+  // 初始化：构建时缓存 > fallback（不读 localStorage，避免 SSR hydration mismatch）
+  // localStorage 在 useEffect 中异步恢复，保证 SSR/CSR 首帧完全一致
   const [data, setData] = useState<T>(() => {
-    // 1. localStorage 缓存（回访用户）
-    const ls = lsGet<T>(key);
-    if (ls.cacheHit && ls.data) {
-      return ls.data;
-    }
-
-    // 2. 构建时首页 JSON（首访用户）
+    // 构建时首页 JSON（首访用户）
     if (homepageKey) {
       const hp = getHomepageCached(homepageKey);
       if (hp) return hp as T;
     }
-
     return fallback;
   });
 
   const [loading, setLoading] = useState(() => {
-    // 如果有 localStorage 或 homepage 缓存命中，不显示 loading
-    const ls = lsGet<T>(key);
-    if (ls.cacheHit && ls.data) return false;
+    // 如果有 homepage 缓存命中，不显示 loading
     if (homepageKey && getHomepageCached(homepageKey)) return false;
     return true;
   });
 
+  // 客户端 mount 后：从 localStorage 恢复缓存 + Supabase 刷新
   useEffect(() => {
     let cancelled = false;
+
+    // 先从 localStorage 恢复（回访用户秒开），
+    // 放在 useEffect 而非 useState 初始化器，确保 SSR/CSR 首帧一致
+    const ls = lsGet<T>(key);
+    if (ls.cacheHit && ls.data) {
+      setData(ls.data);
+      setLoading(false);
+    }
 
     // 包装成标准 Promise 以支持 .catch()
     Promise.resolve(fetcherRef.current())

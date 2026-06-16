@@ -16,11 +16,11 @@ export default function HotDiscussions() {
       .limit(5)
       .then(({ data }) => data || []),
     [
-      { id: "h1", title: "2026年国产3A你最期待哪一款？", reply_count: 456, view_count: 15600, author_name: "管理员", created_at: new Date().toISOString() },
-      { id: "h2", title: "升级显卡备战国产3A", reply_count: 234, view_count: 8900, author_name: "硬件发烧友", created_at: new Date().toISOString() },
-      { id: "h3", title: "《归唐》SGF实机讨论集中帖", reply_count: 128, view_count: 3200, author_name: "游戏猎人", created_at: new Date().toISOString() },
-      { id: "h4", title: "蛇夫座第二项目曝光", reply_count: 134, view_count: 4500, author_name: "军事游戏迷", created_at: new Date().toISOString() },
-      { id: "h5", title: "晒一晒你的游戏设备和桌面", reply_count: 567, view_count: 18900, author_name: "桌面控", created_at: new Date().toISOString() },
+      { id: "h1", title: "2026年国产3A你最期待哪一款？", reply_count: 456, view_count: 15600, author_name: "管理员", created_at: "2026-06-15T12:00:00Z" },
+      { id: "h2", title: "升级显卡备战国产3A", reply_count: 234, view_count: 8900, author_name: "硬件发烧友", created_at: "2026-06-15T12:00:00Z" },
+      { id: "h3", title: "《归唐》SGF实机讨论集中帖", reply_count: 128, view_count: 3200, author_name: "游戏猎人", created_at: "2026-06-15T12:00:00Z" },
+      { id: "h4", title: "蛇夫座第二项目曝光", reply_count: 134, view_count: 4500, author_name: "军事游戏迷", created_at: "2026-06-15T12:00:00Z" },
+      { id: "h5", title: "晒一晒你的游戏设备和桌面", reply_count: 567, view_count: 18900, author_name: "桌面控", created_at: "2026-06-15T12:00:00Z" },
     ],
     "hotDiscussions"
   );

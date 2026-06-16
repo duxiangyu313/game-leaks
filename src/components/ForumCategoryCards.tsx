@@ -16,6 +16,13 @@ interface CatStat {
   posts: number;
 }
 
+const MOCK_CATS: CatStat[] = [
+  { slug: "games", name: "游戏专区", desc: "黑神话、影之刃零、归唐等国产3A游戏讨论", icon: Gamepad2, color: "text-[#06B6D4]", bg: "from-[#06B6D4]/10 to-[#0891B2]/5", threads: 156, posts: 2340 },
+  { slug: "leaks", name: "爆料交流", desc: "最新游戏爆料讨论与信息交叉验证", icon: Flame, color: "text-[#F59E0B]", bg: "from-[#F59E0B]/10 to-[#D97706]/5", threads: 89, posts: 1200 },
+  { slug: "general", name: "综合讨论", desc: "游戏行业动态、硬件配置、买买买心得", icon: MessageSquare, color: "text-[#10B981]", bg: "from-[#10B981]/10 to-[#059669]/5", threads: 234, posts: 3800 },
+  { slug: "off-topic", name: "灌水区", desc: "游戏之外的轻松话题，聊天交友", icon: Coffee, color: "text-[#8B5CF6]", bg: "from-[#8B5CF6]/10 to-[#7C3AED]/5", threads: 456, posts: 8900 },
+];
+
 const CAT_BASE = [
   { slug: "games", name: "游戏专区", desc: "黑神话、影之刃零、归唐等国产3A游戏讨论", icon: Gamepad2, color: "text-[#06B6D4]", bg: "from-[#06B6D4]/10 to-[#0891B2]/5" },
   { slug: "leaks", name: "爆料交流", desc: "最新游戏爆料讨论与信息交叉验证", icon: Flame, color: "text-[#F59E0B]", bg: "from-[#F59E0B]/10 to-[#D97706]/5" },
@@ -24,7 +31,7 @@ const CAT_BASE = [
 ];
 
 export default function ForumCategoryCards() {
-  const [cats, setCats] = useState<CatStat[]>(CAT_BASE.map(c => ({ ...c, threads: 0, posts: 0 })));
+  const [cats, setCats] = useState<CatStat[]>(MOCK_CATS);
 
   useEffect(() => {
     Promise.all(
@@ -33,7 +40,8 @@ export default function ForumCategoryCards() {
         const { count: replies } = await supabase.from("forum_replies").select("id", { count: "exact", head: true }).eq("category", c.slug).maybeSingle();
         return { ...c, threads: threads || 0, posts: (threads || 0) + (typeof replies === 'number' ? replies : 0) };
       })
-    ).then(setCats);
+    ).then(setCats)
+    .catch(() => setCats(MOCK_CATS));
   }, []);
 
   return (

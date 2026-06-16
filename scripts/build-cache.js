@@ -80,7 +80,7 @@ async function main() {
     if (leaks?.length) {
       cache["leaks"] = leaks.map((l) => ({
         ...l,
-        gameId: l.id,
+        gameId: l.game_id,
         publishedAt: l.published_at,
         viewCount: l.view_count,
         commentCount: l.comment_count || 0,

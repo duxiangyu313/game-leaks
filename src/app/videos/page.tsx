@@ -5,9 +5,21 @@ import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { supabase } from "@/lib/supabase/client";
 import { Play, Search, Clock } from "lucide-react";
 
+// 静态回退数据（Supabase 不可用时使用，与首页 VideoSection 保持一致）
+const MOCK_VIDEOS = [
+  { id: "v8", title: "第8期 · 归唐实机深度解析——我看了五遍才发现这游戏不对劲", content: 'BV1dTEu6PE5d', created_at: "2026-06-09T00:00:00Z", required_tier: "free" },
+  { id: "v7", title: "第7期 · 归唐SGF首曝——国产3A登上世界舞台", content: 'BV1i37D6UE6H', created_at: "2026-06-09T00:00:00Z", required_tier: "free" },
+  { id: "v6", title: "第6期 · 影之刃零跳票到10月——灵游坊在赌什么？", content: 'BV1EwEF62Evi', created_at: "2026-06-09T00:00:00Z", required_tier: "free" },
+  { id: "v5", title: "第5期 · 湮灭之潮——中国人做的亚瑟王游戏，老外先疯了", content: 'BV1v3Vd6JEgw', created_at: "2026-06-09T00:00:00Z", required_tier: "free" },
+  { id: "v4", title: "第4期 · 归唐——网易憋了一年的牌，终于要亮了", content: 'BV1DWV56FEX7', created_at: "2026-06-09T00:00:00Z", required_tier: "free" },
+  { id: "v3", title: "第3期 · 48小时三国杀——国产3A赛道突然拥挤", content: 'BV1bnVH6LEtX', created_at: "2026-06-09T00:00:00Z", required_tier: "free" },
+  { id: "v2", title: "第2期 · 影之刃零深度前瞻——只剩66天的杀手", content: 'BV1gXG16mE9E', created_at: "2026-06-09T00:00:00Z", required_tier: "free" },
+  { id: "v1", title: "第1期 · 2026国产3A全景展望——中国游戏的新纪元", content: 'BV1qTG76yEUH', created_at: "2026-06-09T00:00:00Z", required_tier: "free" },
+];
+
 export default function VideosPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [videos, setVideos] = useState<any[]>([]);
+  const [videos, setVideos] = useState<any[]>(MOCK_VIDEOS);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
 
@@ -17,8 +29,14 @@ export default function VideosPage() {
       supabase.from("ugc_content").select("*").eq("category", "video").order("published_at", { ascending: false }),
     ]).then(([{ data: articles }, { data: ugcVideos }]) => {
       const all = [...(articles || []), ...((ugcVideos || []).map((v: any) => ({ ...v, created_at: v.published_at })))];
-      all.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-      setVideos(all); setLoading(false);
+      if (all.length > 0) {
+        all.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+        setVideos(all);
+      }
+      // 如果 Supabase 返回空，保留 MOCK_VIDEOS（初始状态已有）
+      setLoading(false);
+    }).catch(() => {
+      setLoading(false); // 出错时保留 MOCK_VIDEOS
     });
   }, []);
 
