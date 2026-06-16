@@ -12,8 +12,13 @@ export default function VideosPage() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    supabase.from("articles").select("*").eq("category", "video").eq("status", "published").order("created_at", { ascending: false }).then(({ data }) => {
-      setVideos(data || []); setLoading(false);
+    Promise.all([
+      supabase.from("articles").select("*").eq("category", "video").eq("status", "published").order("created_at", { ascending: false }),
+      supabase.from("ugc_content").select("*").eq("category", "video").order("published_at", { ascending: false }),
+    ]).then(([{ data: articles }, { data: ugcVideos }]) => {
+      const all = [...(articles || []), ...((ugcVideos || []).map((v: any) => ({ ...v, created_at: v.published_at })))];
+      all.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+      setVideos(all); setLoading(false);
     });
   }, []);
 

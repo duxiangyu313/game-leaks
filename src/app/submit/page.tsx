@@ -3,18 +3,19 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, Loader2, Upload, X, Globe, Star, Crown, AlertTriangle, FileText, Flame, Gamepad, DollarSign, Gift } from "lucide-react";
+import { Send, Loader2, Upload, X, Globe, Star, Crown, AlertTriangle, FileText, Flame, Gamepad, DollarSign, Gift, Play } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import { getUserLevel, canSubmitContent, isColdStart } from "@/lib/auth";
 import type { MembershipLevel } from "@/lib/auth";
 import type { ContentLevel, ArticleCategory } from "@/types";
 
-type SubmitType = "article" | "leak" | "game_nomination";
+type SubmitType = "article" | "leak" | "game_nomination" | "video";
 
 const SUBMIT_TYPES: { key: SubmitType; icon: typeof FileText; label: string; desc: string }[] = [
   { key: "article", icon: FileText, label: "文章投稿", desc: "深度分析、评测、观点文章" },
   { key: "leak", icon: Flame, label: "快捷爆料", desc: "新闻线索、内幕消息" },
   { key: "game_nomination", icon: Gamepad, label: "游戏提名", desc: "推荐新游戏入库" },
+  { key: "video", icon: Play, label: "视频投稿", desc: "B站/YouTube 嵌入 + 文字解读" },
 ];
 
 const CATEGORIES: { value: ArticleCategory; label: string }[] = [
@@ -67,6 +68,11 @@ export default function SubmitPage() {
   const [nomDesc, setNomDesc] = useState("");
   const [nomRelease, setNomRelease] = useState("");
 
+  // video fields
+  const [videoUrl, setVideoUrl] = useState("");
+  const [videoTitle, setVideoTitle] = useState("");
+  const [videoDesc, setVideoDesc] = useState("");
+
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState("");
@@ -97,8 +103,13 @@ export default function SubmitPage() {
     } else if (submitType === "game_nomination") {
       if (!nomGameName.trim()) { setError("请输入游戏名称"); return; }
       if (!nomDesc.trim()) { setError("请输入游戏描述"); return; }
+    } else if (submitType === "video") {
+      if (!videoUrl.trim()) { setError("请输入视频链接"); return; }
+      if (!videoTitle.trim()) { setError("请输入视频标题"); return; }
     }
-    if (!canSubmit(contentLevel)) { setError("你的会员等级无法投稿该等级内容"); return; }
+    // video投稿 contentLevel 固定 free（视频嵌入免费看，文字解读可设付费）
+    const actualLevel = submitType === "video" ? "free" : contentLevel;
+    if (!canSubmit(actualLevel)) { setError("你的会员等级无法投稿该等级内容"); return; }
 
     setSubmitting(true);
     try {
@@ -135,6 +146,12 @@ export default function SubmitPage() {
         payload.content = `**开发商**: ${nomDeveloper.trim() || "未知"}\n**预计发售**: ${nomRelease.trim() || "未知"}\n\n${nomDesc.trim()}`;
         payload.category = "misc";
         payload.game_name = nomGameName.trim();
+      } else if (submitType === "video") {
+        payload.title = videoTitle.trim();
+        payload.content = `**视频链接**: ${videoUrl.trim()}\n\n${videoDesc.trim() || ""}`;
+        payload.category = "video";
+        payload.content_level = "free";
+        payload.game_name = gameName.trim() || null;
       }
 
       const { error: submitErr } = await supabase.from("ugc_submissions").insert(payload);
@@ -177,7 +194,7 @@ export default function SubmitPage() {
       </motion.div>}
 
       {/* ── Submission type selector ── */}
-      <div className="grid grid-cols-3 gap-3 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
         {SUBMIT_TYPES.map(({ key, icon: Icon, label, desc }) => (
           <button key={key} type="button" onClick={() => switchType(key)}
             className={`p-4 rounded-xl border text-left transition-all ${
@@ -298,6 +315,33 @@ export default function SubmitPage() {
               <input type="text" value={nomRelease} onChange={e => setNomRelease(e.target.value)}
                 placeholder="如：2026年Q3 或 2026年9月"
                 className="w-full px-4 py-3 rounded-xl bg-[#1E293B]/40 border border-[rgba(30,41,59,0.6)] text-[#F1F5F9] text-sm outline-none focus:border-[#06B6D4]/40" /></div>
+          </motion.div>}
+
+          {/* ═══ VIDEO ═══ */}
+          {submitType === "video" && <motion.div key="video" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-5">
+            <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-[#E94560]/5 border border-[#E94560]/10">
+              <Play className="w-4 h-4 text-[#E94560]" />
+              <p className="text-xs text-[#E94560]">粘贴 B站/YouTube 链接 + 写你的独家文字解读</p>
+            </div>
+            <div><label className="block text-sm font-medium text-[#94A3B8] mb-1.5">视频链接 *</label>
+              <input type="url" value={videoUrl} onChange={e => setVideoUrl(e.target.value)}
+                placeholder="https://www.bilibili.com/video/BVxxx 或 https://youtube.com/watch?v=xxx"
+                className="w-full px-4 py-3 rounded-xl bg-[#1E293B]/40 border border-[rgba(30,41,59,0.6)] text-[#F1F5F9] text-sm outline-none focus:border-[#E94560]/40" /></div>
+            <div><label className="block text-sm font-medium text-[#94A3B8] mb-1.5">视频标题 *</label>
+              <input type="text" value={videoTitle} onChange={e => setVideoTitle(e.target.value)}
+                placeholder="给你的视频起个标题..."
+                className="w-full px-4 py-3 rounded-xl bg-[#1E293B]/40 border border-[rgba(30,41,59,0.6)] text-[#F1F5F9] text-sm outline-none focus:border-[#E94560]/40" /></div>
+            <div><label className="block text-sm font-medium text-[#94A3B8] mb-1.5">文字解读（可选，支持 Markdown）</label>
+              <textarea value={videoDesc} onChange={e => setVideoDesc(e.target.value)} rows={5}
+                placeholder="写一段独家解读——视频在哪都能看，但你的分析才是核心价值。这里可以设为付费内容。"
+                className="w-full px-4 py-3 rounded-xl bg-[#1E293B]/40 border border-[rgba(30,41,59,0.6)] text-[#F1F5F9] text-sm outline-none focus:border-[#E94560]/40 resize-y" /></div>
+            <div className="px-4 py-3 rounded-xl bg-[#F59E0B]/5 border border-[#F59E0B]/10 flex items-start gap-3">
+              <DollarSign className="w-4 h-4 text-[#F59E0B] shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-semibold text-[#F59E0B]">视频投稿奖励</p>
+                <p className="text-xs text-[#64748B] mt-1">审核通过后 ¥2 现金奖励 + 文字解读部分浏览量高可获追投</p>
+              </div>
+            </div>
           </motion.div>}
 
         </AnimatePresence>
