@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { motion } from "framer-motion";
 import { BookOpen, PenLine, Users, TrendingUp, Clock, Eye, Flame, Newspaper } from "lucide-react";
-import { supabase } from "@/lib/supabase/client";
 import { calculateReadingTime, calculateWordCount, formatDate } from "@/lib/article-utils";
+import { useArticles } from "@/data/hooks";
+import type { ArticleListItem } from "@/data/hooks";
 import PremiumBadge from "@/components/cyber/PremiumBadge";
 
 const CATS = [
@@ -21,41 +22,25 @@ const CATS = [
 const TIER_FILTERS = [
   { key: "all", label: "全部" },
   { key: "free", label: "免费", color: "text-[#64748B]" },
- 
   { key: "gold", label: "黄金", color: "text-[#F59E0B]" },
   { key: "diamond", label: "钻石", color: "text-[#22D3EE]" },
 ];
 
 export default function AnalysisPage() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [articles, setArticles] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { articles, loading } = useArticles();
   const [activeCat, setActiveCat] = useState("all");
   const [activeTier, setActiveTier] = useState("all");
 
-  useEffect(() => {
-    supabase
-      .from("articles")
-      .select("*")
-      .eq("status", "published")
-      .order("created_at", { ascending: false })
-      .then(({ data }) => {
-        setArticles(data || []);
-        setLoading(false);
-      });
-  }, []);
-
-  // 筛选
-  const filtered = articles.filter((a) => {
-    if (activeCat !== "all" && a.category !== activeCat) return false;
-    if (activeTier !== "all" && a.required_tier !== activeTier) return false;
-    // 过滤掉视频分类（视频在 /videos 展示）
+  // 客户端筛选（分类 + 等级，即时切换无需重新查询）
+  const filtered = articles.filter((a: ArticleListItem) => {
     if (a.category === "video") return false;
+    if (activeCat !== "all" && a.category !== activeCat) return false;
+    if (activeTier !== "all" && a.requiredTier !== activeTier) return false;
     return true;
   });
 
-  // 分类计数（排除视频）
-  const displayArticles = articles.filter(a => a.category !== "video");
+  // 分类计数
+  const displayArticles = articles.filter((a: ArticleListItem) => a.category !== "video");
   const catCounts: Record<string, number> = {};
   CATS.forEach((cat) => {
     if (cat.key === "all") catCounts[cat.key] = displayArticles.length;
@@ -116,10 +101,9 @@ export default function AnalysisPage() {
           </div>
         ) : (
           <div className="space-y-4">
-            {filtered.map((a, i) => {
-              const isPaid = (a.required_tier as string) !== "free";
-              const readTime = calculateReadingTime(a.content || "");
-              const wordCount = calculateWordCount(a.content || "");
+            {filtered.map((a: ArticleListItem, i: number) => {
+              const isPaid = (a.requiredTier as string) !== "free";
+              const readTime = calculateReadingTime((a as any).content || "");
 
               return (
                 <motion.article
@@ -133,12 +117,10 @@ export default function AnalysisPage() {
                   }`}
                 >
                   <LinkNoPrefetch href={`/articles/detail?id=${a.id}`} className="flex flex-col md:flex-row">
-                    {/* 封面图 */}
-                    {a.cover_image && (
+                    {a.coverImage && (
                       <div className="md:w-48 shrink-0 h-36 md:h-auto overflow-hidden bg-[#1E293B]/40">
-                        {/* eslint-disable-next-line @next/next/no-img-element -- static export */}
                         <img
-                          src={a.cover_image}
+                          src={a.coverImage}
                           alt={a.title}
                           loading="lazy"
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -147,52 +129,39 @@ export default function AnalysisPage() {
                     )}
 
                     <div className="flex-1 p-5 md:p-6">
-                      {/* 元信息行 */}
                       <div className="flex items-center gap-2 mb-2 flex-wrap">
                         <span className="text-xs px-2 py-0.5 rounded-full bg-[#06B6D4]/10 text-[#06B6D4]">
-                          {categoryLabel(a.category)}
+                          {categoryLabel(a.category || "")}
                         </span>
                         {isPaid && (
-                          <PremiumBadge tier={a.required_tier === "diamond" ? "diamond" : "gold"} />
+                          <PremiumBadge tier={a.requiredTier === "diamond" ? "diamond" : "gold"} />
                         )}
                         <span className="text-xs text-[#64748B] flex items-center gap-1 ml-auto">
                           <Clock className="w-3 h-3" />
-                          {formatDate(a.created_at)}
+                          {a.createdAt ? formatDate(a.createdAt) : ""}
                         </span>
                       </div>
 
-                      {/* 标题 */}
                       <h3 className="text-lg font-bold text-[#F1F5F9] mb-2 group-hover:text-[#06B6D4] transition-colors">
                         {a.title}
                       </h3>
 
-                      {/* 摘要 */}
                       {a.excerpt && (
                         <p className="text-sm text-[#94A3B8] line-clamp-2 mb-3">{a.excerpt}</p>
                       )}
 
-                      {/* 底部信息 */}
                       <div className="flex items-center gap-4 text-xs text-[#64748B] flex-wrap">
                         <span className="flex items-center gap-1">
                           <Clock className="w-3 h-3" /> {readTime} 分钟
                         </span>
-                        {wordCount > 0 && (
-                          <span>{wordCount.toLocaleString()} 字</span>
-                        )}
-                        {a.view_count > 0 && (
+                        {a.viewCount > 0 && (
                           <span className="flex items-center gap-1">
-                            <Eye className="w-3 h-3" /> {a.view_count.toLocaleString()} 阅读
-                          </span>
-                        )}
-                        {a.purchase_count > 0 && (
-                          <span className="text-[#F59E0B]">
-                            {a.purchase_count.toLocaleString()} 人已购
+                            <Eye className="w-3 h-3" /> {a.viewCount.toLocaleString()} 阅读
                           </span>
                         )}
                       </div>
 
-                      {/* 标签 */}
-                      {a.tags?.length > 0 && (
+                      {a.tags.length > 0 && (
                         <div className="flex flex-wrap gap-1.5 mt-3">
                           {a.tags.map((t: string) => (
                             <span key={t} className="text-[10px] text-[#64748B] bg-[#1E293B]/40 px-2 py-0.5 rounded">
