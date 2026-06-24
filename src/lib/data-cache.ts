@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any -- 泛型缓存层，Record<string, any> 为 JSON 数据的合理类型 */
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, startTransition } from "react";
 
 const CACHE_PREFIX = "gc:";
 const CACHE_TTL = 10 * 60 * 1000; // 10分钟过期
@@ -115,8 +115,10 @@ export function useCachedQuery<T>(
     // 放在 useEffect 而非 useState 初始化器，确保 SSR/CSR 首帧一致
     const ls = lsGet<T>(key);
     if (ls.cacheHit && ls.data) {
-      setData(ls.data);
-      setLoading(false);
+      startTransition(() => {
+        setData(ls.data);
+        setLoading(false);
+      });
     }
 
     // 包装成标准 Promise 以支持 .catch()

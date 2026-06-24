@@ -1,6 +1,6 @@
 "use client";
 
-import { Crown, Star, Shield, Lock } from "lucide-react";
+import { Crown, Star, Lock } from "lucide-react";
 import type { MembershipTier } from "@/types";
 
 interface Props {
@@ -10,6 +10,7 @@ interface Props {
 
 const TIER_CONFIG: Record<MembershipTier, { icon: typeof Crown; label: string; color: string; bg: string; border: string }> = {
   free: { icon: Lock, label: "免费", color: "text-[#64748B]", bg: "bg-[#64748B]/10", border: "border-[#64748B]/20" },
+  silver: { icon: Star, label: "白银会员", color: "text-[#94A3B8]", bg: "bg-[#94A3B8]/10", border: "border-[#94A3B8]/25" },
   gold: { icon: Crown, label: "黄金会员", color: "text-[#F59E0B]", bg: "bg-[#F59E0B]/10", border: "border-[#F59E0B]/25" },
   diamond: { icon: Star, label: "钻石会员", color: "text-[#3B82F6]", bg: "bg-[#3B82F6]/10", border: "border-[#3B82F6]/25" },
 };

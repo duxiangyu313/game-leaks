@@ -4,8 +4,8 @@ import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { usePathname } from "next/navigation";
 import { useAdmin } from "./AdminAuth";
 import {
-  LayoutDashboard, FileText, Flame, Gamepad2, BarChart3, Users, CreditCard,
-  LogOut, ChevronLeft, Menu, X, Gift, Shield, Send, DollarSign, Wallet
+  LayoutDashboard, FileText, Flame, Gamepad2, Users, CreditCard,
+  LogOut, ChevronLeft, Menu, X, Send, DollarSign, Wallet
 } from "lucide-react";
 import { useState } from "react";
 import { supabase } from "@/lib/supabase/client";

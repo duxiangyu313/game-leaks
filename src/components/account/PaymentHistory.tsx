@@ -27,7 +27,7 @@ export default function PaymentHistory() {
         .order("created_at", { ascending: false })
         .limit(20)
         .then(({ data }) => {
-          if (data) setPayments(data);
+          if (data) setPayments(data as unknown as Payment[]);
           setLoading(false);
         });
     });

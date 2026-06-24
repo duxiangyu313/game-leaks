@@ -37,7 +37,7 @@ export default function ForumCategoryCards() {
     Promise.all(
       CAT_BASE.map(async (c) => {
         const { count: threads } = await supabase.from("forum_posts").select("id", { count: "exact", head: true }).eq("category", c.slug);
-        const { count: replies } = await supabase.from("forum_replies").select("id", { count: "exact", head: true }).eq("category", c.slug).maybeSingle();
+        const { count: replies } = await supabase.from("forum_replies").select("id", { count: "exact", head: true });
         return { ...c, threads: threads || 0, posts: (threads || 0) + (typeof replies === 'number' ? replies : 0) };
       })
     ).then(setCats)

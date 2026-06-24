@@ -5,7 +5,7 @@ import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { supabase } from "@/lib/supabase/client";
 import { Plus, Pencil, Trash2, Search, ChevronLeft, ChevronRight } from "lucide-react";
 
-interface Article { id: string; title: string; category: string; required_tier: string; status: string; view_count: number; created_at: string; }
+interface Article { id: string; title: string; category: string | null; required_tier: string | null; status: string | null; view_count: number | null; created_at: string | null; }
 const PAGE_SIZE = 20;
 const STATUSES = ["全部", "published", "draft", "scheduled"];
 
@@ -116,7 +116,7 @@ export default function ArticlesPage() {
                   <td className="p-3 text-[#94A3B8] hidden md:table-cell">{a.required_tier}</td>
                   <td className="p-3"><span className={`text-xs px-2 py-0.5 rounded-full ${a.status === "published" ? "bg-[#10B981]/10 text-[#10B981]" : a.status === "draft" ? "bg-[#F59E0B]/10 text-[#F59E0B]" : "bg-[#64748B]/10 text-[#64748B]"}`}>{a.status === "published" ? "已发布" : a.status === "draft" ? "草稿" : a.status}</span></td>
                   <td className="p-3 text-[#94A3B8] hidden md:table-cell">{a.view_count || 0}</td>
-                  <td className="p-3 text-[#64748B] text-xs hidden md:table-cell">{new Date(a.created_at).toLocaleDateString("zh-CN")}</td>
+                  <td className="p-3 text-[#64748B] text-xs hidden md:table-cell">{a.created_at ? new Date(a.created_at).toLocaleDateString("zh-CN") : "-"}</td>
                   <td className="p-3">
                     <div className="flex gap-1">
                       <LinkNoPrefetch href={`/admin/articles/edit?id=${a.id}`} className="p-1.5 text-[#64748B] hover:text-[#06B6D4]"><Pencil className="w-3.5 h-3.5" /></LinkNoPrefetch>

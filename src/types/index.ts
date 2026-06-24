@@ -128,7 +128,7 @@ export interface InlineComment {
   createdAt: string;
 }
 
-export type MembershipTier = 'free' | 'gold' | 'diamond';
+export type MembershipTier = 'free' | 'silver' | 'gold' | 'diamond';
 export type ContentLevel = 'free' | 'gold' | 'diamond';
 export type PayoutMethod = 'alipay' | 'wechat';
 

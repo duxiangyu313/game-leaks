@@ -39,12 +39,12 @@ function PostContent() {
     const { data: { user } } = await supabase.auth.getUser();
     setReplying(true);
     const { data } = await supabase.from("forum_replies").insert({
-      post_id: id, user_id: user?.id || null,
+      post_id: id!, user_id: user?.id || null,
       author_name: user?.email?.split("@")[0] || "匿名用户", content: replyText,
     }).select().single();
     if (data) { setReplies(prev => [...prev, data]); setReplyText(""); }
     // 更新回复计数
-    supabase.from("forum_posts").update({ reply_count: replies.length + 1 }).eq("id", id).then();
+    supabase.from("forum_posts").update({ reply_count: (replies.length + 1) as number }).eq("id", id!).then(() => {});
     setReplying(false);
   };
 

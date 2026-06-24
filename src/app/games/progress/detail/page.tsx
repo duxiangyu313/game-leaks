@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useState, Suspense, startTransition } from "react";
 import { useSearchParams } from "next/navigation";
 import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { supabase } from "@/lib/supabase/client";
 import { ArrowLeft, Calendar, Users, Star, Shield, Clock, Loader2, Globe, Lock, Gamepad2 } from "lucide-react";
-import { getUserLevel, getVisibilityLabel, type MembershipLevel } from "@/lib/auth";
+import { getUserLevel, type MembershipLevel } from "@/lib/auth";
 import PaywallBlur from "@/components/article/PaywallBlur";
 import DevProgressCard from "@/components/DevProgressCard";
 import type { GameProgress } from "@/types";
@@ -73,10 +73,13 @@ function StarRating({ score }: { score: number }) {
   return <div className="flex items-center gap-0.5">{stars}</div>;
 }
 
-/** 简单 Markdown 转 HTML（处理加粗和换行） */
+/** 简单 Markdown 转 HTML（处理加粗和换行），先转义 HTML 防 XSS */
 function simpleMarkdown(text: string): string {
   if (!text) return "";
   return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
     .replace(/\*\*(.*?)\*\*/g, "<strong class='text-[#F1F5F9] font-semibold'>$1</strong>")
     .replace(/\n\n/g, "</p><p class='mb-3'>")
     .replace(/\n-/g, "\n<br/>-")
@@ -95,8 +98,10 @@ function DetailContent() {
 
   useEffect(() => {
     if (!id) {
-      setLoading(false);
-      setError("未提供游戏ID");
+      startTransition(() => {
+        setLoading(false);
+        setError("未提供游戏ID");
+      });
       return;
     }
 
@@ -152,7 +157,7 @@ function DetailContent() {
     };
 
     loadData();
-  }, [id, related.length]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [id, related.length]);
 
   // 加载态
   if (loading) {

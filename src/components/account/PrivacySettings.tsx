@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Shield } from "lucide-react";
 
 // 隐私设置目前用 localStorage 存储偏好
 const PRIVACY_KEY = "gylb_privacy";

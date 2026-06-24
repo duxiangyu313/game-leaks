@@ -13,9 +13,9 @@ import AccountSettings from "@/components/account/AccountSettings";
 import PrivacySettings from "@/components/account/PrivacySettings";
 
 interface Profile {
-  username: string;
-  membership: MembershipTier;
-  subscription_status: string;
+  username: string | null;
+  membership: MembershipTier | null;
+  subscription_status: string | null;
   subscription_end_date: string | null;
   stripe_customer_id: string | null;
 }
@@ -93,7 +93,7 @@ export default function AccountPage() {
     );
   }
 
-  const tier = MEMBERSHIP_TIERS[profile.membership];
+  const tier = MEMBERSHIP_TIERS[profile.membership ?? "free"];
   const isActive = profile.subscription_status === "active";
   const activePanel = PANELS.find((p) => p.key === panel);
 

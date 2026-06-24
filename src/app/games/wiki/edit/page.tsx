@@ -57,7 +57,7 @@ function WikiEditContent() {
 
     setSaving(true);
     const payload = {
-      game_id: id,
+      game_id: id!,
       background, worldview,
       characters: charactersJson,
       weapons: weaponsJson,
@@ -68,7 +68,7 @@ function WikiEditContent() {
 
     let error;
     if (wiki) {
-      ({ error } = await supabase.from("game_wiki").update(payload).eq("game_id", id));
+      ({ error } = await supabase.from("game_wiki").update(payload).eq("game_id", id!));
     } else {
       ({ error } = await supabase.from("game_wiki").insert(payload));
     }

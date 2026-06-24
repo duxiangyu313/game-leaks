@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Crown, X, ArrowRight, Clock } from "lucide-react";
+import { X, ArrowRight, Clock } from "lucide-react";
 import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { supabase } from "@/lib/supabase/client";
 

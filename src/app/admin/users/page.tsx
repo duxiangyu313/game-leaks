@@ -3,6 +3,9 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase/client";
 import { Search, Crown, Shield, Save } from "lucide-react";
+import type { Database } from "@/types/database";
+
+type MembershipTier = Database["public"]["Enums"]["membership_tier"];
 
 const TIERS = [
   { value: "free", label: "普通用户" },
@@ -17,7 +20,7 @@ export default function UsersPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editTier, setEditTier] = useState("free");
+  const [editTier, setEditTier] = useState<MembershipTier>("free");
 
   useEffect(() => {
     supabase.from("profiles").select("*").order("created_at", { ascending: false }).then(({ data }) => {
@@ -60,7 +63,7 @@ export default function UsersPage() {
                   </td>
                   <td className="p-3 hidden md:table-cell">
                     {editingId===u.id?(
-                      <select value={editTier} onChange={e=>setEditTier(e.target.value)} className="px-2 py-1 rounded bg-[#1E293B]/40 border border-[rgba(30,41,59,0.6)] text-[#F1F5F9] text-xs outline-none">
+                      <select value={editTier} onChange={e=>setEditTier(e.target.value as MembershipTier)} className="px-2 py-1 rounded bg-[#1E293B]/40 border border-[rgba(30,41,59,0.6)] text-[#F1F5F9] text-xs outline-none">
                         {TIERS.map(t=><option key={t.value} value={t.value}>{t.label}</option>)}
                       </select>
                     ):(

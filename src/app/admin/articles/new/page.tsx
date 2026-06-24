@@ -12,7 +12,7 @@ import MarkdownEditor from "@/components/admin/MarkdownEditor";
 import TemplateSelector from "@/components/admin/TemplateSelector";
 import FormatButton from "@/components/admin/FormatButton";
 import BatchImport from "@/components/admin/BatchImport";
-import type { TemplateType } from "@/types";
+import type { TemplateType, MembershipTier } from "@/types";
 
 const TIERS = [
   { value: "free", label: "免费可见" },
@@ -36,7 +36,7 @@ export default function NewArticlePage() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("analysis");
-  const [requiredTier, setRequiredTier] = useState("free");
+  const [requiredTier, setRequiredTier] = useState<MembershipTier>("free");
   const [coverUrl, setCoverUrl] = useState("");
   const [excerpt, setExcerpt] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
@@ -85,8 +85,6 @@ export default function NewArticlePage() {
       required_tier: requiredTier,
       cover_image: coverUrl,
       excerpt: autoExcerpt,
-      video_url: videoUrl,
-      template_type: templateType,
       tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
       status: "published",
       author_id: (await supabase.auth.getUser()).data.user?.id,
@@ -182,7 +180,7 @@ export default function NewArticlePage() {
                 <label className="text-xs text-[#64748B] mb-1 block">可见权限</label>
                 <select
                   value={requiredTier}
-                  onChange={(e) => setRequiredTier(e.target.value)}
+                  onChange={(e) => setRequiredTier(e.target.value as MembershipTier)}
                   className="w-full px-3 py-2 rounded-lg bg-[#1E293B]/40 border border-[rgba(30,41,59,0.6)] text-[#F1F5F9] text-sm outline-none"
                 >
                   {TIERS.map((t) => (

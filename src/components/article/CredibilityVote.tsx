@@ -36,7 +36,7 @@ export default function CredibilityVote({
     Promise.all([
       supabase.from("article_interactions").select("id", { count: "exact", head: true }).eq("article_id", articleId).eq("interaction_type", "credibility_believe"),
       supabase.from("article_interactions").select("id", { count: "exact", head: true }).eq("article_id", articleId).eq("interaction_type", "credibility_skeptical"),
-      supabase.from("article_interactions").select("interaction_type").eq("article_id", articleId).eq("user_id", userId).in("interaction_type", ["credibility_believe", "credibility_skeptical"]).single(),
+      supabase.from("article_interactions").select("interaction_type").eq("article_id", articleId).eq("user_id", userId).in("interaction_type", ["credibility_believe", "credibility_skeptical"]).maybeSingle(),
     ]).then(([{ count: b }, { count: s }, { data: uv }]) => {
       if (b != null) setBelieve(b);
       if (s != null) setSkeptical(s);

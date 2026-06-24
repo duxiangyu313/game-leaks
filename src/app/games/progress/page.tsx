@@ -67,15 +67,6 @@ export default function GameProgressListPage() {
       });
   }, []);
 
-  // 提取所有唯一类型
-  const genres = useMemo(() => {
-    const set = new Set<string>();
-    games.forEach((g) => {
-      if (g.genre) set.add(g.genre);
-    });
-    return Array.from(set);
-  }, [games]);
-
   // 客户端筛选 + 排序
   const filtered = useMemo(() => {
     let result = [...games];

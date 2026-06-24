@@ -29,7 +29,7 @@ export default function BookmarkButton({ articleId, initialBookmarked = false }:
       .eq("article_id", articleId)
       .eq("user_id", userId)
       .eq("interaction_type", "bookmark")
-      .single()
+      .maybeSingle()
       .then(({ data }) => setBookmarked(!!data));
   }, [articleId, userId]);
 

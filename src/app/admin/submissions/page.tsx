@@ -17,7 +17,7 @@ export default function SubmissionsPage() {
 
   const load = useCallback(async () => {
     const { data } = await supabase.from("ugc_submissions").select("*").order("submitted_at", { ascending: false });
-    setSubs((data || []) as UgcSubmission[]); setLoading(false);
+    setSubs((data || []) as unknown as UgcSubmission[]); setLoading(false);
   }, []);
 
   // eslint-disable-next-line react-hooks/set-state-in-effect

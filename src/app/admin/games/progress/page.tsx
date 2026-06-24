@@ -112,7 +112,6 @@ export default function AdminGameProgressPage() {
       team_size: form.team_size || null,
       credibility_score: form.credibility_score,
       public_info: form.public_info,
-      diamond_info: form.diamond_info,
       gold_info: form.gold_info,
       risk_assessment: form.risk_assessment,
       tags: form.tags.split(",").map((t) => t.trim()).filter(Boolean),

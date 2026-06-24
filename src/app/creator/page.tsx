@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, startTransition } from "react";
 import { motion } from "framer-motion";
 import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { supabase } from "@/lib/supabase/client";
@@ -9,7 +9,7 @@ import type { PayoutMethod } from "@/types";
 import {
   TrendingUp, Wallet, Users, Copy, Check, ArrowUpRight, Clock, Gift,
   Loader2, DollarSign, FileText, Eye, Heart, MessageSquare,
-  AlertCircle, Plus, X
+  AlertCircle
 } from "lucide-react";
 
 type Tab = "earnings" | "withdraw" | "invite";
@@ -26,7 +26,7 @@ export default function CreatorCenterPage() {
   const [tab, setTab] = useState<Tab>("earnings");
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
-  const [profile, setProfile] = useState<any>(null);
+  const [, setProfile] = useState<any>(null);
 
   // earnings
   const [earnings, setEarnings] = useState({ total: 0, available: 0, pending: 0, settled: 0 });
@@ -76,7 +76,7 @@ export default function CreatorCenterPage() {
 
     // referral
     const { data: rc } = await supabase.from("referral_codes").select("code, usage_count").eq("user_id", u.id).maybeSingle();
-    if (rc) { setRefCode(rc.code); setRefCount(rc.usage_count); }
+    if (rc) { setRefCode(rc.code); setRefCount(rc.usage_count || 0); }
     const { data: rrs } = await supabase.from("referral_records").select("*").eq("referrer_id", u.id).order("invited_at", { ascending: false });
     if (rrs) setRefRecords(rrs as any[]);
 
@@ -87,7 +87,7 @@ export default function CreatorCenterPage() {
     setLoading(false);
   }, []);
 
-  useEffect(() => { loadAll(); }, [loadAll]);
+  useEffect(() => { startTransition(() => { loadAll(); }); }, [loadAll]);
 
   // ─── withdrawal submit ───
   const submitWithdrawal = async () => {
@@ -293,7 +293,7 @@ function WithdrawTab({ form, setForm, min, available, error, submitting, onSubmi
 }
 
 // ── Invite Tab ──
-function InviteTab({ code, url, count, copied, onCopy, records }: {
+function InviteTab({ url, count, copied, onCopy, records }: {
   code: string; url: string; count: number; copied: boolean; onCopy: () => void;
   records: any[];
 }) {

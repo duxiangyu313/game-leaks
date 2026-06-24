@@ -27,24 +27,26 @@ export default function LikeButton({ articleId, initialCount = 0, initialLiked =
   // 加载初始状态和计数
   useEffect(() => {
     if (!articleId || !userId) return;
-    // 获取总点赞数
-    supabase
-      .from("article_interactions")
-      .select("id", { count: "exact", head: true })
-      .eq("article_id", articleId)
-      .eq("interaction_type", "like")
-      .then(({ count: c }) => {
-        if (c != null) setCount(c);
-      });
-    // 检查用户是否已点赞
-    supabase
-      .from("article_interactions")
-      .select("id")
-      .eq("article_id", articleId)
-      .eq("user_id", userId)
-      .eq("interaction_type", "like")
-      .single()
-      .then(({ data }) => setLiked(!!data));
+    try {
+      // 获取总点赞数
+      supabase
+        .from("article_interactions")
+        .select("id", { count: "exact", head: true })
+        .eq("article_id", articleId)
+        .eq("interaction_type", "like")
+        .then(({ count: c }: { count: number | null }) => {
+          if (c != null) setCount(c);
+        });
+      // 检查用户是否已点赞
+      supabase
+        .from("article_interactions")
+        .select("id")
+        .eq("article_id", articleId)
+        .eq("user_id", userId)
+        .eq("interaction_type", "like")
+        .maybeSingle()
+        .then(({ data }: { data: unknown }) => setLiked(!!data));
+    } catch {}
   }, [articleId, userId]);
 
   const handleClick = useCallback(async () => {

@@ -1,63 +1,16 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import LinkNoPrefetch from "@/components/LinkNoPrefetch";
-import { supabase } from "@/lib/supabase/client";
+import { useSearch } from "@/data/hooks";
+import type { SearchResult } from "@/data/hooks";
 import { Search, Gamepad2, Newspaper, FileText, Loader2 } from "lucide-react";
-
-interface SearchResult {
-  id: string;
-  title: string;
-  subtitle: string;
-  type: "game" | "leak" | "article";
-  link: string;
-}
 
 function SearchContent() {
   const params = useSearchParams();
   const query = params.get("q") || "";
-  const [results, setResults] = useState<SearchResult[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    if (!query.trim()) return;
-    setLoading(true);
-    setError("");
-
-    const term = `%${query.trim()}%`;
-
-    Promise.all([
-      supabase.from("games").select("id,title,developer,genre").ilike("title", term).limit(5),
-      supabase.from("leaks").select("id,title,summary,game_name").eq("status", "published").ilike("title", term).limit(5),
-      supabase.from("articles").select("id,title,excerpt,category").eq("status", "published").ilike("title", term).limit(5),
-    ])
-      .then(([{ data: games }, { data: leaks }, { data: articles }]) => {
-        const items: SearchResult[] = [];
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (games || []).forEach((g: any) => items.push({
-          id: g.id, title: g.title,
-          subtitle: `${g.developer || ""} · ${(g.genre || []).join("、")}`,
-          type: "game", link: `/games/detail?id=${g.id}`,
-        }));
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (leaks || []).forEach((l: any) => items.push({
-          id: l.id, title: l.title,
-          subtitle: l.summary?.slice(0, 100) || l.game_name || "",
-          type: "leak", link: `/leaks/detail?id=${l.id}`,
-        }));
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (articles || []).forEach((a: any) => items.push({
-          id: a.id, title: a.title,
-          subtitle: a.excerpt?.slice(0, 100) || a.category || "",
-          type: "article", link: `/articles/detail?id=${a.id}`,
-        }));
-        setResults(items);
-      })
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
-  }, [query]);
+  const { results, loading, error } = useSearch(query);
 
   const typeIcon = (t: string) => {
     switch (t) {
@@ -78,7 +31,6 @@ function SearchContent() {
   return (
     <div className="pt-20 pb-20 min-h-screen">
       <div className="max-w-[768px] mx-auto px-4">
-        {/* Search bar */}
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-[#F1F5F9] mb-2">
             搜索{query ? `：「${query}」` : ""}
@@ -88,22 +40,19 @@ function SearchContent() {
           </p>
         </div>
 
-        {/* Loading */}
         {loading && (
           <div className="flex items-center justify-center py-20">
             <Loader2 className="w-8 h-8 text-[#06B6D4] animate-spin" />
           </div>
         )}
 
-        {/* Error */}
         {error && (
           <div className="text-center py-12 text-[#EF4444] text-sm">{error}</div>
         )}
 
-        {/* Results */}
         {!loading && results.length > 0 && (
           <div className="space-y-3">
-            {results.map((r) => (
+            {results.map((r: SearchResult) => (
               <LinkNoPrefetch
                 key={`${r.type}-${r.id}`}
                 href={r.link}
@@ -130,7 +79,6 @@ function SearchContent() {
           </div>
         )}
 
-        {/* Empty state */}
         {!loading && query && results.length === 0 && !error && (
           <div className="text-center py-16">
             <Search className="w-12 h-12 text-[#334155] mx-auto mb-4" />

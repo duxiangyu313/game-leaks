@@ -13,8 +13,8 @@ export default function RevenuePage() {
     setLoading(true);
     const { data: records } = await supabase.from("revenue_records").select("amount, settlement_status");
     if (records) {
-      const total = records.reduce((s: number, r: any) => s + (r.amount || 0), 0);
-      const pending = records.filter((r: any) => r.settlement_status === "pending").reduce((s: number, r: any) => s + (r.amount || 0), 0);
+      const total = records.reduce((s: number, r) => s + (r.amount || 0), 0);
+      const pending = records.filter((r) => r.settlement_status === "pending").reduce((s: number, r) => s + (r.amount || 0), 0);
       setStats({ totalRevenue: total, creatorCount: 0, pendingPayout: pending });
     }
     const { count } = await supabase.from("profiles").select("id", { count: "exact", head: true }).gt("revenue_balance", 0);
@@ -29,7 +29,10 @@ export default function RevenuePage() {
     setRunning(true); setResult(null);
     const { data, error } = await supabase.rpc("calculate_revenue");
     if (error) { setResult(`错误: ${error.message}`); }
-    else if (data) { setResult(`计算完成！生成 ${data.records_created || 0} 条记录，总金额 ¥${((data.total_amount || 0) / 100).toFixed(2)}`); }
+    else if (data) {
+      const result = data as { records_created?: number; total_amount?: number };
+      setResult(`计算完成！生成 ${result.records_created || 0} 条记录，总金额 ¥${((result.total_amount || 0) / 100).toFixed(2)}`);
+    }
     setRunning(false);
     loadStats();
   };

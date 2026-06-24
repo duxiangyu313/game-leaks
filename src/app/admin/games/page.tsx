@@ -5,7 +5,7 @@ import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { supabase } from "@/lib/supabase/client";
 import { Plus, Pencil, Trash2, Search, ChevronLeft, ChevronRight } from "lucide-react";
 
-interface Game { id: string; title: string; developer: string; status: string; hype_score: number; release_date: string; }
+interface Game { id: string; title: string; developer: string | null; status: string | null; hype_score: number | null; release_date: string | null; }
 const PAGE_SIZE = 20;
 
 export default function GamesPage() {
@@ -66,7 +66,7 @@ export default function GamesPage() {
                 <tr key={g.id} className="border-t border-[rgba(30,41,59,0.3)] hover:bg-[#1E293B]/30">
                   <td className="p-3 text-[#F1F5F9] font-medium">{g.title}</td>
                   <td className="p-3 text-[#94A3B8] hidden md:table-cell">{g.developer || "—"}</td>
-                  <td className="p-3"><span className={`text-xs px-2 py-0.5 rounded-full ${statusColor(g.status)}`}>{statusLabel(g.status)}</span></td>
+                  <td className="p-3"><span className={`text-xs px-2 py-0.5 rounded-full ${statusColor(g.status || "")}`}>{statusLabel(g.status || "")}</span></td>
                   <td className="p-3 text-[#94A3B8] hidden md:table-cell">{g.hype_score || "—"}</td>
                   <td className="p-3 text-[#64748B] text-xs hidden md:table-cell">{g.release_date || "待定"}</td>
                   <td className="p-3">

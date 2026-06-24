@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { Clock, Eye, Trash2 } from "lucide-react";
 
@@ -27,14 +27,14 @@ export function addHistory(item: Omit<HistoryItem, "time">) {
 }
 
 export default function BrowsingHistory() {
-  const [items, setItems] = useState<HistoryItem[]>([]);
-
-  useEffect(() => {
+  const [items, setItems] = useState<HistoryItem[]>(() => {
     try {
       const raw = localStorage.getItem(KEY);
-      setItems(raw ? JSON.parse(raw) : []);
-    } catch {}
-  }, []);
+      return raw ? JSON.parse(raw) : [];
+    } catch { return []; }
+  });
+
+  const [now] = useState(() => Date.now());
 
   const clear = () => {
     localStorage.removeItem(KEY);
@@ -51,7 +51,7 @@ export default function BrowsingHistory() {
   };
 
   const timeAgo = (iso: string) => {
-    const diff = Date.now() - new Date(iso).getTime();
+    const diff = now - new Date(iso).getTime();
     const mins = Math.floor(diff / 60000);
     if (mins < 1) return "刚刚";
     if (mins < 60) return `${mins}分钟前`;

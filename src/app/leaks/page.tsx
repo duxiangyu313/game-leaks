@@ -29,7 +29,7 @@ export default function LeaksPage() {
         .order("published_at", { ascending: false })
     ).then(({ data, error }) => {
         if (!error && data && data.length > 0) {
-          setLeaks(data);
+          setLeaks(data as LeakItem[]);
           const confirmed = data.filter((l: any) => l.credibility === "confirmed").length;
           setStats({ today: data.length, week: data.length, confirmed });
         } else {

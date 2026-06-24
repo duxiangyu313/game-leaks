@@ -1,7 +1,7 @@
 /**
- * 会员配置 — 客户端安全 · UGC 3级会员制
+ * 会员配置 — 客户端安全 · UGC 4级会员制
  */
-import type { ContentLevel } from "@/types";
+import type { ContentLevel, MembershipTier } from "@/types";
 
 export const MEMBERSHIP_PRICES = {
   gold:    { monthly: "price_1ThRsgQ9NyBUwMBMt0b5WkXA", yearly: "price_1ThRtDQ9NyBUwMBMSpWF4J6Y" },
@@ -13,6 +13,11 @@ export const MEMBERSHIP_TIERS = {
     name: "普通用户", nameEn: "Free", tier: 0, priceMonthly: 0, priceYearly: 0,
     features: ["浏览免费资讯", "参与论坛讨论", "查看游戏库"],
     color: "from-gray-500 to-gray-600", highlight: false,
+  },
+  silver: {
+    name: "白银会员", nameEn: "Silver", tier: 0.5, priceMonthly: 9, priceYearly: 99,
+    features: ["普通用户全部权益", "白银专享内容"],
+    color: "from-slate-300 to-slate-400", highlight: false,
   },
   gold: {
     name: "黄金会员", nameEn: "Gold", tier: 1, priceMonthly: 29, priceYearly: 299,
@@ -26,7 +31,7 @@ export const MEMBERSHIP_TIERS = {
   },
 } as const;
 
-export type MembershipTier = keyof typeof MEMBERSHIP_TIERS;
+export type { MembershipTier };
 
 export const CONTENT_LEVEL_META: Record<ContentLevel, {
   name: string; color: string; badge: string; canView: MembershipTier; canSubmit: MembershipTier;

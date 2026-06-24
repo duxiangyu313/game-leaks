@@ -17,14 +17,14 @@ function EditForm() {
   useEffect(() => {
     if (!id) { router.push("/admin/leaks"); return; }
     supabase.from("leaks").select("*").eq("id", id).single().then(({ data }) => {
-      if (data) { setTitle(data.title); setSummary(data.summary); setContent(data.content); setCredibility(data.credibility); setGameName(data.game_name); setSource(data.source); setScheduledAt(data.scheduled_at||""); }
+      if (data) { setTitle(data.title); setSummary(data.summary || ""); setContent(data.content || ""); setCredibility(data.credibility || "likely"); setGameName(data.game_name || ""); setSource(data.source || ""); setScheduledAt(data.scheduled_at||""); }
       setLoading(false);
     });
   }, [id, router]);
 
   const handleSave = async () => {
     setSaving(true);
-    await supabase.from("leaks").update({ title, summary, content, credibility, game_name: gameName, source, scheduled_at: scheduledAt||null }).eq("id", id);
+    await supabase.from("leaks").update({ title, summary, content, credibility, game_name: gameName, source, scheduled_at: scheduledAt||null }).eq("id", id!);
     router.push("/admin/leaks");
   };
 

@@ -5,7 +5,7 @@ import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { supabase } from "@/lib/supabase/client";
 import { Plus, Pencil, Trash2, Search, ChevronLeft, ChevronRight } from "lucide-react";
 
-interface Leak { id: string; title: string; game_name: string; credibility: string; status: string; view_count: number; created_at: string; }
+interface Leak { id: string; title: string; game_name: string | null; credibility: string | null; status: string | null; view_count: number | null; created_at: string | null; }
 const PAGE_SIZE = 20;
 const CREDS = ["全部", "confirmed", "likely", "rumor"];
 
@@ -46,7 +46,11 @@ export default function LeaksPage() {
   };
   const toggleSelect = (id: string) => {
     const next = new Set(selected);
-    next.has(id) ? next.delete(id) : next.add(id);
+    if (next.has(id)) {
+      next.delete(id);
+    } else {
+      next.add(id);
+    }
     setSelected(next);
   };
 
@@ -101,9 +105,9 @@ export default function LeaksPage() {
                   <td className="p-3"><input type="checkbox" checked={selected.has(l.id)} onChange={() => toggleSelect(l.id)} /></td>
                   <td className="p-3 text-[#F1F5F9] truncate max-w-[200px]">{l.title}</td>
                   <td className="p-3 text-[#94A3B8] hidden md:table-cell">{l.game_name || "—"}</td>
-                  <td className="p-3"><span className={`text-xs px-2 py-0.5 rounded-full ${l.credibility === "confirmed" ? "bg-[#10B981]/10 text-[#10B981]" : l.credibility === "likely" ? "bg-[#F59E0B]/10 text-[#F59E0B]" : "bg-[#64748B]/10 text-[#64748B]"}`}>{credLabel(l.credibility)}</span></td>
+                  <td className="p-3"><span className={`text-xs px-2 py-0.5 rounded-full ${l.credibility === "confirmed" ? "bg-[#10B981]/10 text-[#10B981]" : l.credibility === "likely" ? "bg-[#F59E0B]/10 text-[#F59E0B]" : "bg-[#64748B]/10 text-[#64748B]"}`}>{credLabel(l.credibility || "")}</span></td>
                   <td className="p-3 text-[#94A3B8] hidden md:table-cell">{l.view_count || 0}</td>
-                  <td className="p-3 text-[#64748B] text-xs hidden md:table-cell">{new Date(l.created_at).toLocaleDateString("zh-CN")}</td>
+                  <td className="p-3 text-[#64748B] text-xs hidden md:table-cell">{l.created_at ? new Date(l.created_at).toLocaleDateString("zh-CN") : "-"}</td>
                   <td className="p-3">
                     <div className="flex gap-1">
                       <LinkNoPrefetch href={`/admin/leaks/edit?id=${l.id}`} className="p-1.5 text-[#64748B] hover:text-[#06B6D4]"><Pencil className="w-3.5 h-3.5" /></LinkNoPrefetch>

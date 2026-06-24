@@ -3,7 +3,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, Loader2, Upload, X, Globe, Star, Crown, AlertTriangle, FileText, Flame, Gamepad, DollarSign, Gift, Play } from "lucide-react";
+import { Send, Loader2, Upload, Globe, Star, Crown, AlertTriangle, FileText, Flame, Gamepad, DollarSign, Gift, Play } from "lucide-react";
+import Image from "next/image";
 import { supabase } from "@/lib/supabase/client";
 import { getUserLevel, canSubmitContent, isColdStart } from "@/lib/auth";
 import type { MembershipLevel } from "@/lib/auth";
@@ -126,7 +127,7 @@ export default function SubmitPage() {
       const tagArray = tags.split(",").map(t => t.trim()).filter(Boolean);
 
       // build submission payload based on type
-      let payload: Record<string, unknown> = {
+      const payload: Record<string, unknown> = {
         content_level: contentLevel, tags: tagArray, status: "pending",
         cover_image: coverUrl || null,
       };
@@ -154,7 +155,7 @@ export default function SubmitPage() {
         payload.game_name = gameName.trim() || null;
       }
 
-      const { error: submitErr } = await supabase.from("ugc_submissions").insert(payload);
+      const { error: submitErr } = await supabase.from("ugc_submissions").insert(payload as any);
       if (submitErr) throw new Error(submitErr.message);
       setDone(true);
     } catch (e: any) { setError(e.message || "提交失败"); }
@@ -353,7 +354,7 @@ export default function SubmitPage() {
               className="w-full px-4 py-3 rounded-xl bg-[#1E293B]/40 border border-[rgba(30,41,59,0.6)] text-[#F1F5F9] text-sm outline-none focus:border-[#F59E0B]/40" /></div>
           <div><label className="block text-sm font-medium text-[#94A3B8] mb-1.5">封面图（可选）</label>
             <label className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-dashed cursor-pointer transition-all ${coverPreview ? "border-[#10B981]/40 bg-[#10B981]/5" : "border-[#334155] hover:border-[#475569] bg-[#1E293B]/20"}`}>
-              {coverPreview ? <div className="flex items-center gap-2"><img src={coverPreview} alt="封面预览" className="w-10 h-10 rounded-lg object-cover" /><span className="text-sm text-[#10B981]">已选择</span></div>
+              {coverPreview ? <div className="flex items-center gap-2"><Image src={coverPreview} alt="封面预览" width={40} height={40} className="w-10 h-10 rounded-lg object-cover" /><span className="text-sm text-[#10B981]">已选择</span></div>
                 : <span className="text-sm text-[#64748B] flex items-center gap-2"><Upload className="w-4 h-4" />点击上传</span>}
               <input type="file" accept="image/*" onChange={e => { const f = e.target.files?.[0]; if (!f) return; setCoverFile(f); setCoverPreview(URL.createObjectURL(f)); }} className="hidden" /></label></div>
         </div>

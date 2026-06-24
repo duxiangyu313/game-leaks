@@ -11,6 +11,11 @@ import { supabase } from "@/lib/supabase/client";
 type BillingCycle = "monthly" | "yearly";
 
 const TIER_FEATURES: Record<Exclude<MembershipTier, "free">, { text: string; highlight: boolean }[]> = {
+  silver: [
+    { text: "普通用户全部权益", highlight: true },
+    { text: "白银专享内容", highlight: true },
+    { text: "参与论坛讨论", highlight: false },
+  ],
   gold: [
     { text: "观看所有黄金内容（深度解析、独家攻略）", highlight: true },
     { text: "投稿免费 & 黄金内容", highlight: true },

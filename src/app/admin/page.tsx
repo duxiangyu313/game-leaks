@@ -31,8 +31,8 @@ export default function AdminDashboard() {
         supabase.from("withdrawal_requests").select("id", { count: "exact", head: true }).eq("status", "pending"),
         supabase.from("revenue_records").select("amount"),
       ]);
-      const totalViews = v.data?.reduce((sum: number, l: { view_count: number }) => sum + (l.view_count || 0), 0) || 0;
-      const revenueTotal = r.data?.reduce((sum: number, rec: { amount: number }) => sum + (rec.amount || 0), 0) || 0;
+      const totalViews = v.data?.reduce((sum: number, l: { view_count: number | null }) => sum + (l.view_count || 0), 0) || 0;
+      const revenueTotal = r.data?.reduce((sum: number, rec: { amount: number | null }) => sum + (rec.amount || 0), 0) || 0;
       setStats({ articles: a.count || 0, leaks: l.count || 0, games: g.count || 0, users: u.count || 0, orders: p.count || 0, totalViews, pendingSubs: s.count || 0, pendingWds: w.count || 0, revenueTotal });
 
       // Recent activity — combine articles and leaks
@@ -41,8 +41,8 @@ export default function AdminDashboard() {
         supabase.from("leaks").select("id,title,status,created_at").order("created_at", { ascending: false }).limit(5),
       ]);
       const combined: RecentItem[] = [
-        ...(recentArticles || []).map((x: { id: string; title: string; status: string; created_at: string }) => ({ id: x.id, title: x.title, type: "article" as const, status: x.status, time: x.created_at })),
-        ...(recentLeaks || []).map((x: { id: string; title: string; status: string; created_at: string }) => ({ id: x.id, title: x.title, type: "leak" as const, status: x.status, time: x.created_at })),
+        ...(recentArticles || []).map((x: { id: string; title: string; status: string | null; created_at: string | null }) => ({ id: x.id, title: x.title, type: "article" as const, status: x.status || "", time: x.created_at || "" })),
+        ...(recentLeaks || []).map((x: { id: string; title: string; status: string | null; created_at: string | null }) => ({ id: x.id, title: x.title, type: "leak" as const, status: x.status || "", time: x.created_at || "" })),
       ].sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime()).slice(0, 10);
       setRecent(combined);
     }
@@ -79,8 +79,10 @@ export default function AdminDashboard() {
     setTimeout(() => setDeployMsg(""), 8000);
   };
 
+  const [now] = useState(() => Date.now());
+
   const timeAgo = (iso: string) => {
-    const m = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
+    const m = Math.floor((now - new Date(iso).getTime()) / 60000);
     if (m < 1) return "刚刚";
     if (m < 60) return `${m}分钟前`;
     const h = Math.floor(m / 60);
@@ -104,7 +106,7 @@ export default function AdminDashboard() {
               {c.label === "累计收益" ? `¥${(c.count / 100).toFixed(0)}` : c.count.toLocaleString()}
             </div>
             <div className="text-xs text-[#64748B] mt-1 flex items-center gap-1.5">{c.label}
-              {(c as any).badge && <span className="w-2 h-2 rounded-full bg-[#EF4444] animate-pulse" />}
+              {(c as { badge?: boolean }).badge && <span className="w-2 h-2 rounded-full bg-[#EF4444] animate-pulse" />}
             </div>
           </LinkNoPrefetch>
         ))}

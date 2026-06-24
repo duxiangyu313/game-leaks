@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, startTransition } from "react";
 
 interface Particle {
   id: number;
@@ -33,8 +33,10 @@ export default function CyberParticles({ count = 15 }: { count?: number }) {
         driftY: -30 + Math.random() * 60,
       });
     }
-    setParticles(arr);
-    setReady(true);
+    startTransition(() => {
+      setParticles(arr);
+      setReady(true);
+    });
   }, [count]);
 
   if (!ready || particles.length === 0) return null;

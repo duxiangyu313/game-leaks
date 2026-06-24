@@ -18,7 +18,7 @@ export default function TermsPage() {
         <div className="article-content glass-card p-6 md:p-10">
 
           <h2>一、接受条款</h2>
-          <p>欢迎使用国游爆料（以下简称"本平台"，域名为 news.guoyouwenduji.cc）。注册或使用本平台即表示您同意本服务条款的全部内容。如果您不同意，请勿注册或使用本平台。</p>
+          <p>欢迎使用国游爆料（以下简称&ldquo;本平台&rdquo;，域名为 news.guoyouwenduji.cc）。注册或使用本平台即表示您同意本服务条款的全部内容。如果您不同意，请勿注册或使用本平台。</p>
 
           <h2>二、账号注册与管理</h2>
           <ol>
@@ -34,7 +34,7 @@ export default function TermsPage() {
             <li><strong>自动续费</strong>：订阅默认开启自动续费。您可随时在账户设置中取消，取消后当前周期结束前仍可享受对应权益。</li>
             <li><strong>退款政策</strong>：付款后 7 天内可申请全额退款。超过 7 天不支持退款。退款请联系客服邮箱。</li>
             <li><strong>价格变更</strong>：本平台保留调整会员价格的权利。现有订阅用户的价格将在下一个计费周期生效前至少 30 天通知。</li>
-            <li><strong>付费内容</strong>：Silver 及以上会员可阅读标注为"会员专享"的深度文章。付费内容受著作权保护，禁止复制、传播。</li>
+            <li><strong>付费内容</strong>：Silver 及以上会员可阅读标注为&ldquo;会员专享&rdquo;的深度文章。付费内容受著作权保护，禁止复制、传播。</li>
           </ol>
 
           <h2>四、社区规范</h2>
@@ -54,7 +54,7 @@ export default function TermsPage() {
 
           <h2>六、免责声明</h2>
           <ol>
-            <li><strong>爆料信息</strong>：本平台发布的"爆料"内容来源于非官方渠道（传闻/业内消息/招聘信息等），仅供参考，不构成购买建议。实际产品信息以官方公告为准。</li>
+            <li><strong>爆料信息</strong>：本平台发布的&ldquo;爆料&rdquo;内容来源于非官方渠道（传闻/业内消息/招聘信息等），仅供参考，不构成购买建议。实际产品信息以官方公告为准。</li>
             <li><strong>第三方链接</strong>：本平台可能包含指向第三方网站的链接，对第三方内容不作任何保证。</li>
             <li><strong>服务中断</strong>：因不可抗力（自然灾害、网络攻击、服务器故障等）导致的服务中断，本平台不承担责任。</li>
             <li><strong>数据安全</strong>：我们采用行业标准措施保护用户数据，但不保证绝对安全。</li>

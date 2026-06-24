@@ -5,9 +5,9 @@ import { supabase } from "@/lib/supabase/client";
 import type { MembershipTier, ContentLevel } from "@/types";
 
 export type MembershipLevel = MembershipTier;
-export type Visibility = "free" | "public" | "gold" | "diamond";
+export type Visibility = "free" | "public" | "silver" | "gold" | "diamond";
 
-const LEVEL_RANK: Record<MembershipLevel, number> = { free: 0, gold: 1, diamond: 2 };
+const LEVEL_RANK: Record<MembershipLevel, number> = { free: 0, silver: 0.5, gold: 1, diamond: 2 };
 
 export async function getUserLevel(): Promise<MembershipLevel> {
   const { data: { user } } = await supabase.auth.getUser();
@@ -39,13 +39,13 @@ export function hasContentAccess(userLevel: MembershipLevel, contentLevel: Conte
 }
 
 export function canSubmitContent(userLevel: MembershipLevel, contentLevel: ContentLevel): boolean {
-  const MAX: Record<MembershipLevel, number> = { free: -1, gold: 1, diamond: 2 };
+  const MAX: Record<MembershipLevel, number> = { free: -1, silver: 0, gold: 1, diamond: 2 };
   const CR: Record<ContentLevel, number> = { free: 0, gold: 1, diamond: 2 };
   return CR[contentLevel] <= (MAX[userLevel] ?? -1);
 }
 
 export function getVisibilityLabel(v: Visibility | MembershipLevel): string {
-  const l: Record<string, string> = { public: "免费", free: "免费", gold: "黄金会员", diamond: "钻石会员" };
+  const l: Record<string, string> = { public: "免费", free: "免费", silver: "白银会员", gold: "黄金会员", diamond: "钻石会员" };
   return l[v] || v;
 }
 

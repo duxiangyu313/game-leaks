@@ -20,7 +20,7 @@ function EditForm() {
   useEffect(() => {
     if (!id) { router.push("/admin/games"); return; }
     supabase.from("games").select("*").eq("id", id).single().then(({ data }) => {
-      if (data) { setTitle(data.title); setEnglishTitle(data.english_title||""); setDeveloper(data.developer||""); setPublisher(data.publisher||""); setGenre((data.genre||[]).join(",")); setPlatforms((data.platforms||[]).join(",")); setReleaseDate(data.release_date||""); setStatus(data.status); setDescription(data.description||""); setCoverUrl(data.cover||""); }
+      if (data) { setTitle(data.title); setEnglishTitle(data.english_title||""); setDeveloper(data.developer||""); setPublisher(data.publisher||""); setGenre((data.genre||[]).join(",")); setPlatforms((data.platforms||[]).join(",")); setReleaseDate(data.release_date||""); setStatus(data.status || "in-dev"); setDescription(data.description||""); setCoverUrl(data.cover||""); }
       setLoading(false);
     });
   }, [id, router]);
@@ -34,7 +34,7 @@ function EditForm() {
 
   const handleSave = async () => {
     setSaving(true);
-    await supabase.from("games").update({ title, english_title: englishTitle, developer, publisher, genre: genre.split(",").map(s=>s.trim()).filter(Boolean), platforms: platforms.split(",").map(s=>s.trim()).filter(Boolean), release_date: releaseDate, status, description, cover: coverUrl }).eq("id", id);
+    await supabase.from("games").update({ title, english_title: englishTitle, developer, publisher, genre: genre.split(",").map(s=>s.trim()).filter(Boolean), platforms: platforms.split(",").map(s=>s.trim()).filter(Boolean), release_date: releaseDate, status, description, cover: coverUrl }).eq("id", id!);
     setSaving(false); router.push("/admin/games");
   };
 

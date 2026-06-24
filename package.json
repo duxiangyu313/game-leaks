@@ -8,7 +8,9 @@
     "postbuild": "node scripts/fix-rsc.js live2 && node scripts/generate-sitemap.js live2 && touch live2/.nojekyll",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "npx playwright test",
+    "test:unit": "npx vitest run"
   },
   "dependencies": {
     "@stripe/stripe-js": "^9.7.0",
@@ -36,9 +38,12 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/react-syntax-highlighter": "^15.5.13",
+    "@vitejs/plugin-react": "^6.0.3",
     "eslint": "^9",
     "eslint-config-next": "16.2.7",
+    "jsdom": "^29.1.1",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.9"
   }
 }
