@@ -159,13 +159,12 @@ export default function MemberPage() {
               <div className="space-y-4">
                 <div className="bg-[#0F172A]/60 rounded-xl p-4 text-center">
                   <p className="text-sm text-[#94A3B8] mb-3">扫描下方支付宝收款码付款</p>
-                  <div className="w-40 h-40 mx-auto bg-[#1E293B] rounded-xl flex items-center justify-center border border-dashed border-[#334155] mb-2">
-                    <span className="text-xs text-[#64748B]">支付宝收款码<br/>（替换为你的码）</span>
-                  </div>
+                  <img src="/alipay-qr.jpg" alt="支付宝收款码" className="w-40 h-40 mx-auto rounded-xl mb-2" />
                   <p className="text-xs text-[#475569]">或直接转账至支付宝账号</p>
                   <div className="flex items-center justify-center gap-2 mt-2">
-                    <code className="text-sm text-[#F59E0B] bg-[#1E293B] px-3 py-1.5 rounded-lg select-all">你的支付宝账号</code>
-                    <button title="复制账号" className="p-1.5 text-[#64748B] hover:text-[#F1F5F9] transition-colors">
+                    <code className="text-sm text-[#F59E0B] bg-[#1E293B] px-3 py-1.5 rounded-lg select-all">19712720925</code>
+                    <button title="复制账号" className="p-1.5 text-[#64748B] hover:text-[#F1F5F9] transition-colors"
+                      onClick={() => navigator.clipboard.writeText("19712720925")}>
                       <Copy className="w-3.5 h-3.5" />
                     </button>
                   </div>
