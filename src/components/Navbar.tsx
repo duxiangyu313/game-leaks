@@ -80,6 +80,14 @@ export default function Navbar() {
         {/* Search + Auth */}
         <div className="flex items-center gap-3">
           <SearchInput />
+          {/* 投稿按钮 — 醒目位置 */}
+          <LinkNoPrefetch
+            href="/submit"
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-[#F59E0B] border border-[#F59E0B]/30 bg-[#F59E0B]/5 hover:bg-[#F59E0B]/10 hover:border-[#F59E0B]/50 rounded-lg transition-all"
+          >
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            投稿
+          </LinkNoPrefetch>
           {/* Auth buttons */}
           {loading ? null : user ? (
             <>
