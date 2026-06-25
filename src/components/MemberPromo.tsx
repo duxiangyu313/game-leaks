@@ -35,7 +35,7 @@ export default function MemberPromo() {
               加入<span className="bg-gradient-to-r from-[#F59E0B] to-[#FBBF24] bg-clip-text text-transparent"> 国游爆料会员 </span>
             </h2>
             <p className="text-[#94A3B8] mb-6 max-w-md">
-              获取独家爆料的优先查看权，参与制作人AMA，享受无广告纯净浏览。白银会员低至 ¥199/年。
+              获取独家爆料的优先查看权，参与制作人AMA，享受无广告纯净浏览。黄金会员低至 ¥299/年。
             </p>
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
               {BENEFITS.map((b) => (
@@ -50,7 +50,7 @@ export default function MemberPromo() {
               className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#F59E0B] to-[#D97706] text-white font-semibold rounded-xl hover:shadow-[0_0_30px_rgba(245,158,11,0.25)] transition-all"
             >
               <Crown className="w-4 h-4" />
-              立即加入 · <span className="cyber-price-pulse inline-block">¥199</span>/年起
+              立即加入 · <span className="cyber-price-pulse inline-block">¥299</span>/年起
               <ArrowRight className="w-4 h-4" />
             </LinkNoPrefetch>
           </div>

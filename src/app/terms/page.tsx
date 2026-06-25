@@ -30,7 +30,7 @@ export default function TermsPage() {
 
           <h2>三、会员服务</h2>
           <ol>
-            <li><strong>会员等级</strong>：本平台提供 Free（免费）、Silver（¥29/月）、Gold（¥59/月）、Diamond（¥199/月）四级会员。各等级权益详见会员页面。</li>
+            <li><strong>会员等级</strong>：本平台提供 Free（免费）、Silver（¥9/月）、Gold（¥29/月）、Diamond（¥89/月）四级会员。各等级权益详见会员页面。</li>
             <li><strong>自动续费</strong>：订阅默认开启自动续费。您可随时在账户设置中取消，取消后当前周期结束前仍可享受对应权益。</li>
             <li><strong>退款政策</strong>：付款后 7 天内可申请全额退款。超过 7 天不支持退款。退款请联系客服邮箱。</li>
             <li><strong>价格变更</strong>：本平台保留调整会员价格的权利。现有订阅用户的价格将在下一个计费周期生效前至少 30 天通知。</li>
