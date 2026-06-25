@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Crown, Check, Shield, Gift, Users, Clock, ArrowRight, Sparkles } from "lucide-react";
+import { Crown, Check, Shield, Gift, Users, Clock, ArrowRight, Sparkles, Smartphone, Copy, BadgeCheck } from "lucide-react";
 import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { useStripeCheckout } from "@/hooks/useStripeCheckout";
 import { MEMBERSHIP_TIERS, type MembershipTier } from "@/lib/stripe-config";
@@ -140,6 +140,68 @@ export default function MemberPage() {
             );
           })}
         </div>
+        {/* 国内用户 · 支付宝付款 */}
+        <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+          className="mt-12 max-w-[900px] mx-auto">
+          <div className="glass-card p-6 md:p-8 border-[#1677FF]/20 bg-gradient-to-br from-[#1677FF]/5 to-transparent">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-[#1677FF]/15 flex items-center justify-center">
+                <Smartphone className="w-5 h-5 text-[#1677FF]" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-[#F1F5F9]">国内用户 · 支付宝付款</h3>
+                <p className="text-xs text-[#64748B]">无需信用卡，扫码即付，适合国内玩家</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* 左侧：付款信息 */}
+              <div className="space-y-4">
+                <div className="bg-[#0F172A]/60 rounded-xl p-4 text-center">
+                  <p className="text-sm text-[#94A3B8] mb-3">扫描下方支付宝收款码付款</p>
+                  <div className="w-40 h-40 mx-auto bg-[#1E293B] rounded-xl flex items-center justify-center border border-dashed border-[#334155] mb-2">
+                    <span className="text-xs text-[#64748B]">支付宝收款码<br/>（替换为你的码）</span>
+                  </div>
+                  <p className="text-xs text-[#475569]">或直接转账至支付宝账号</p>
+                  <div className="flex items-center justify-center gap-2 mt-2">
+                    <code className="text-sm text-[#F59E0B] bg-[#1E293B] px-3 py-1.5 rounded-lg select-all">你的支付宝账号</code>
+                    <button title="复制账号" className="p-1.5 text-[#64748B] hover:text-[#F1F5F9] transition-colors">
+                      <Copy className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2 text-xs text-[#64748B]">
+                  <BadgeCheck className="w-3.5 h-3.5 text-[#10B981] shrink-0 mt-0.5" />
+                  <span>付款时请备注<strong className="text-[#F1F5F9]">注册邮箱</strong>，付款后 24 小时内自动开通</span>
+                </div>
+              </div>
+
+              {/* 右侧：价格说明 */}
+              <div className="space-y-3">
+                <div className="flex justify-between items-center py-2 border-b border-[rgba(30,41,59,0.6)]">
+                  <span className="text-sm text-[#94A3B8]">黄金会员 · 年付</span>
+                  <span className="text-sm font-bold text-[#F59E0B]">¥299</span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b border-[rgba(30,41,59,0.6)]">
+                  <span className="text-sm text-[#94A3B8]">钻石会员 · 年付</span>
+                  <span className="text-sm font-bold text-[#3B82F6]">¥899</span>
+                </div>
+                <div className="flex justify-between items-center py-2">
+                  <span className="text-sm text-[#94A3B8]">黄金会员 · 月付</span>
+                  <span className="text-sm font-bold text-[#F1F5F9]">¥29</span>
+                </div>
+                <div className="flex justify-between items-center py-2">
+                  <span className="text-sm text-[#94A3B8]">钻石会员 · 月付</span>
+                  <span className="text-sm font-bold text-[#F1F5F9]">¥89</span>
+                </div>
+                <p className="text-xs text-[#475569] mt-3">
+                  付款后在 <a href="/contact" className="text-[#06B6D4] hover:underline">联系我们</a> 发送<strong>支付宝交易号 + 邮箱</strong>，或直接加微信沟通
+                </p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
         <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
           className="mt-14 flex flex-wrap items-center justify-center gap-6 text-xs text-[#64748B]">
           <span className="flex items-center gap-1.5"><Shield className="w-3.5 h-3.5 text-[#10B981]" /> 支付宝 · 微信支付</span>
