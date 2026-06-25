@@ -21,14 +21,16 @@ serve(async (req) => {
     if (fetchErr || !conf) throw new Error("确认记录不存在");
     if (conf.status !== "pending") throw new Error("该记录已处理");
 
-    // 查找用户
-    const { data: profile, error: profileErr } = await supabase
-      .from("profiles")
-      .select("id")
-      .eq("email", conf.user_email)
-      .single();
+    // 通过 auth.users 查找用户
+    const { data: authUser, error: authErr } = await supabase.auth.admin.listUsers();
+    if (authErr) throw new Error("无法查询用户列表");
 
-    if (profileErr || !profile) throw new Error(`未找到用户: ${conf.user_email}`);
+    const matchedUser = authUser.users.find(
+      (u: any) => u.email?.toLowerCase() === conf.user_email.toLowerCase()
+    );
+    if (!matchedUser) throw new Error(`未找到用户: ${conf.user_email}`);
+
+    const userId = matchedUser.id;
 
     // 计算到期日
     const endDate = new Date();
@@ -41,7 +43,7 @@ serve(async (req) => {
       subscription_status: "active",
       subscription_end_date: endDate.toISOString(),
       updated_at: new Date().toISOString(),
-    }).eq("id", profile.id);
+    }).eq("id", userId);
 
     if (updateErr) throw new Error(`升级失败: ${updateErr.message}`);
 
@@ -51,7 +53,7 @@ serve(async (req) => {
       approved_at: new Date().toISOString(),
     }).eq("id", confirmation_id);
 
-    return new Response(JSON.stringify({ success: true, message: `${conf.user_email} 已升级为 ${conf.tier}` }), {
+    return new Response(JSON.stringify({ success: true, message: `${conf.user_email} 已升级为 ${conf.tier}`, user_id: userId }), {
       headers: { "Content-Type": "application/json" },
     });
   } catch (err: any) {

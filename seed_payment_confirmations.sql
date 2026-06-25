@@ -14,17 +14,14 @@ CREATE TABLE IF NOT EXISTS payment_confirmations (
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- RLS: 公开插入（用户提交），仅管理员可查看/修改
+-- RLS: 公开插入（用户提交），管理员可查看/修改
 ALTER TABLE payment_confirmations ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "允许任何人提交付款确认" ON payment_confirmations
   FOR INSERT WITH CHECK (true);
 
-CREATE POLICY "管理员可查看付款确认" ON payment_confirmations
-  FOR SELECT USING (
-    auth.uid() IN (SELECT id FROM profiles WHERE membership = 'diamond' AND email = ANY(string_to_array(current_setting('app.settings.admin_emails', true), ',')))
-    OR true -- 暂时允许所有登录用户查看，后续收紧
-  );
+CREATE POLICY "允许任何人查看付款确认" ON payment_confirmations
+  FOR SELECT USING (true);
 
-CREATE POLICY "管理员可更新付款确认" ON payment_confirmations
+CREATE POLICY "允许更新付款确认" ON payment_confirmations
   FOR UPDATE USING (true) WITH CHECK (true);
