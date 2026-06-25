@@ -4,23 +4,23 @@ import { useEffect, useState } from "react";
 import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { useAdmin } from "@/components/admin/AdminAuth";
 import { supabase } from "@/lib/supabase/client";
-import { FileText, Flame, Gamepad2, Users, CreditCard, Eye, TrendingUp, Clock, ArrowRight, Rocket, CheckCircle, Loader2, Send, Wallet, DollarSign } from "lucide-react";
+import { FileText, Flame, Gamepad2, Users, CreditCard, Eye, TrendingUp, Clock, ArrowRight, Rocket, CheckCircle, Loader2, Send, Wallet, DollarSign, Smartphone } from "lucide-react";
 
-interface Stats { articles: number; leaks: number; games: number; users: number; orders: number; totalViews: number; pendingSubs: number; pendingWds: number; revenueTotal: number; }
+interface Stats { articles: number; leaks: number; games: number; users: number; orders: number; totalViews: number; pendingSubs: number; pendingWds: number; revenueTotal: number; pendingPayments: number; }
 interface RecentItem { id: string; title: string; type: "article" | "leak"; time: string; status: string; }
 
 const DEPLOY_FN = "https://gumpxfxbxxyljikaizsh.supabase.co/functions/v1/trigger-deploy";
 
 export default function AdminDashboard() {
   const { user } = useAdmin();
-  const [stats, setStats] = useState<Stats>({ articles: 0, leaks: 0, games: 0, users: 0, orders: 0, totalViews: 0, pendingSubs: 0, pendingWds: 0, revenueTotal: 0 });
+  const [stats, setStats] = useState<Stats>({ articles: 0, leaks: 0, games: 0, users: 0, orders: 0, totalViews: 0, pendingSubs: 0, pendingWds: 0, revenueTotal: 0, pendingPayments: 0 });
   const [recent, setRecent] = useState<RecentItem[]>([]);
   const [deploying, setDeploying] = useState(false);
   const [deployMsg, setDeployMsg] = useState("");
 
   useEffect(() => {
     async function load() {
-      const [a, l, g, u, p, v, s, w, r] = await Promise.all([
+      const [a, l, g, u, p, v, s, w, r, pp] = await Promise.all([
         supabase.from("articles").select("id", { count: "exact", head: true }),
         supabase.from("leaks").select("id", { count: "exact", head: true }),
         supabase.from("games").select("id", { count: "exact", head: true }),
@@ -30,10 +30,11 @@ export default function AdminDashboard() {
         supabase.from("ugc_submissions").select("id", { count: "exact", head: true }).eq("status", "pending"),
         supabase.from("withdrawal_requests").select("id", { count: "exact", head: true }).eq("status", "pending"),
         supabase.from("revenue_records").select("amount"),
+        (supabase.from as any)("payment_confirmations").select("id", { count: "exact", head: true }).eq("status", "pending"),
       ]);
       const totalViews = v.data?.reduce((sum: number, l: { view_count: number | null }) => sum + (l.view_count || 0), 0) || 0;
       const revenueTotal = r.data?.reduce((sum: number, rec: { amount: number | null }) => sum + (rec.amount || 0), 0) || 0;
-      setStats({ articles: a.count || 0, leaks: l.count || 0, games: g.count || 0, users: u.count || 0, orders: p.count || 0, totalViews, pendingSubs: s.count || 0, pendingWds: w.count || 0, revenueTotal });
+      setStats({ articles: a.count || 0, leaks: l.count || 0, games: g.count || 0, users: u.count || 0, orders: p.count || 0, totalViews, pendingSubs: s.count || 0, pendingWds: w.count || 0, revenueTotal, pendingPayments: pp.count || 0 });
 
       // Recent activity — combine articles and leaks
       const [{ data: recentArticles }, { data: recentLeaks }] = await Promise.all([
@@ -58,6 +59,7 @@ export default function AdminDashboard() {
     { icon: DollarSign, label: "累计收益", count: stats.revenueTotal, color: "text-[#10B981]", bg: "bg-[#10B981]/10", href: "/admin/revenue" },
     { icon: Users, label: "用户", count: stats.users, color: "text-[#22D3EE]", bg: "bg-[#22D3EE]/10", href: "/admin/users" },
     { icon: CreditCard, label: "订单", count: stats.orders, color: "text-[#8B5CF6]", bg: "bg-[#8B5CF6]/10", href: "/admin/orders" },
+    { icon: Smartphone, label: "支付宝审核", count: stats.pendingPayments, color: "text-[#1677FF]", bg: "bg-[#1677FF]/10", href: "/admin/payments", badge: stats.pendingPayments > 0 },
     { icon: Eye, label: "总浏览", count: stats.totalViews, color: "text-[#EC4899]", bg: "bg-[#EC4899]/10" },
   ];
 
@@ -126,6 +128,7 @@ export default function AdminDashboard() {
               { label: "审核投稿", href: "/admin/submissions", highlight: true },
               { label: "收益管理", href: "/admin/revenue" },
               { label: "提现审核", href: "/admin/withdrawals" },
+              { label: "支付宝审核", href: "/admin/payments", highlight: true },
             ].map((a) => (
               <LinkNoPrefetch key={a.href} href={a.href} className={`py-2.5 px-4 text-sm text-center rounded-lg transition-all ${
                 (a as any).highlight ? "bg-[#F59E0B]/10 text-[#F59E0B] hover:bg-[#F59E0B]/20 font-semibold" : "bg-[#1E293B]/40 text-[#94A3B8] hover:text-[#F1F5F9] hover:bg-[#06B6D4]/10"
