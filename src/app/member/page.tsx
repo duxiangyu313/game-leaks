@@ -171,8 +171,12 @@ export default function MemberPage() {
                 </div>
                 <div className="flex items-start gap-2 text-xs text-[#64748B]">
                   <BadgeCheck className="w-3.5 h-3.5 text-[#10B981] shrink-0 mt-0.5" />
-                  <span>付款时请备注<strong className="text-[#F1F5F9]">注册邮箱</strong>，付款后 24 小时内自动开通</span>
+                  <span>付款时请备注<strong className="text-[#F1F5F9]">注册邮箱</strong></span>
                 </div>
+                <LinkNoPrefetch href="/member/alipay-confirm"
+                  className="block w-full text-center py-3 bg-[#1677FF] hover:bg-[#0958D9] text-white font-semibold rounded-xl transition-all mt-4">
+                  已完成付款？点此确认开通 →
+                </LinkNoPrefetch>
               </div>
 
               {/* 右侧：价格说明 */}
