@@ -1,24 +1,28 @@
 import dynamic from "next/dynamic";
-import HeroWrapper from "@/components/HeroWrapper";
-import FeaturedProgress from "@/components/FeaturedProgress";
 import LastUpdated from "@/components/LastUpdated";
 import LiveSignal from "@/components/LiveSignal";
-import FreeTrialBanner from "@/components/FreeTrialBanner";
-import MemberStatsBar from "@/components/MemberStatsBar";
 import EmailSubscribe from "@/components/EmailSubscribe";
-import CyberParticles from "@/components/cyber/CyberParticles";
+
+// Above-fold — dynamic for code splitting (framer-motion heavy)
+const HeroWrapper = dynamic(() => import("@/components/HeroWrapper"), {
+  loading: () => <div className="h-[420px] md:h-[520px] bg-[#0F172A] animate-pulse rounded-2xl" />,
+});
+const FreeTrialBanner = dynamic(() => import("@/components/FreeTrialBanner"));
+const CyberParticles = dynamic(() => import("@/components/cyber/CyberParticles"));
 
 // Above-fold lazy — reduces initial JS bundle
 const HotTopics = dynamic(() => import("@/components/HotTopics"));
 const LatestLeaks = dynamic(() => import("@/components/LatestLeaks"));
 const HotGames = dynamic(() => import("@/components/HotGames"));
 const UpcomingGames = dynamic(() => import("@/components/UpcomingGames"));
+const FeaturedProgress = dynamic(() => import("@/components/FeaturedProgress"));
 
 // Below-fold — lazy loaded for faster LCP
 const HotDiscussions = dynamic(() => import("@/components/HotDiscussions"));
 const VideoSection = dynamic(() => import("@/components/VideoSection"));
 const StatsDashboard = dynamic(() => import("@/components/StatsDashboard"));
 const MemberPromo = dynamic(() => import("@/components/MemberPromo"));
+const MemberStatsBar = dynamic(() => import("@/components/MemberStatsBar"));
 
 export default function Home() {
   return (

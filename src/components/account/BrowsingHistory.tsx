@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { Clock, Eye, Trash2 } from "lucide-react";
 
@@ -34,7 +34,9 @@ export default function BrowsingHistory() {
     } catch { return []; }
   });
 
-  const [now] = useState(() => Date.now());
+  const [now, setNow] = useState(0);
+
+  useEffect(() => { setNow(Date.now()); }, []);
 
   const clear = () => {
     localStorage.removeItem(KEY);

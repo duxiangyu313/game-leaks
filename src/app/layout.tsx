@@ -33,7 +33,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="zh-CN" className="h-full">
+    <html lang="zh-CN" className="h-full" suppressHydrationWarning>
       <head>
         {/* 🔗 预连接 Supabase — 省去 DNS+SSL 握手延迟 (~200ms) */}
         <link rel="dns-prefetch" href="https://gumpxfxbxxyljikaizsh.supabase.co" />
@@ -56,7 +56,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           "form-action 'self' https://api.stripe.com;"
         } />
       </head>
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>
         <RecoveryRedirect />
         <ClientLayout>
           <Navbar />
