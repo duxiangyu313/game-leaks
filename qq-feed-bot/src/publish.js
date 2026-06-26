@@ -10,7 +10,12 @@ const { formatArticleItem } = require("./format-article");
 loadEnv(path.join(__dirname, "..", "..", ".env.local"));
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+// 弱提示：service key 不存在时用 anon key（RLS 会拦截写入）
+if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+  console.warn("⚠️  未配置 SUPABASE_SERVICE_ROLE_KEY，写入可能被 RLS 拦截");
+}
 
 /**
  * 保存到本地 output/YYYY-MM-DD/ 目录
@@ -56,24 +61,7 @@ async function publishToSupabase(items, dryRun = false) {
     return 0;
   }
 
-  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
-    auth: { persistSession: false },
-  });
-
-  // 尝试管理员登录
-  const adminEmail = process.env.SUPABASE_ADMIN_EMAIL;
-  const adminPassword = process.env.SUPABASE_ADMIN_PASSWORD;
-  if (adminEmail && adminPassword) {
-    const { error } = await supabase.auth.signInWithPassword({
-      email: adminEmail,
-      password: adminPassword,
-    });
-    if (error) {
-      console.error(`⚠️  管理员登录失败: ${error.message}，尝试匿名插入...`);
-    } else {
-      console.log("✅ 管理员登录成功");
-    }
-  }
+  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
   let successCount = 0;
 

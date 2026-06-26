@@ -99,7 +99,7 @@ async function fetchAll(config) {
       // B站源之间加延迟避免频率限制（第一个除外）
       const isBiliSource = /bilibili/.test(fullUrl);
       if (isBiliSource && !isFirstBiliCall) {
-        await sleep(300);
+        await sleep(1500);
       }
       if (isBiliSource) isFirstBiliCall = false;
 
