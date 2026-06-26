@@ -13,7 +13,8 @@
     "test:unit": "npx vitest run",
     "feed": "cd qq-feed-bot && node src/index.js",
     "feed:dry": "cd qq-feed-bot && node src/index.js --dry",
-    "feed:scheduler": "cd qq-feed-bot && node src/index.js --scheduler"
+    "feed:scheduler": "cd qq-feed-bot && node src/index.js --scheduler",
+    "feed:test-api": "cd qq-feed-bot && npm run test:api"
   },
   "dependencies": {
     "@stripe/stripe-js": "^9.7.0",

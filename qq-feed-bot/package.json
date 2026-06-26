@@ -6,7 +6,8 @@
   "scripts": {
     "feed": "node src/index.js",
     "feed:scheduler": "node src/index.js --scheduler",
-    "feed:dry": "node src/index.js --dry"
+    "feed:dry": "node src/index.js --dry",
+    "test:api": "node -e \"const {fetchBilibiliDynamic}=require('./src/fetch-bilibili');(async()=>{const r=await fetchBilibiliDynamic('605433916','test',['诡秘','测试','上线','预告']);console.log(r.length+'条动态');r.slice(0,2).forEach(i=>console.log(i.title));})();\""
   },
   "dependencies": {
     "node-cron": "^3.0.3",

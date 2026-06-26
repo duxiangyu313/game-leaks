@@ -1,9 +1,12 @@
 /**
- * RSS 抓取模块
- * 从 sources.json 配置的信源抓取 RSS，关键词过滤，去重
+ * 抓取调度模块
+ * 根据信源类型自动选择抓取方式：
+ *   - B站 /bilibili/user/dynamic/{UID} → 直接调 B站 API（无需 RSSHub）
+ *   - 其他 URL → RSS 解析器
  */
 const RssParser = require("rss-parser");
 const { dedupByTitle } = require("./utils");
+const { fetchBilibiliDynamic } = require("./fetch-bilibili");
 
 const parser = new RssParser({
   timeout: 15000,
@@ -12,40 +15,49 @@ const parser = new RssParser({
   },
 });
 
-/**
- * 检查标题是否包含任一关键词
- * @param {string} title
- * @param {string[]} keywords
- * @returns {boolean}
- */
-function matchKeywords(title, keywords) {
-  if (!title) return false;
-  return keywords.some(kw => title.includes(kw));
-}
+/** 匹配 B站用户动态路径: /bilibili/user/dynamic/{UID} */
+const BILIBILI_DYNAMIC_RE = /\/bilibili\/user\/dynamic\/(\d+)/;
 
 /**
- * 从单项 RSS 源抓取并过滤
- * @param {string} rssUrl - 完整 RSS URL
+ * 从单项信源抓取并过滤
+ * @param {string} sourceUrl - 完整 URL 或 RSSHub 相对路径
  * @param {string} label - 源标签（用于日志）
  * @param {string[]} keywords - 关键词列表
  * @returns {Promise<Array<{title, link, content, pubDate, sourceLabel}>>}
  */
-async function fetchOneSource(rssUrl, label, keywords) {
+async function fetchOneSource(sourceUrl, label, keywords) {
+  // 检测 B站动态模式 → 走直接 API
+  const biliMatch = sourceUrl.match(BILIBILI_DYNAMIC_RE);
+  if (biliMatch) {
+    try {
+      return await fetchBilibiliDynamic(biliMatch[1], label, keywords);
+    } catch (err) {
+      console.error(`  [${label}] B站抓取失败: ${err.message}`);
+      return [];
+    }
+  }
+
+  // 其他源 → RSS 解析器
   try {
-    const feed = await parser.parseURL(rssUrl);
+    const feed = await parser.parseURL(sourceUrl);
     const items = (feed.items || [])
-      .filter(item => matchKeywords(item.title, keywords))
-      .map(item => ({
+      .filter((item) => {
+        const title = item.title || "";
+        return keywords.some((kw) => title.includes(kw));
+      })
+      .map((item) => ({
         title: item.title || "",
         link: item.link || "",
         content: item.contentSnippet || item.content || "",
         pubDate: item.pubDate || "",
         sourceLabel: label,
       }));
-    console.log(`  [${label}] 抓取 ${feed.items?.length || 0} 条 → 关键词匹配 ${items.length} 条`);
+    console.log(
+      `  [${label}] 抓取 ${feed.items?.length || 0} 条 → 关键词匹配 ${items.length} 条`
+    );
     return items;
   } catch (err) {
-    console.error(`  [${label}] 抓取失败: ${err.message}`);
+    console.error(`  [${label}] RSS抓取失败: ${err.message}`);
     return [];
   }
 }
@@ -65,9 +77,18 @@ async function fetchAll(config) {
 
     for (const source of game.rss) {
       if (!source.enabled) continue;
+
+      // 拼接完整 URL
       const fullUrl = source.url.startsWith("http")
         ? source.url
-        : `${rsshubBase}${source.url}`;
+        : `${rsshubBase || ""}${source.url}`;
+
+      // 跳过未配置的占位符 UID
+      if (fullUrl.includes("FIND_UID") || fullUrl.includes("REPLACE_UID")) {
+        console.log(`🔍 [${game.name}] 跳过未配置: ${source.label}（需填写 UID）`);
+        continue;
+      }
+
       console.log(`🔍 [${game.name}] 抓取: ${source.label}`);
       const items = await fetchOneSource(fullUrl, source.label, game.keywords);
       gameItems.push(...items);
@@ -76,7 +97,7 @@ async function fetchAll(config) {
     // 同一游戏内去重
     const titles = [];
     const deduped = dedupByTitle(gameItems, titles);
-    deduped.forEach(item => {
+    deduped.forEach((item) => {
       item.gameName = game.name;
       item.gameSlug = game.slug;
     });
@@ -94,4 +115,4 @@ async function fetchAll(config) {
   return { items: finalItems, byGame };
 }
 
-module.exports = { fetchAll, matchKeywords };
+module.exports = { fetchAll };
