@@ -1,0 +1,15 @@
+{
+  "name": "qq-feed-bot",
+  "version": "1.0.0",
+  "private": true,
+  "description": "QQ群每日爆料早报自动生成器",
+  "scripts": {
+    "feed": "node src/index.js",
+    "feed:scheduler": "node src/index.js --scheduler",
+    "feed:dry": "node src/index.js --dry"
+  },
+  "dependencies": {
+    "node-cron": "^3.0.3",
+    "rss-parser": "^3.13.0"
+  }
+}

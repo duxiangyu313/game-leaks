@@ -1,0 +1,38 @@
+{
+  "rsshubBase": "https://rsshub.example.com",
+  "games": [
+    {
+      "name": "归唐",
+      "slug": "guitang",
+      "rss": [
+        { "label": "B站动态", "url": "/bilibili/user/dynamic/REPLACE_UID", "enabled": true },
+        { "label": "微博", "url": "/weibo/user/REPLACE_UID", "enabled": false }
+      ],
+      "keywords": ["归唐", "Return To Tang", "网易3A"]
+    },
+    {
+      "name": "影之刃零",
+      "slug": "phantom-blade-zero",
+      "rss": [
+        { "label": "B站动态", "url": "/bilibili/user/dynamic/REPLACE_UID", "enabled": true }
+      ],
+      "keywords": ["影之刃零", "Phantom Blade Zero", "灵游坊", "梁其伟"]
+    },
+    {
+      "name": "燕云十六声",
+      "slug": "where-winds-meet",
+      "rss": [
+        { "label": "B站动态", "url": "/bilibili/user/dynamic/REPLACE_UID", "enabled": true }
+      ],
+      "keywords": ["燕云十六声", "燕云", "Where Winds Meet"]
+    },
+    {
+      "name": "诡秘之主",
+      "slug": "lord-of-mysteries",
+      "rss": [
+        { "label": "B站动态", "url": "/bilibili/user/dynamic/REPLACE_UID", "enabled": true }
+      ],
+      "keywords": ["诡秘之主", "Lord of Mysteries", "弹指宇宙", "快手"]
+    }
+  ]
+}

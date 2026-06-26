@@ -10,7 +10,10 @@
     "start": "next start",
     "lint": "eslint",
     "test": "npx playwright test",
-    "test:unit": "npx vitest run"
+    "test:unit": "npx vitest run",
+    "feed": "cd qq-feed-bot && node src/index.js",
+    "feed:dry": "cd qq-feed-bot && node src/index.js --dry",
+    "feed:scheduler": "cd qq-feed-bot && node src/index.js --scheduler"
   },
   "dependencies": {
     "@stripe/stripe-js": "^9.7.0",
