@@ -1,17 +1,10 @@
-"use client";
-
-import { motion } from "framer-motion";
 import HeroCarousel from "@/components/HeroCarousel";
 
+// 纯展示组件 — 移除了 framer-motion，改用 CSS animation
 export default function HeroWrapper() {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      className="cyber-hologram"
-    >
+    <div className="animate-fade-up">
       <HeroCarousel />
-    </motion.div>
+    </div>
   );
 }

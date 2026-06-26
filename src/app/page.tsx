@@ -27,9 +27,9 @@ const MemberStatsBar = dynamic(() => import("@/components/MemberStatsBar"));
 export default function Home() {
   return (
     <div className="pt-16 relative cyber-scanline-bg">
-      {/* 全息粒子背景 */}
+      {/* 全息粒子背景 — 移动端禁用 */}
       <div className="fixed inset-0 pointer-events-none z-0 hidden md:block">
-        <CyberParticles count={50} />
+        <CyberParticles count={30} />
       </div>
 
       <div className="relative z-10">
@@ -39,27 +39,30 @@ export default function Home() {
           <EmailSubscribe compact />
         </div>
 
-        {/* 英雄区 */}
+        {/* 英雄区 — 首屏关键内容 */}
         <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-4 md:pt-6">
           <HeroWrapper />
           <LiveSignal />
         </div>
 
+        {/* 首屏以上 */}
         <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-4 md:pt-6"><HotTopics /></div>
         <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-8 md:pt-16"><LatestLeaks /></div>
         <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-8 md:pt-16"><HotGames /></div>
-        <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-8 md:pt-16"><UpcomingGames /></div>
-        <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-8 md:pt-16"><FeaturedProgress /></div>
-        <div className="pt-8 md:pt-16"><HotDiscussions /></div>
-        <div className="pt-8 md:pt-16"><VideoSection /></div>
-        <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-8 md:pt-16">
+
+        {/* 首屏以下 — lazy-section 触发 content-visibility: auto */}
+        <div className="lazy-section max-w-[1280px] mx-auto px-4 md:px-6 pt-8 md:pt-16"><UpcomingGames /></div>
+        <div className="lazy-section max-w-[1280px] mx-auto px-4 md:px-6 pt-8 md:pt-16"><FeaturedProgress /></div>
+        <div className="lazy-section pt-8 md:pt-16"><HotDiscussions /></div>
+        <div className="lazy-section pt-8 md:pt-16"><VideoSection /></div>
+        <div className="lazy-section max-w-[1280px] mx-auto px-4 md:px-6 pt-8 md:pt-16">
           <StatsDashboard />
           <div className="mt-4 flex justify-end"><LastUpdated /></div>
         </div>
-        <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-8 md:pt-12">
+        <div className="lazy-section max-w-[1280px] mx-auto px-4 md:px-6 pt-8 md:pt-12">
           <MemberStatsBar />
         </div>
-        <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-8 md:pt-16 pb-12 md:pb-20"><MemberPromo /></div>
+        <div className="lazy-section max-w-[1280px] mx-auto px-4 md:px-6 pt-8 md:pt-16 pb-12 md:pb-20"><MemberPromo /></div>
       </div>
     </div>
   );

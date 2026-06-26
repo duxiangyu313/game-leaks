@@ -35,9 +35,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="zh-CN" className="h-full" suppressHydrationWarning>
       <head>
-        {/* 🔗 预连接 Supabase — 省去 DNS+SSL 握手延迟 (~200ms) */}
+        {/* 🔗 预连接关键源 — 省去 DNS+SSL 握手延迟 (~200ms) */}
         <link rel="dns-prefetch" href="https://gumpxfxbxxyljikaizsh.supabase.co" />
         <link rel="preconnect" href="https://gumpxfxbxxyljikaizsh.supabase.co" crossOrigin="anonymous" />
+        {/* 🖼️ 预加载首页数据 — 让 LCP 更快 */}
+        <link rel="prefetch" href="/homepage-cache.json" as="fetch" crossOrigin="anonymous" />
+        {/* 📱 移动端 viewport 优化 */}
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="theme-color" content="#0F172A" />
         <WebsiteSchema />
         <Analytics />
         <link rel="sitemap" type="application/xml" href="/sitemap.xml" />

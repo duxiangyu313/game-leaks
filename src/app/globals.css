@@ -594,3 +594,58 @@ body {
   animation: cursor-blink 1s step-end infinite;
   vertical-align: text-bottom; margin-left: 2px;
 }
+
+/* ═══════════════════════════════════════════
+   性能优化 · Performance
+   ═══════════════════════════════════════════ */
+
+/* —— Hero 幻灯片切换动画（替代 framer-motion ~30KB）—— */
+@keyframes slide-in {
+  from { opacity: 0; transform: translateX(30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.animate-slide-in {
+  animation: slide-in 0.4s ease-out;
+}
+
+/* —— 免费试用条幅滑入（替代 framer-motion）—— */
+@keyframes slide-in-banner {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* —— 字体渲染优化 —— */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: local('Inter'), local('PingFang SC'), local('Microsoft YaHei');
+}
+
+/* —— 视口外延迟渲染（减少首屏 Layout/Paint）—— */
+@media (max-width: 768px) {
+  .lazy-section {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 300px;
+  }
+}
+
+/* —— 移动端减少动画 —— */
+@media (max-width: 768px) {
+  .cyber-hologram { animation: none !important; }
+  .cyber-border-glow { animation: none !important; }
+  .cyber-scanline-bg { animation: none !important; background-image: none !important; }
+  .glass-card:hover { transform: none !important; box-shadow: none !important; }
+  .cyber-particle { display: none !important; }
+}
+
+/* —— 图片优化：移动端默认懒加载 —— */
+img[loading] {
+  content-visibility: auto;
+}
+
+/* —— 触控优化：消除 300ms 点击延迟 —— */
+a, button, [role="button"] {
+  touch-action: manipulation;
+}

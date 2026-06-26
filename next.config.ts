@@ -5,6 +5,8 @@ const nextConfig: NextConfig = {
   distDir: "live",
   images: { unoptimized: true },
   trailingSlash: true,
+  compress: true,
+  poweredByHeader: false,
   generateBuildId: async () => "v" + Date.now(),
 };
 
