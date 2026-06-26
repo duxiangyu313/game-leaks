@@ -14,7 +14,7 @@
       "name": "影之刃零",
       "slug": "phantom-blade-zero",
       "rss": [
-        { "label": "B站动态", "url": "/bilibili/user/dynamic/3493283531590620", "enabled": true }
+        { "label": "B站动态", "url": "/bilibili/user/dynamic/FIND_UID", "enabled": true }
       ],
       "keywords": ["影之刃零", "Phantom Blade Zero", "灵游坊", "梁其伟", "S-GAME"]
     },
@@ -22,9 +22,9 @@
       "name": "燕云十六声",
       "slug": "where-winds-meet",
       "rss": [
-        { "label": "B站动态", "url": "/bilibili/user/dynamic/3546919905266105", "enabled": true }
+        { "label": "B站动态", "url": "/bilibili/user/dynamic/FIND_UID", "enabled": true }
       ],
-      "keywords": ["燕云十六声", "燕云", "Where Winds Meet", "十六声"]
+      "keywords": ["燕云十六声", "燕云", "Where Winds Meet"]
     },
     {
       "name": "诡秘之主",
@@ -32,7 +32,7 @@
       "rss": [
         { "label": "B站动态", "url": "/bilibili/user/dynamic/605433916", "enabled": true }
       ],
-      "keywords": ["诡秘之主", "Lord of Mysteries", "弹指宇宙", "快手", "代号诡秘"]
+      "keywords": ["诡秘之主", "灰雾", "序列", "途径", "弹指宇宙", "诡秘"]
     }
   ]
 }
