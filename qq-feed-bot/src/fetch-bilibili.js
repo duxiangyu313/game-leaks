@@ -141,7 +141,11 @@ async function fetchBilibiliDynamic(uid, label, keywords) {
   let items = [];
   try {
     items = await fetchFromApi(uid, label);
-    console.log(`  [${label}] API抓取 ${items.length} 条动态`);
+    if (items.length === 0) {
+      console.log(`  [${label}] API正常但该号近期无动态`);
+    } else {
+      console.log(`  [${label}] API抓取 ${items.length} 条动态`);
+    }
   } catch (err) {
     console.error(`  [${label}] API失败: ${err.message}`);
     return [];

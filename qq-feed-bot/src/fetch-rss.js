@@ -67,10 +67,17 @@ async function fetchOneSource(sourceUrl, label, keywords) {
  * @param {object} config - sources.json 解析后的对象
  * @returns {Promise<{items: Array, byGame: object}>}
  */
+/** 简单延迟 */
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 async function fetchAll(config) {
   const { rsshubBase, games } = config;
   const allItems = [];
   const byGame = {};
+
+  let isFirstBiliCall = true;
 
   for (const game of games) {
     const gameItems = [];
@@ -88,6 +95,13 @@ async function fetchAll(config) {
         console.log(`🔍 [${game.name}] 跳过未配置: ${source.label}（需填写 UID）`);
         continue;
       }
+
+      // B站源之间加延迟避免频率限制（第一个除外）
+      const isBiliSource = /bilibili/.test(fullUrl);
+      if (isBiliSource && !isFirstBiliCall) {
+        await sleep(300);
+      }
+      if (isBiliSource) isFirstBiliCall = false;
 
       console.log(`🔍 [${game.name}] 抓取: ${source.label}`);
       const items = await fetchOneSource(fullUrl, source.label, game.keywords);

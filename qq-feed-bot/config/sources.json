@@ -5,26 +5,25 @@
       "name": "归唐",
       "slug": "guitang",
       "rss": [
-        { "label": "B站动态", "url": "/bilibili/user/dynamic/FIND_UID", "enabled": true },
-        { "label": "微博", "url": "/weibo/user/FIND_UID", "enabled": false }
+        { "label": "B站动态", "url": "/bilibili/user/dynamic/1450192387", "enabled": true }
       ],
-      "keywords": ["归唐", "Return To Tang", "网易3A"]
+      "keywords": ["归唐", "Return To Tang", "网易3A", "实机", "发售", "预告", "上线", "演示"]
     },
     {
       "name": "影之刃零",
       "slug": "phantom-blade-zero",
       "rss": [
-        { "label": "B站动态", "url": "/bilibili/user/dynamic/FIND_UID", "enabled": true }
+        { "label": "B站动态", "url": "/bilibili/user/dynamic/3493283531590620", "enabled": true }
       ],
-      "keywords": ["影之刃零", "Phantom Blade Zero", "灵游坊", "梁其伟", "S-GAME"]
+      "keywords": ["影之刃零", "Phantom Blade Zero", "灵游坊", "梁其伟", "S-GAME", "实机", "发售", "预告", "演示", "上线"]
     },
     {
       "name": "燕云十六声",
       "slug": "where-winds-meet",
       "rss": [
-        { "label": "B站动态", "url": "/bilibili/user/dynamic/FIND_UID", "enabled": true }
+        { "label": "B站动态", "url": "/bilibili/user/dynamic/1567141152", "enabled": true }
       ],
-      "keywords": ["燕云十六声", "燕云", "Where Winds Meet"]
+      "keywords": ["燕云十六声", "燕云", "Where Winds Meet", "江南", "版本", "更新", "上线", "新地图"]
     },
     {
       "name": "诡秘之主",
@@ -32,7 +31,31 @@
       "rss": [
         { "label": "B站动态", "url": "/bilibili/user/dynamic/605433916", "enabled": true }
       ],
-      "keywords": ["诡秘之主", "灰雾", "序列", "途径", "弹指宇宙", "诡秘"]
+      "keywords": ["诡秘之主", "灰雾", "序列", "途径", "弹指宇宙", "诡秘", "测试", "上线", "开测"]
+    },
+    {
+      "name": "湮灭之潮",
+      "slug": "annihilation-tide",
+      "rss": [
+        { "label": "B站动态", "url": "/bilibili/user/dynamic/3546744281368908", "enabled": true }
+      ],
+      "keywords": ["湮灭之潮", "湮灭", "上线", "测试", "预告", "发售", "实机", "演示"]
+    },
+    {
+      "name": "黑神话悟空",
+      "slug": "black-myth-wukong",
+      "rss": [
+        { "label": "B站动态", "url": "/bilibili/user/dynamic/642389251", "enabled": true }
+      ],
+      "keywords": ["黑神话", "悟空", "Black Myth", "Wukong", "游戏科学", "DLC", "更新", "上线"]
+    },
+    {
+      "name": "古剑奇谭",
+      "slug": "gujian",
+      "rss": [
+        { "label": "B站动态", "url": "/bilibili/user/dynamic/3546952757152588", "enabled": true }
+      ],
+      "keywords": ["古剑", "古剑奇谭", "烛龙", "上线", "测试", "预告", "发售", "实机", "演示", "更新"]
     }
   ]
 }
