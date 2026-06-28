@@ -8,6 +8,7 @@ import { ArrowLeft, Send, Loader2 } from "lucide-react";
 import { getUserLevel, type MembershipLevel, type Visibility } from "@/lib/auth";
 import { calculateReadingTime, calculateWordCount } from "@/lib/article-utils";
 import { useArticleDetail } from "@/data/hooks";
+import { addHistory } from "@/components/account/BrowsingHistory";
 import type { InteractionCounts, ArticleCategory } from "@/types";
 import ArticleTemplate from "@/components/article/ArticleTemplate";
 import type { Database } from "@/types/database";
@@ -39,6 +40,9 @@ function DetailContent() {
     else { meta = document.createElement("meta"); meta.setAttribute("name", "description"); meta.setAttribute("content", desc); document.head.appendChild(meta); }
 
     getUserLevel().then(setUserLevel);
+
+    // 记录浏览历史
+    addHistory({ id: article.id, title: article.title, link: `/articles/detail?id=${article.id}`, type: "article" });
 
     // 增加浏览量
     supabase.rpc("increment_view", { article_id: id! }).then(() => {});

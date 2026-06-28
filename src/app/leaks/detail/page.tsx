@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Eye, Clock, Shield, AlertTriangle } from "lucide-react";
 import { formatDate } from "@/lib/article-utils";
 import { useLeakDetail } from "@/data/hooks";
+import { addHistory } from "@/components/account/BrowsingHistory";
 
 export default function LeakDetailPage() {
   return (
@@ -24,6 +25,7 @@ function LeakDetailContent() {
   useEffect(() => {
     if (!leak) return;
     document.title = `${leak.title} · 国游爆料`;
+    addHistory({ id: leak.id, title: leak.title, link: `/leaks/detail?id=${leak.id}`, type: "leak" });
   }, [leak]);
 
   if (!id) return (

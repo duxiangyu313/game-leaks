@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
 import { useGameDetail } from "@/data/hooks";
 import { Loader2 } from "lucide-react";
+import { addHistory } from "@/components/account/BrowsingHistory";
 import GameHeader from "@/components/game/GameHeader";
 import GameProgressCard from "@/components/game/GameProgressCard";
 import GameTabs from "@/components/game/GameTabs";
@@ -36,6 +37,7 @@ function DetailContent() {
   useEffect(() => {
     if (detail?.game) {
       document.title = `${detail.game.title} · 国游爆料`;
+      addHistory({ id: detail.game.id, title: detail.game.title, link: `/games/detail?id=${detail.game.id}`, type: "game" });
     }
   }, [detail]);
 

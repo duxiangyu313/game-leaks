@@ -26,17 +26,33 @@ export function addHistory(item: Omit<HistoryItem, "time">) {
   } catch {}
 }
 
-export default function BrowsingHistory() {
-  const [items, setItems] = useState<HistoryItem[]>(() => {
-    try {
-      const raw = localStorage.getItem(KEY);
-      return raw ? JSON.parse(raw) : [];
-    } catch { return []; }
-  });
+function loadHistory(): HistoryItem[] {
+  try {
+    const raw = localStorage.getItem(KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch { return []; }
+}
 
+export default function BrowsingHistory() {
+  const [items, setItems] = useState<HistoryItem[]>([]);
   const [now, setNow] = useState(0);
 
-  useEffect(() => { setNow(Date.now()); }, []);
+  // 每次面板打开（组件挂载）时读取 localStorage
+  useEffect(() => {
+    setItems(loadHistory());
+    setNow(Date.now());
+  }, []);
+
+  // 监听其他标签页的 storage 变更
+  useEffect(() => {
+    const handler = (e: StorageEvent) => {
+      if (e.key === KEY) {
+        setItems(loadHistory());
+      }
+    };
+    window.addEventListener("storage", handler);
+    return () => window.removeEventListener("storage", handler);
+  }, []);
 
   const clear = () => {
     localStorage.removeItem(KEY);
