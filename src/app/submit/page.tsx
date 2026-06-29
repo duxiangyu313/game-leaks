@@ -114,6 +114,10 @@ export default function SubmitPage() {
 
     setSubmitting(true);
     try {
+      // 获取当前用户 ID（数据库 ugc_submissions.user_id 为 NOT NULL）
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { setError("请先登录"); setSubmitting(false); return; }
+
       let coverUrl = "";
       if (coverFile) {
         const { data: presignData } = await supabase.functions.invoke("upload-presign", {
@@ -128,6 +132,7 @@ export default function SubmitPage() {
 
       // build submission payload based on type
       const payload: Record<string, unknown> = {
+        user_id: user.id,
         content_level: contentLevel, tags: tagArray, status: "pending",
         cover_image: coverUrl || null,
       };
