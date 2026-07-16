@@ -26,13 +26,13 @@ const FOOTER_LINKS = {
 
 export default function Footer() {
   return (
-    <footer className="border-t border-[rgba(30,41,59,0.6)] bg-[#0B1120]">
+    <footer className="border-t border-[rgba(255,255,255,0.04)] bg-[#080A0D]">
       <div className="max-w-[1280px] mx-auto px-6 py-16">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
           {/* Brand */}
           <div className="col-span-2">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#06B6D4] to-[#0891B2] flex items-center justify-center text-white font-bold text-sm shadow-[0_0_16px_rgba(6,182,212,0.3)]">
+              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#F5A623] to-[#E8960F] flex items-center justify-center text-white font-bold text-sm shadow-[0_0_16px_rgba(245,166,35,0.25)]">
                 G
               </div>
               <span className="text-lg font-bold text-[#F1F5F9]">国游爆料</span>
@@ -41,13 +41,13 @@ export default function Footer() {
               国产大作游戏最新资讯平台。追踪黑神话悟空、影之刃零、归唐、湮灭之潮等国产大作，提供深度解析与玩家社区。
             </p>
             <div className="flex gap-3 mt-5">
-              <a href="https://guoyouwenduji.cc" target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg text-[#64748B] hover:text-[#06B6D4] hover:bg-[#1E293B]/50 transition-all" title="主站">
+              <a href="https://guoyouwenduji.cc" target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg text-[#64748B] hover:text-[#F5A623] hover:bg-[#1E293B]/50 transition-all" title="主站">
                 <Globe className="w-4 h-4" />
               </a>
-              <a href="https://space.bilibili.com/3546857156380947" target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg text-[#64748B] hover:text-[#06B6D4] hover:bg-[#1E293B]/50 transition-all" title="B站主页">
+              <a href="https://space.bilibili.com/3546857156380947" target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg text-[#64748B] hover:text-[#F5A623] hover:bg-[#1E293B]/50 transition-all" title="B站主页">
                 <MessageCircle className="w-4 h-4" />
               </a>
-              <a href="mailto:1852779947@qq.com" className="p-2 rounded-lg text-[#64748B] hover:text-[#06B6D4] hover:bg-[#1E293B]/50 transition-all" title="合作联系">
+              <a href="mailto:1852779947@qq.com" className="p-2 rounded-lg text-[#64748B] hover:text-[#F5A623] hover:bg-[#1E293B]/50 transition-all" title="合作联系">
                 <Mail className="w-4 h-4" />
               </a>
             </div>
@@ -62,7 +62,7 @@ export default function Footer() {
                   <li key={link.href}>
                     <LinkNoPrefetch
                       href={link.href}
-                      className="text-sm text-[#64748B] hover:text-[#06B6D4] transition-colors"
+                      className="text-sm text-[#64748B] hover:text-[#F5A623] transition-colors"
                     >
                       {link.label}
                     </LinkNoPrefetch>

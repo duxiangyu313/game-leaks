@@ -53,7 +53,7 @@ export default function StatsDashboard() {
     "stats"
   );
 
-  const { stats, topHype, topRated } = data;
+  const { stats, topHype = [], topRated = [] } = data || {};
 
   if (loading) return (
     <section>

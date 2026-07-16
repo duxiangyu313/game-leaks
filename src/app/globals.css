@@ -1,23 +1,23 @@
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════
-   国游爆料 · 深蓝科技风
-   主色 #0F172A · 强调色 #06B6D4
+   国游爆料 · Cinematic Dark
+   底色 #080A0D · 强调金 #F5A623
    ═══════════════════════════════════════════ */
 
 @theme inline {
-  --color-bg-primary: #0F172A;
-  --color-bg-secondary: #1E293B;
-  --color-bg-card: #1A2332;
-  --color-bg-hover: #243044;
-  --color-accent: #06B6D4;
-  --color-accent-light: #22D3EE;
-  --color-accent-dark: #0891B2;
+  --color-bg-primary: #080A0D;
+  --color-bg-secondary: #111318;
+  --color-bg-card: #14171D;
+  --color-bg-hover: #1A1E25;
+  --color-accent: #F5A623;
+  --color-accent-light: #F7C948;
+  --color-accent-dark: #D4891A;
   --color-text-primary: #F1F5F9;
   --color-text-secondary: #94A3B8;
   --color-text-muted: #64748B;
-  --color-border: rgba(30, 41, 59, 0.8);
-  --color-border-glow: rgba(6, 182, 212, 0.15);
+  --color-border: rgba(255, 255, 255, 0.06);
+  --color-border-glow: rgba(245, 166, 35, 0.12);
   --color-success: #10B981;
   --color-warning: #F59E0B;
   --color-danger: #EF4444;
@@ -56,23 +56,23 @@ body {
 ::-webkit-scrollbar-thumb { background: #243044; border-radius: 3px }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-accent-dark) }
 
-/* Glass card */
+/* Glass card v2 — Cinematic Dark */
 .glass-card {
-  background: rgba(30,41,59,0.5);
+  background: rgba(255,255,255,0.03);
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(30,41,59,0.8);
+  border: 1px solid rgba(255,255,255,0.06);
   border-radius: 12px;
-  transition: all .3s;
+  transition: all .35s cubic-bezier(0.16,1,0.3,1);
 }
 .glass-card:hover {
-  border-color: rgba(6,182,212,0.2);
-  box-shadow: 0 0 30px rgba(6,182,212,0.08), 0 8px 32px rgba(0,0,0,0.3);
+  border-color: rgba(245,166,35,0.2);
+  box-shadow: 0 0 30px rgba(245,166,35,0.06), 0 8px 32px rgba(0,0,0,0.4);
   transform: translateY(-2px);
 }
 .glass-card-intense {
-  background: rgba(30,41,59,0.7);
+  background: rgba(255,255,255,0.05);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(6,182,212,0.12);
+  border: 1px solid rgba(245,166,35,0.08);
   border-radius: 12px;
 }
 

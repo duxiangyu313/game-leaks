@@ -40,7 +40,10 @@ export default function HotTopics() {
 
   if (loading) return (
     <section>
-      <div className="flex items-center gap-3 mb-6"><div className="w-6 h-6 rounded bg-[#1E293B]/40 animate-pulse" /><div className="w-24 h-6 rounded bg-[#1E293B]/40 animate-pulse" /></div>
+      <div className="flex items-center gap-3 mb-6">
+        <Flame className="w-6 h-6 text-[#F59E0B] opacity-30" />
+        <div className="w-24 h-6 rounded bg-[#1E293B]/40 animate-pulse" />
+      </div>
       <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="h-16 rounded-xl bg-[#1E293B]/20 animate-pulse" />)}</div>
     </section>
   );
