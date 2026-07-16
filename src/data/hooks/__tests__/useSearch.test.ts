@@ -3,13 +3,12 @@
  *
  * 测试策略：mock supabase 返回值，验证搜索结果正确聚合
  */
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 
 // Mock supabase client
-const mockFrom = vi.fn();
 vi.mock("@/lib/supabase/client", () => ({
   supabase: {
-    from: (...args: unknown[]) => ({
+    from: () => ({
       select: vi.fn().mockReturnThis(),
       ilike: vi.fn().mockReturnThis(),
       eq: vi.fn().mockReturnThis(),

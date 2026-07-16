@@ -54,6 +54,8 @@ export function useGames(filters?: {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const filtersKey = JSON.stringify(filters);
+
   const refresh = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -85,7 +87,8 @@ export function useGames(filters?: {
       setError(e instanceof Error ? e.message : "加载失败");
     }
     setLoading(false);
-  }, [JSON.stringify(filters)]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filtersKey]);
 
   useEffect(() => { refresh(); }, [refresh]);
 

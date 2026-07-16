@@ -65,11 +65,22 @@ export function getVisibilityBg(v: Visibility | MembershipLevel): string {
 }
 
 export async function isAdmin(): Promise<boolean> {
-  const level = await getUserLevel();
-  if (level === "diamond") return true;
-  const { data: { user } } = await supabase.auth.getUser();
-  const adminEmails = (process.env.NEXT_PUBLIC_ADMIN_EMAILS || "").split(",").map(e => e.trim().toLowerCase());
-  return !!(user?.email && adminEmails.includes(user.email.toLowerCase()));
+  try {
+    const level = await getUserLevel();
+    if (level === "diamond") return true;
+    const { data: { user } } = await supabase.auth.getUser();
+    const adminEmails = (process.env.NEXT_PUBLIC_ADMIN_EMAILS || "").split(",").map(e => e.trim().toLowerCase());
+    return !!(user?.email && adminEmails.includes(user.email.toLowerCase()));
+  } catch {
+    // Supabase 查询失败时，退回到纯邮箱检查
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      const adminEmails = (process.env.NEXT_PUBLIC_ADMIN_EMAILS || "").split(",").map(e => e.trim().toLowerCase());
+      return !!(user?.email && adminEmails.includes(user.email.toLowerCase()));
+    } catch {
+      return false;
+    }
+  }
 }
 
 export function getUpgradeTier(userLevel: MembershipLevel, requiredLevel: Visibility): MembershipLevel | null {

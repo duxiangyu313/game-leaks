@@ -26,37 +26,58 @@ export const useAdmin = () => useContext(AdminContext);
 export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
   const [adminUser, setAdminUser] = useState<AdminUser | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
     async function check() {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) {
-        router.push("/admin/login");
-        return;
-      }
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) {
+          router.push("/admin/login");
+          return;
+        }
 
-      const admin = await isAdmin();
-      if (!admin) {
-        await supabase.auth.signOut();
-        router.push("/admin/login?error=unauthorized");
-        return;
-      }
+        const admin = await isAdmin();
+        if (!admin) {
+          await supabase.auth.signOut();
+          router.push("/admin/login?error=unauthorized");
+          return;
+        }
 
-      setAdminUser({
-        id: session.user.id,
-        email: session.user.email || "",
-        role: "admin",
-      });
-      setLoading(false);
+        setAdminUser({
+          id: session.user.id,
+          email: session.user.email || "",
+          role: "admin",
+        });
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "认证失败");
+      } finally {
+        setLoading(false);
+      }
     }
     check();
   }, [router]);
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0F172A] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-[#06B6D4] animate-spin" />
+      <div className="min-h-screen bg-[#080A0D] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-[#F5A623] animate-spin" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-[#080A0D] flex flex-col items-center justify-center gap-4">
+        <p className="text-[#EF4444] text-lg font-semibold">认证失败</p>
+        <p className="text-[#94A3B8] text-sm">{error}</p>
+        <button
+          onClick={() => { setError(null); setLoading(true); window.location.reload(); }}
+          className="px-4 py-2 bg-[#F5A623] text-white rounded-lg text-sm font-medium"
+        >
+          重试
+        </button>
       </div>
     );
   }

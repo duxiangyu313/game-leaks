@@ -62,7 +62,6 @@ export function useGameDetail(id: string | null) {
         { data: dlcs },
         { data: wiki },
         { data: videos },
-        { data: votes },
       ] = await Promise.all([
         supabase.from("games").select("*").eq("id", id).single(),
         supabase.from("game_requirements").select("*").eq("game_id", id).maybeSingle(),

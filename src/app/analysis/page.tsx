@@ -4,7 +4,7 @@ import { useState } from "react";
 import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { motion } from "framer-motion";
 import { BookOpen, PenLine, Users, TrendingUp, Clock, Eye, Flame, Newspaper } from "lucide-react";
-import { calculateReadingTime, calculateWordCount, formatDate } from "@/lib/article-utils";
+import { calculateReadingTime, formatDate } from "@/lib/article-utils";
 import { useArticles } from "@/data/hooks";
 import type { ArticleListItem } from "@/data/hooks";
 import PremiumBadge from "@/components/cyber/PremiumBadge";
