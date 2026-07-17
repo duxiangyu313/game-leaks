@@ -17,7 +17,7 @@ type Tab = "earnings" | "withdraw" | "invite";
 interface ContentRow {
   id: string; title: string; category: string;
   view_count: number; like_count: number; comment_count: number;
-  published_at: string; content_level: string;
+  published_at: string; content_level: string; status: string;
 }
 interface WithdrawalForm { amount: string; method: PayoutMethod; account: string; realName: string; }
 const EMPTY_WF: WithdrawalForm = { amount: "", method: "alipay", account: "", realName: "" };
@@ -66,9 +66,25 @@ export default function CreatorCenterPage() {
       setEarnings({ total, available, pending, settled });
     }
 
-    // content performance
-    const { data: ugc } = await supabase.from("ugc_content").select("id,title,category,view_count,like_count,comment_count,published_at,content_level").eq("user_id", u.id).order("published_at", { ascending: false });
-    if (ugc) setContents(ugc as any[]);
+    // content performance — 读自己的投稿（ugc_submissions），浏览数从已发布的 leaks/articles 关联
+    const { data: ugc } = await supabase.from("ugc_submissions")
+      .select("id,title,category,content_level,status,submitted_at")
+      .eq("user_id", u.id).order("submitted_at", { ascending: false });
+    if (ugc) {
+      const titles = ugc.map((s: any) => s.title);
+      const [{ data: pubLeaks }, { data: pubArts }] = await Promise.all([
+        supabase.from("leaks").select("title,view_count").in("title", titles),
+        supabase.from("articles").select("title,view_count").in("title", titles),
+      ]);
+      const viewMap = new Map<string, number>();
+      [...(pubLeaks || []), ...(pubArts || [])].forEach((r: any) => viewMap.set(r.title, r.view_count || 0));
+      setContents(ugc.map((s: any) => ({
+        id: s.id, title: s.title, category: s.category,
+        content_level: s.content_level, status: s.status,
+        published_at: s.submitted_at,
+        view_count: viewMap.get(s.title) ?? 0, like_count: 0, comment_count: 0,
+      })));
+    }
 
     // withdrawals
     const { data: wds } = await supabase.from("withdrawal_requests").select("*").eq("user_id", u.id).order("created_at", { ascending: false });
@@ -199,6 +215,7 @@ function EarningsTab({ earnings, contents }: { earnings: any; contents: ContentR
               <div className="min-w-0 flex-1">
                 <h3 className="text-sm font-semibold text-[#F1F5F9] truncate">{c.title}</h3>
                 <div className="flex items-center gap-3 mt-1 text-xs text-[#64748B]">
+                  <span className={`px-2 py-0.5 rounded-full text-[10px] ${c.status === "approved" ? "bg-[#10B981]/10 text-[#10B981]" : c.status === "rejected" ? "bg-[#EF4444]/10 text-[#EF4444]" : "bg-[#F59E0B]/10 text-[#F59E0B]"}`}>{c.status === "approved" ? "已发布" : c.status === "rejected" ? "已拒绝" : "审核中"}</span>
                   <span className={`px-2 py-0.5 rounded-full text-[10px] ${c.content_level === "diamond" ? "bg-[#3B82F6]/10 text-[#3B82F6]" : c.content_level === "gold" ? "bg-[#F59E0B]/10 text-[#F59E0B]" : "bg-gray-500/10 text-gray-400"}`}>{c.content_level === "diamond" ? "钻石" : c.content_level === "gold" ? "黄金" : "免费"}</span>
                   <span>{new Date(c.published_at).toLocaleDateString("zh-CN")}</span>
                 </div>
