@@ -11,13 +11,14 @@ export default function RevenuePage() {
 
   const loadStats = async () => {
     setLoading(true);
-    const { data: records } = await supabase.from("revenue_records").select("amount, settlement_status");
+    const { data: records } = await supabase.from("revenue_records").select("creator_id, amount, settlement_status");
     if (records) {
       const total = records.reduce((s: number, r) => s + (r.amount || 0), 0);
       const pending = records.filter((r) => r.settlement_status === "pending").reduce((s: number, r) => s + (r.amount || 0), 0);
-      setStats({ totalRevenue: total, creatorCount: 0, pendingPayout: pending });
+      // 有收益记录的创作者数（profiles.revenue_balance 列已随简化移除，改由收益记录去重统计）
+      const creators = new Set(records.map((r: any) => r.creator_id)).size;
+      setStats({ totalRevenue: total, creatorCount: creators, pendingPayout: pending });
     }
-    // profiles 表已简化（revenue_balance 列已移除），有余额创作者数改由收益记录估算
     setLoading(false);
   };
 
