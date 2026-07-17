@@ -21,38 +21,23 @@ export default function AuthPage() {
           setLoading(false);
           return;
         }
-        // 使用自定义注册（绕过 GoTrue 兼容问题）
-        const res = await fetch(
-          "https://gumpxfxbxxyljikaizsh.supabase.co/functions/v1/auth-custom",
-          { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "signup", email, password }) }
-        );
-        const data = await res.json();
-        if (!res.ok || !data.success) throw new Error(data.error || "注册失败");
-        // 注册成功，尝试 GoTrue 登录（老用户兼容路径）
+        // 标准 Supabase 注册
+        const { error: signUpErr } = await supabase.auth.signUp({
+          email,
+          password,
+          options: { data: { username: email.split("@")[0] } },
+        });
+        if (signUpErr) throw new Error(signUpErr.message || "注册失败");
+        // 注册后自动登录
         const { error: e2 } = await supabase.auth.signInWithPassword({ email, password });
         if (e2) {
-          // GoTrue 登录不兼容新用户 → 提示用户重新从登录页登录
+          // 可能需要邮箱验证
           setMode("login");
-          throw new Error("注册成功！GoTrue 兼容问题，请点击登录按钮重新登录。");
+          throw new Error("注册成功！请查收验证邮件后登录（如未收到可直接尝试登录）。");
         }
       } else {
-        // 登录：先尝试 GoTrue（预迁移老用户可行）
         const { error: e } = await supabase.auth.signInWithPassword({ email, password });
-        if (e) {
-          // GoTrue 登录失败 → 用自定义 Edge Function 验证密码
-          const res = await fetch(
-            "https://gumpxfxbxxyljikaizsh.supabase.co/functions/v1/auth-custom",
-            { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "login", email, password }) }
-          );
-          const data = await res.json();
-          if (data.success && data.verified) {
-            // 密码正确但 GoTrue 无法创建 session → 重试一次（可能已更新 last_sign_in_at）
-            const { error: retryErr } = await supabase.auth.signInWithPassword({ email, password });
-            if (retryErr) throw new Error("登录失败：认证服务兼容问题，请联系管理员或稍后重试");
-          } else {
-            throw new Error(data.error || "邮箱或密码错误");
-          }
-        }
+        if (e) throw new Error(e.message === "Invalid login credentials" ? "邮箱或密码错误" : e.message);
       }
       window.location.href = "/";
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
