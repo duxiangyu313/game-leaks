@@ -12,20 +12,11 @@ const LEVEL_RANK: Record<MembershipLevel, number> = { free: 0, silver: 0.5, gold
 export async function getUserLevel(): Promise<MembershipLevel> {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return "free";
+  // 只查 membership — 简化后的 profiles 表已无 subscription_end_date/banned 列
   const { data: profile } = await supabase
-    .from("profiles").select("membership, subscription_end_date, banned")
+    .from("profiles").select("membership")
     .eq("id", user.id).maybeSingle();
-  if (profile?.banned) return "free";
-  const level = (profile?.membership || "free") as MembershipLevel;
-  if (profile?.subscription_end_date) {
-    const end = new Date(profile.subscription_end_date);
-    if (end < new Date() && level !== "free") {
-      await supabase.from("profiles")
-        .update({ membership: "free", subscription_status: "inactive" }).eq("id", user.id);
-      return "free";
-    }
-  }
-  return level;
+  return ((profile as { membership?: string } | null)?.membership || "free") as MembershipLevel;
 }
 
 export function hasAccess(userLevel: MembershipLevel, requiredLevel: Visibility): boolean {
