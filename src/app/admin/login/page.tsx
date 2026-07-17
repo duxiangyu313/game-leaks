@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { supabase } from "@/lib/supabase/client";
+import { isAdmin } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 import { Shield, Loader2 } from "lucide-react";
 
@@ -28,11 +29,17 @@ export default function AdminLoginPage() {
       return;
     }
 
-    // 检查邮箱是否在管理员白名单中
-    const adminEmails = (process.env.NEXT_PUBLIC_ADMIN_EMAILS || "").split(",").map((e) => e.trim().toLowerCase());
-    if (!adminEmails.includes(email.toLowerCase())) {
-      await supabase.auth.signOut();
-      setError("该账号无管理员权限");
+    // 通过数据库 profiles.membership 判定 + 邮箱白名单兜底
+    try {
+      const admin = await isAdmin();
+      if (!admin) {
+        await supabase.auth.signOut();
+        setError("该账号无管理员权限（需要 diamond 会员或管理员邮箱）");
+        setLoading(false);
+        return;
+      }
+    } catch {
+      setError("权限验证失败，请重试");
       setLoading(false);
       return;
     }
