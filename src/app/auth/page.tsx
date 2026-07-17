@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase/client";
 
 export default function AuthPage() {
@@ -10,6 +10,25 @@ export default function AuthPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  // 捕获邀请码 ?ref=XXX，存入 localStorage，注册页默认切到注册模式
+  useEffect(() => {
+    try {
+      const ref = new URLSearchParams(window.location.search).get("ref");
+      if (ref) { localStorage.setItem("gylb_ref", ref); setMode("register"); }
+    } catch {}
+  }, []);
+
+  // 登录成功后应用邀请码（幂等，仅注册7天内新账号生效）
+  const applyPendingReferral = async () => {
+    try {
+      const ref = localStorage.getItem("gylb_ref");
+      if (!ref) return;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (supabase.rpc as any)("apply_referral", { ref_code: ref });
+      localStorage.removeItem("gylb_ref");
+    } catch {}
+  };
 
   const handleAuth = async () => {
     setError("");
@@ -39,6 +58,7 @@ export default function AuthPage() {
         const { error: e } = await supabase.auth.signInWithPassword({ email, password });
         if (e) throw new Error(e.message === "Invalid login credentials" ? "邮箱或密码错误" : e.message);
       }
+      await applyPendingReferral();
       window.location.href = "/";
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
