@@ -18,25 +18,10 @@ export default function TrialPage() {
     if (password.length < 6) { setError("密码至少6位"); return; }
     setStep("loading");
 
-    // 注册
+    // 注册（profiles 表已简化，试用到期回收机制不可用，注册后保持 free 并引导购买会员）
     const { data, error: signUpErr } = await supabase.auth.signUp({ email, password });
     if (signUpErr || !data.user) {
       setError(signUpErr?.message || "注册失败");
-      setStep("error");
-      return;
-    }
-
-    // 设为3天白银试用
-    const trialEnd = new Date(Date.now() + 3 * 86400000).toISOString();
-    const { error: updateErr } = await supabase.from("profiles").upsert({
-      id: data.user.id,
-      membership: "gold",
-      subscription_status: "trialing",
-      subscription_end_date: trialEnd,
-    }, { onConflict: "id" });
-
-    if (updateErr) {
-      setError(updateErr.message);
       setStep("error");
       return;
     }
@@ -51,11 +36,11 @@ export default function TrialPage() {
           <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-20 h-20 rounded-full bg-[#10B981]/20 flex items-center justify-center mx-auto mb-6">
             <Check className="w-10 h-10 text-[#10B981]" />
           </motion.div>
-          <h1 className="text-2xl font-bold text-[#F1F5F9] mb-2">试用已开启！</h1>
-          <p className="text-[#94A3B8] mb-2">你已获得 3 天白银会员权限</p>
-          <p className="text-xs text-[#64748B] mb-8">可阅读所有深度分析文章，到期后自动恢复免费账户</p>
-          <LinkNoPrefetch href="/analysis" className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#F59E0B] to-[#D97706] text-white font-semibold rounded-xl">
-            开始阅读 <ArrowRight className="w-4 h-4" />
+          <h1 className="text-2xl font-bold text-[#F1F5F9] mb-2">注册成功！</h1>
+          <p className="text-[#94A3B8] mb-2">账号已创建，前往会员页解锁深度内容</p>
+          <p className="text-xs text-[#64748B] mb-8">黄金会员可阅读所有深度分析文章</p>
+          <LinkNoPrefetch href="/member" className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#F59E0B] to-[#D97706] text-white font-semibold rounded-xl">
+            查看会员权益 <ArrowRight className="w-4 h-4" />
           </LinkNoPrefetch>
         </div>
       </div>

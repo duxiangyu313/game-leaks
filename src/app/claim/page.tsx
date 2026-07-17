@@ -18,7 +18,7 @@ export default function ClaimPage() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { setLoading(false); return; }
 
-      const { data: p } = await supabase.from("profiles").select("membership,subscription_end_date").eq("id", user.id).single();
+      const { data: p } = await supabase.from("profiles").select("membership").eq("id", user.id).single();
       setProfile(p);
 
       // 获取可领取和已领取的激活码

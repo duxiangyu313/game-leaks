@@ -17,8 +17,7 @@ export default function RevenuePage() {
       const pending = records.filter((r) => r.settlement_status === "pending").reduce((s: number, r) => s + (r.amount || 0), 0);
       setStats({ totalRevenue: total, creatorCount: 0, pendingPayout: pending });
     }
-    const { count } = await supabase.from("profiles").select("id", { count: "exact", head: true }).gt("revenue_balance", 0);
-    if (count) setStats(s => ({ ...s, creatorCount: count }));
+    // profiles 表已简化（revenue_balance 列已移除），有余额创作者数改由收益记录估算
     setLoading(false);
   };
 

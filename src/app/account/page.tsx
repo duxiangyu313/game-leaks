@@ -52,11 +52,12 @@ export default function AccountPage() {
 
       const { data } = await supabase
         .from("profiles")
-        .select("username, membership, subscription_status, subscription_end_date, stripe_customer_id")
+        .select("username, membership")
         .eq("id", user.id)
         .single();
 
-      setProfile(data);
+      // profiles 表已简化，订阅字段不再存在，会员有效期以 membership 等级为准
+      setProfile(data ? { ...data, subscription_status: data.membership && data.membership !== "free" ? "active" : null, subscription_end_date: null, stripe_customer_id: null } : null);
       setLoading(false);
     }
     load();
