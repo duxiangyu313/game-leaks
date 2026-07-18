@@ -50,9 +50,9 @@ SELECT
     ELSE '概念阶段'
   END,
   g.release_date::text,
-  COALESCE(g.hype_score, 5),
+  LEAST(10, GREATEST(0, CASE WHEN COALESCE(g.hype_score, 50) > 10 THEN COALESCE(g.hype_score, 50) / 10 ELSE COALESCE(g.hype_score, 50) END)),
   g.cover,
-  g.hype_score >= 8,
+  COALESCE(g.hype_score, 5) >= 80 OR COALESCE(g.hype_score, 5) >= 8,
   ARRAY[]::text[],
   GREATEST(g.updated_at, g.created_at, '2026-06-01'::timestamptz)
 FROM public.games g
