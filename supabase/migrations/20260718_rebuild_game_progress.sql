@@ -38,7 +38,7 @@ SELECT
   g.title,
   g.developer,
   g.publisher,
-  NULL,
+  g.genre,
   CASE
     WHEN g.status = 'released' THEN '已发售'
     WHEN g.status = 'early_access' THEN 'Beta测试'
@@ -49,9 +49,9 @@ SELECT
     WHEN g.status = 'pre_alpha' THEN '原型开发'
     ELSE '概念阶段'
   END,
-  g.release_date,
+  g.release_date::text,
   COALESCE(g.hype_score, 5),
-  g.cover_image,
+  g.cover,
   g.hype_score >= 8,
   ARRAY[]::text[],
   GREATEST(g.updated_at, g.created_at, '2026-06-01'::timestamptz)
