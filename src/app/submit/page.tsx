@@ -120,12 +120,16 @@ export default function SubmitPage() {
 
       let coverUrl = "";
       if (coverFile) {
-        const { data: presignData } = await supabase.functions.invoke("upload-presign", {
-          body: { fileName: `ugc/${Date.now()}-${coverFile.name}`, contentType: coverFile.type }});
-        if (presignData?.url) {
-          await fetch(presignData.url, { method: "PUT", body: coverFile, headers: { "Content-Type": coverFile.type } });
-          coverUrl = presignData.publicUrl || "";
-        }
+        try {
+          const path = `ugc/${Date.now()}-${coverFile.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
+          const { data: upData, error: upErr } = await supabase.storage.from("xyq-assets").upload(path, coverFile, {
+            contentType: coverFile.type, upsert: false,
+          });
+          if (!upErr && upData) {
+            const { data: urlData } = supabase.storage.from("xyq-assets").getPublicUrl(upData.path);
+            coverUrl = urlData?.publicUrl || "";
+          }
+        } catch { /* 上传失败不影响投稿主流程 */ }
       }
 
       const tagArray = tags.split(",").map(t => t.trim()).filter(Boolean);
