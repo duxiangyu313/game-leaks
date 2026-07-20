@@ -30,6 +30,18 @@ export default function AuthPage() {
     } catch {}
   };
 
+  // 登录成功后写入设备记录 → 触发登录通知（device_sessions 触发器内置24h去重）
+  const pingDeviceSession = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      await supabase.from('device_sessions').insert({
+        user_id: user.id,
+        device_fingerprint: navigator.userAgent.slice(0, 80) || 'unknown',
+      });
+    } catch {}
+  };
+
   const handleAuth = async () => {
     setError("");
     setLoading(true);
@@ -59,6 +71,7 @@ export default function AuthPage() {
         if (e) throw new Error(e.message === "Invalid login credentials" ? "邮箱或密码错误" : e.message);
       }
       await applyPendingReferral();
+      await pingDeviceSession();
       window.location.href = "/";
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
