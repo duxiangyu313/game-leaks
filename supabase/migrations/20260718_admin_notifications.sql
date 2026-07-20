@@ -14,6 +14,14 @@ CREATE TABLE IF NOT EXISTS public.device_sessions (
 );
 CREATE INDEX IF NOT EXISTS idx_device_sessions_user ON public.device_sessions(user_id);
 
+ALTER TABLE public.device_sessions ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS ds_insert_own ON public.device_sessions;
+CREATE POLICY ds_insert_own ON public.device_sessions FOR INSERT TO authenticated WITH CHECK (auth.uid() = user_id);
+DROP POLICY IF EXISTS ds_update_own ON public.device_sessions;
+CREATE POLICY ds_update_own ON public.device_sessions FOR UPDATE TO authenticated USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+DROP POLICY IF EXISTS ds_select_own ON public.device_sessions;
+CREATE POLICY ds_select_own ON public.device_sessions FOR SELECT TO authenticated USING (auth.uid() = user_id);
+
 -- 确保 pg_net 可用
 CREATE EXTENSION IF NOT EXISTS pg_net;
 
