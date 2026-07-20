@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Send, Loader2, Upload, Globe, Star, Crown, AlertTriangle, FileText, Flame, Gamepad, DollarSign, Gift, Play } from "lucide-react";
 import Image from "next/image";
 import { supabase } from "@/lib/supabase/client";
+import { notifyAdmin } from "@/lib/admin-notify";
 import { getUserLevel, canSubmitContent, isColdStart } from "@/lib/auth";
 import type { MembershipLevel } from "@/lib/auth";
 import type { ContentLevel, ArticleCategory } from "@/types";
@@ -166,6 +167,7 @@ export default function SubmitPage() {
 
       const { error: submitErr } = await supabase.from("ugc_submissions").insert(payload as any);
       if (submitErr) throw new Error(submitErr.message);
+      notifyAdmin('ugc_submission', '新投稿：' + (payload.title as string), '类型：' + submitType + '\n内容等级：' + (payload.content_level as string), 'https://news.guoyouwenduji.cc/admin/submissions');
       setDone(true);
     } catch (e: any) { setError(e.message || "提交失败"); }
     finally { setSubmitting(false); }

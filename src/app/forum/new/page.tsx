@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, Send, Loader2 } from "lucide-react";
 import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { supabase } from "@/lib/supabase/client";
+import { notifyAdmin } from "@/lib/admin-notify";
 
 const CATEGORIES = [
   { value: "general", label: "综合讨论" },
@@ -41,6 +42,7 @@ export default function NewPostPage() {
     if (insertError) {
       setError("发布失败: " + insertError.message);
     } else {
+      notifyAdmin('forum_post', '新论坛帖子：' + title, '作者：' + (user.email?.split('@')[0] || '匿名') + '\n板块：' + category, 'https://news.guoyouwenduji.cc/forum');
       router.push("/forum/" + category);
     }
     setSubmitting(false);

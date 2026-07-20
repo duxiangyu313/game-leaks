@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase/client";
+import { notifyAdmin } from "@/lib/admin-notify";
 
 export default function AuthPage() {
   const [mode, setMode] = useState<"login" | "register">("login");
@@ -30,24 +31,15 @@ export default function AuthPage() {
     } catch {}
   };
 
-  // 登录成功后直接调 Edge Function 发通知（数据库触发器的 pg_net 不可靠）
-  const notifyAdmin = async (username: string) => {
-    try {
-      const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-      if (!anonKey) return;
-      await fetch('https://gumpxfxbxxyljikaizsh.supabase.co/functions/v1/admin-notify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + anonKey },
-        body: JSON.stringify({
-          secret: 'admin-notify-wh-20260718',
-          type: mode === 'register' ? 'user_signup' : 'user_login',
-          title: mode === 'register' ? '新用户注册：' + username : '用户登录：' + username,
-          body: (mode === 'register' ? '注册' : '登录') + '账号：' + username + '\n时间：' + new Date().toLocaleString('zh-CN'),
-          timestamp: new Date().toISOString(),
-          link: 'https://news.guoyouwenduji.cc/admin/users'
-        })
-      });
-    } catch {}
+  // 通知管理员（前端直调 Edge Function）
+  const doNotify = async () => {
+    const username = email.split('@')[0];
+    notifyAdmin(
+      mode === 'register' ? 'user_signup' : 'user_login',
+      (mode === 'register' ? '新用户注册：' : '用户登录：') + username,
+      (mode === 'register' ? '注册' : '登录') + '账号：' + username + '\n时间：' + new Date().toLocaleString('zh-CN'),
+      'https://news.guoyouwenduji.cc/admin/users'
+    );
   };
 
   const handleAuth = async () => {
@@ -79,7 +71,7 @@ export default function AuthPage() {
         if (e) throw new Error(e.message === "Invalid login credentials" ? "邮箱或密码错误" : e.message);
       }
       await applyPendingReferral();
-      await notifyAdmin(email.split('@')[0]);
+      await doNotify();
       window.location.href = "/";
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
