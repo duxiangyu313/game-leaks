@@ -33,7 +33,10 @@ BEGIN
   -- 异步 HTTP POST，不阻塞主事务
   PERFORM net.http_post(
     url := 'https://gumpxfxbxxyljikaizsh.supabase.co/functions/v1/admin-notify',
-    headers := '{"Content-Type": "application/json"}'::jsonb,
+    headers := jsonb_build_object(
+      'Content-Type', 'application/json',
+      'Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd1bXB4ZnhieHh5bGppa2FpenNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzNzM1NDUsImV4cCI6MjA5NTk0OTU0NX0.MnnnjS_kkxL6fdS3S0gXSrQ0v3rEUikehmr08HmHJkU'
+    ),
     body := json_build_object(
       'secret', 'admin-notify-wh-20260718',
       'type', event_type,
