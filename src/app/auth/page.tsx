@@ -30,14 +30,22 @@ export default function AuthPage() {
     } catch {}
   };
 
-  // 登录成功后写入设备记录 → 触发登录通知（device_sessions 触发器内置24h去重）
-  const pingDeviceSession = async () => {
+  // 登录成功后直接调 Edge Function 发通知（数据库触发器的 pg_net 不可靠）
+  const notifyAdmin = async (username: string) => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-      await supabase.from('device_sessions').insert({
-        user_id: user.id,
-        device_fingerprint: navigator.userAgent.slice(0, 80) || 'unknown',
+      const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+      if (!anonKey) return;
+      await fetch('https://gumpxfxbxxyljikaizsh.supabase.co/functions/v1/admin-notify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + anonKey },
+        body: JSON.stringify({
+          secret: 'admin-notify-wh-20260718',
+          type: mode === 'register' ? 'user_signup' : 'user_login',
+          title: mode === 'register' ? '新用户注册：' + username : '用户登录：' + username,
+          body: (mode === 'register' ? '注册' : '登录') + '账号：' + username + '\n时间：' + new Date().toLocaleString('zh-CN'),
+          timestamp: new Date().toISOString(),
+          link: 'https://news.guoyouwenduji.cc/admin/users'
+        })
       });
     } catch {}
   };
@@ -71,7 +79,7 @@ export default function AuthPage() {
         if (e) throw new Error(e.message === "Invalid login credentials" ? "邮箱或密码错误" : e.message);
       }
       await applyPendingReferral();
-      await pingDeviceSession();
+      await notifyAdmin(email.split('@')[0]);
       window.location.href = "/";
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
