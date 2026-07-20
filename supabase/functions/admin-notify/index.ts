@@ -12,7 +12,8 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const RESEND_API = "https://api.resend.com/emails";
 const ADMIN_EMAIL = "1852779947@qq.com";
-const FROM = Deno.env.get("NOTIFY_FROM") || "国游温度计 <notify@guoyouwenduji.cc>";
+// 优先用环境变量，否则用 Resend 测试发件人（无需域名验证，不会被静默丢弃）
+const FROM = Deno.env.get("NOTIFY_FROM") || "国游温度计 <onboarding@resend.dev>";
 const WEBHOOK_SECRET = "admin-notify-wh-20260718";
 
 interface NotifyPayload {
