@@ -90,29 +90,34 @@ export function useCachedQuery<T>(
     homepageKeyRef.current = homepageKey;
   });
 
-  // 初始化：构建时缓存 > fallback（不读 localStorage，避免 SSR hydration mismatch）
-  // localStorage 在 useEffect 中异步恢复，保证 SSR/CSR 首帧完全一致
-  const [data, setData] = useState<T>(() => {
-    // 构建时首页 JSON（首访用户）
-    if (homepageKey) {
-      const hp = getHomepageCached(homepageKey);
-      if (hp) return hp as T;
-    }
-    return fallback;
-  });
+  // 初始化：始终使用 fallback，确保 SSR/CSR 首帧完全一致（hydration 安全）
+  // 构建时缓存 + localStorage 在 useEffect 中异步恢复
+  const [data, setData] = useState<T>(fallback);
 
-  const [loading, setLoading] = useState(() => {
-    // 如果有 homepage 缓存命中，不显示 loading
-    if (homepageKey && getHomepageCached(homepageKey)) return false;
-    return true;
-  });
+  // 始终从 loading:true 开始，确保 SSR/CSR 首帧一致（hydration 安全）
+  // 构建时缓存数据已在 data 初始化器中注入，loading 由 useEffect 在客户端关闭
+  const [loading, setLoading] = useState(true);
 
-  // 客户端 mount 后：从 localStorage 恢复缓存 + Supabase 刷新
+  // 客户端 mount 后：按优先级恢复缓存（homepage 构建缓存 > localStorage > Supabase）
   useEffect(() => {
     let cancelled = false;
 
-    // 先从 localStorage 恢复（回访用户秒开），
-    // 放在 useEffect 而非 useState 初始化器，确保 SSR/CSR 首帧一致
+    // 1) 构建时首页 JSON 缓存（首访问用户秒开）
+    const hk = homepageKeyRef.current;
+    if (hk) {
+      const hp = getHomepageCached(hk);
+      if (hp) {
+        setData(hp as T);
+        setLoading(false);
+        // 有 homepage 缓存仍查 Supabase 保证新鲜度
+        Promise.resolve(fetcherRef.current())
+          .then((fresh) => { if (!cancelled) { setData(fresh); lsSet(key, fresh); } })
+          .catch(() => {});
+        return () => { cancelled = true; };
+      }
+    }
+
+    // 2) localStorage 缓存（回访用户秒开）
     const ls = lsGet<T>(key);
     if (ls.cacheHit && ls.data) {
       startTransition(() => {

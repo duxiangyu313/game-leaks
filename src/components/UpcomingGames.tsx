@@ -48,7 +48,7 @@ export default function UpcomingGames() {
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-3">
           <Calendar className="w-6 h-6 text-[#10B981]" />
-          <h2 className="text-2xl font-bold text-[#F1F5F9]">即将发售</h2>
+          <h2 className="text-2xl font-bold text-[#F1F5F9] heading-glow">即将发售</h2>
         </div>
         <LinkNoPrefetch href="/games" className="text-sm text-[#06B6D4] hover:text-[#22D3EE] transition-colors">全部 →</LinkNoPrefetch>
       </div>

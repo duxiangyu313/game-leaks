@@ -83,7 +83,7 @@ export default function FeaturedProgress() {
             <TrendingUp className="w-4 h-4 text-[#F59E0B]" />
           </div>
           <div>
-            <h2 className="text-xl md:text-2xl font-bold text-[#F1F5F9]">
+            <h2 className="text-xl md:text-2xl font-bold text-[#F1F5F9] heading-glow">
               开发进度追踪
             </h2>
             <p className="text-xs text-[#64748B] mt-0.5">

@@ -1,23 +1,25 @@
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════
-   国游爆料 · Cinematic Dark
-   底色 #080A0D · 强调金 #F5A623
+   国游爆料 · Cinematic Dark v3
+   底色 #06080A · 强调金 #F5A623 · 爆料红 #E94560
+   风格: Modern Dark + Cyberpunk 轻量
    ═══════════════════════════════════════════ */
 
 @theme inline {
-  --color-bg-primary: #080A0D;
-  --color-bg-secondary: #111318;
-  --color-bg-card: #14171D;
-  --color-bg-hover: #1A1E25;
+  --color-bg-primary: #06080A;
+  --color-bg-secondary: #0D0F14;
+  --color-bg-card: #111318;
+  --color-bg-hover: #161920;
   --color-accent: #F5A623;
   --color-accent-light: #F7C948;
   --color-accent-dark: #D4891A;
-  --color-text-primary: #F1F5F9;
-  --color-text-secondary: #94A3B8;
-  --color-text-muted: #64748B;
-  --color-border: rgba(255, 255, 255, 0.06);
-  --color-border-glow: rgba(245, 166, 35, 0.12);
+  --color-accent-red: #E94560;
+  --color-text-primary: #EDF1F7;
+  --color-text-secondary: #8B93A5;
+  --color-text-muted: #5A6272;
+  --color-border: rgba(255, 255, 255, 0.05);
+  --color-border-glow: rgba(245, 166, 35, 0.15);
   --color-success: #10B981;
   --color-warning: #F59E0B;
   --color-danger: #EF4444;
@@ -26,6 +28,7 @@
   --animate-float: float 6s ease-in-out infinite;
   --animate-fade-up: fade-up 0.6s ease-out;
   --animate-pulse-glow: pulse-glow 2s ease-in-out infinite;
+  --animate-scanline: scanline 8s linear infinite;
 }
 
 @keyframes float {
@@ -37,10 +40,23 @@
   to { opacity: 1; transform: translateY(0) }
 }
 @keyframes pulse-glow {
-  0%,100% { box-shadow: 0 0 20px rgba(6,182,212,0.2) }
-  50% { box-shadow: 0 0 40px rgba(6,182,212,0.4) }
+  0%,100% { box-shadow: 0 0 20px rgba(245,166,35,0.15) }
+  50% { box-shadow: 0 0 40px rgba(245,166,35,0.3) }
+}
+@keyframes scanline {
+  0% { transform: translateY(0) }
+  100% { transform: translateY(8px) }
+}
+@keyframes neon-flicker {
+  0%,100% { opacity: 1 }
+  92% { opacity: 1 }
+  93% { opacity: 0.8 }
+  94% { opacity: 1 }
+  96% { opacity: 0.9 }
+  97% { opacity: 1 }
 }
 
+/* ── 全局基底 ── */
 body {
   background: var(--color-bg-primary);
   color: var(--color-text-primary);
@@ -50,42 +66,129 @@ body {
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
+/* CRT 扫线纹理 — 仅桌面端，10% 可见度 */
+body::after {
+  content: "";
+  position: fixed; inset: 0; z-index: 9999;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0,0,0,0.08) 3px,
+    rgba(0,0,0,0.08) 4px
+  );
+}
+@media (max-width: 768px) { body::after { display: none } }
 
-::-webkit-scrollbar { width: 6px }
+::-webkit-scrollbar { width: 5px }
 ::-webkit-scrollbar-track { background: var(--color-bg-primary) }
-::-webkit-scrollbar-thumb { background: #243044; border-radius: 3px }
+::-webkit-scrollbar-thumb { background: #1E2A3A; border-radius: 3px }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-accent-dark) }
 
-/* Glass card v2 — Cinematic Dark */
+/* ── Glass Card v3 — 霓虹边框 + 悬浮发光 ── */
 .glass-card {
-  background: rgba(255,255,255,0.03);
+  background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
   backdrop-filter: blur(16px);
   border: 1px solid rgba(255,255,255,0.06);
   border-radius: 12px;
-  transition: all .35s cubic-bezier(0.16,1,0.3,1);
+  transition: all .4s cubic-bezier(0.16,1,0.3,1);
 }
 .glass-card:hover {
-  border-color: rgba(245,166,35,0.2);
-  box-shadow: 0 0 30px rgba(245,166,35,0.06), 0 8px 32px rgba(0,0,0,0.4);
+  border-color: rgba(245,166,35,0.35);
+  box-shadow:
+    0 0 15px rgba(245,166,35,0.12),
+    0 0 40px rgba(245,166,35,0.06),
+    0 8px 32px rgba(0,0,0,0.5);
   transform: translateY(-2px);
 }
 .glass-card-intense {
-  background: rgba(255,255,255,0.05);
+  background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
   backdrop-filter: blur(20px);
   border: 1px solid rgba(245,166,35,0.08);
   border-radius: 12px;
 }
-
-/* Glow ring */
-.glow-ring {
-  box-shadow: 0 0 20px rgba(6,182,212,0.15), 0 0 60px rgba(6,182,212,0.05);
+.glass-card-intense:hover {
+  border-color: rgba(245,166,35,0.25);
+  box-shadow: 0 0 30px rgba(245,166,35,0.06), 0 8px 40px rgba(0,0,0,0.5);
 }
 
-/* Text gradient */
-.text-cyan-gradient {
-  background: linear-gradient(135deg, #22D3EE, #06B6D4);
+/* ── 发光 ── */
+.glow-ring {
+  box-shadow: 0 0 20px rgba(245,166,35,0.1), 0 0 60px rgba(245,166,35,0.04);
+}
+.glow-ring-cyan {
+  box-shadow: 0 0 20px rgba(6,182,212,0.12), 0 0 60px rgba(6,182,212,0.04);
+}
+
+/* ── CTA 按钮 — 金色脉冲 ── */
+.btn-cta {
+  background: linear-gradient(135deg, #F5A623, #D4891A);
+  color: #0A0A0A;
+  font-weight: 600;
+  border-radius: 10px;
+  padding: 10px 24px;
+  transition: all .3s ease;
+  box-shadow: 0 0 20px rgba(245,166,35,0.15);
+  animation: neon-flicker 4s ease-in-out infinite;
+}
+.btn-cta:hover {
+  box-shadow: 0 0 40px rgba(245,166,35,0.35);
+  transform: translateY(-1px);
+}
+
+/* ── 爆料/紧急标签 — 红色脉冲 ── */
+.tag-leak {
+  background: rgba(233,69,96,0.12);
+  color: #E94560;
+  border: 1px solid rgba(233,69,96,0.25);
+  border-radius: 6px;
+  padding: 2px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  animation: neon-flicker 3s ease-in-out infinite;
+}
+.tag-leak::before { content: "▎"; margin-right: 4px }
+
+/* ── 终端/情报风格 ── */
+.terminal-accent {
+  font-family: 'JetBrains Mono','Fira Code','Cascadia Code',monospace;
+  color: #F5A623;
+  letter-spacing: 0.5px;
+}
+.terminal-accent::before { content: "> "; opacity: 0.6 }
+
+/* ── 章节标题 — 金色左线 + 微光 ── */
+.heading-glow {
+  position: relative;
+  padding-left: 14px;
+}
+.heading-glow::before {
+  content: "";
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  width: 3px; height: 70%;
+  background: linear-gradient(180deg, #F5A623, #D4891A);
+  border-radius: 2px;
+  box-shadow: 0 0 8px rgba(245,166,35,0.4);
+}
+
+/* ── 金色渐变文字 ── */
+.text-gold-gradient {
+  background: linear-gradient(135deg, #F7C948, #F5A623, #D4891A);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── 霓虹边框辅助类 ── */
+.border-neon {
+  border: 1px solid rgba(245,166,35,0.15);
+  box-shadow: 0 0 12px rgba(245,166,35,0.06), inset 0 0 12px rgba(245,166,35,0.02);
+}
+.border-neon-red {
+  border: 1px solid rgba(233,69,96,0.2);
+  box-shadow: 0 0 12px rgba(233,69,96,0.06), inset 0 0 12px rgba(233,69,96,0.02);
 }
 
 /* ═══════════════════════════════════════════

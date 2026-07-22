@@ -6,6 +6,7 @@ import { TrendingUp, Star } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import { useCachedQuery } from "@/lib/data-cache";
 import type { Game } from "@/types";
+import SpotlightCard from "@/components/ui/react-bits/SpotlightCard";
 
 const MOCK: (Game & { rank: number })[] = [
   { id: "1", rank: 1, title: "黑神话：悟空", developer: "游戏科学", publisher: "游戏科学", genre: ["动作RPG","神话"], platforms: ["PC","PS5"], releaseDate: "2024-08-20", status: "released", description: "国产3A开山之作", rating: 9.5, hypeScore: 98, cover: "", createdAt: "", updatedAt: "" },
@@ -48,14 +49,15 @@ export default function HotGames() {
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-3">
           <TrendingUp className="w-6 h-6 text-[#06B6D4]" />
-          <h2 className="text-2xl font-bold text-[#F1F5F9]">热门游戏</h2>
+          <h2 className="text-2xl font-bold text-[#F1F5F9] heading-glow">热门游戏</h2>
         </div>
         <LinkNoPrefetch href="/games" className="text-sm text-[#06B6D4] hover:text-[#22D3EE]">全部游戏 →</LinkNoPrefetch>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {games.map((game, i) => (
           <motion.div key={game.id} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}>
-            <LinkNoPrefetch href={`/games/detail?id=${game.id}`} className="glass-card block p-4 group h-full">
+            <SpotlightCard className="!bg-[#14171D] !border-[rgba(245,166,35,0.2)] p-0" spotlightColor="rgba(245,166,35,0.45)">
+              <LinkNoPrefetch href={`/games/detail?id=${game.id}`} className="glass-card block p-4 group h-full">
               <div className="flex items-center justify-between mb-3">
                 <span className={`text-lg font-black ${game.rank === 1 ? "text-[#F59E0B]" : game.rank === 2 ? "text-[#94A3B8]" : game.rank === 3 ? "text-[#D97706]" : "text-[#64748B]"}`}>#{game.rank}</span>
                 {game.rating && <span className="flex items-center gap-1 text-xs text-[#F59E0B]"><Star className="w-3 h-3 fill-[#F59E0B]" />{game.rating}</span>}
@@ -73,6 +75,7 @@ export default function HotGames() {
                 <span className="text-[10px] text-[#64748B]">{game.hypeScore}</span>
               </div>
             </LinkNoPrefetch>
+            </SpotlightCard>
           </motion.div>
         ))}
       </div>

@@ -53,7 +53,7 @@ export default function HotTopics() {
     <section>
       <div className="flex items-center gap-3 mb-6">
         <Flame className="w-6 h-6 text-[#F59E0B]" />
-        <h2 className="text-2xl font-bold text-[#F1F5F9]">今日热点</h2>
+        <h2 className="text-2xl font-bold text-[#F1F5F9] heading-glow">今日热点</h2>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {topics.map((t, i) => (

@@ -167,7 +167,7 @@ export default function SubmitPage() {
 
       const { error: submitErr } = await supabase.from("ugc_submissions").insert(payload as any);
       if (submitErr) throw new Error(submitErr.message);
-      notifyAdmin('ugc_submission', '新投稿：' + (payload.title as string), '类型：' + submitType + '\n内容等级：' + (payload.content_level as string), 'https://news.guoyouwenduji.cc/admin/submissions');
+      await notifyAdmin('ugc_submission', '新投稿：' + (payload.title as string), '类型：' + submitType + '\n内容等级：' + (payload.content_level as string), 'https://news.guoyouwenduji.cc/admin/submissions');
       setDone(true);
     } catch (e: any) { setError(e.message || "提交失败"); }
     finally { setSubmitting(false); }

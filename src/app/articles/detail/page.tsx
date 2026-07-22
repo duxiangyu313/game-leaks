@@ -12,6 +12,7 @@ import { addHistory } from "@/components/account/BrowsingHistory";
 import type { InteractionCounts, ArticleCategory } from "@/types";
 import ArticleTemplate from "@/components/article/ArticleTemplate";
 import type { Database } from "@/types/database";
+import { BreadcrumbListSchema, NewsArticleSchema } from "@/components/StructuredData";
 
 type PostComment = Database["public"]["Tables"]["post_comments"]["Row"];
 
@@ -152,6 +153,22 @@ function DetailContent() {
 
   return (
     <div className="pt-20 pb-20">
+      {/* 结构化数据 — 搜索引擎收录 */}
+      <BreadcrumbListSchema items={[
+        { name: "首页", url: "https://news.guoyouwenduji.cc/" },
+        { name: "深度解析", url: "https://news.guoyouwenduji.cc/analysis/" },
+        { name: article.title, url: `https://news.guoyouwenduji.cc/articles/detail/?id=${article.id}` },
+      ]} />
+      <NewsArticleSchema
+        title={article.title}
+        description={article.excerpt || article.title}
+        datePublished={article.published_at || article.created_at || ""}
+        author={article.author_name}
+        url={`https://news.guoyouwenduji.cc/articles/detail/?id=${article.id}`}
+        image={article.cover_image || undefined}
+        category={article.category}
+      />
+
       {isPaid && <canvas ref={canvasRef} className="fixed inset-0 w-full h-full pointer-events-none z-[999]" />}
 
       <div className="max-w-3xl mx-auto px-4 md:px-6 mb-6">

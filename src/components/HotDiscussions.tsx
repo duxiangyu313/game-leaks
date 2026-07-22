@@ -33,7 +33,7 @@ export default function HotDiscussions() {
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
             <Flame className="w-6 h-6 text-[#E94560]" />
-            <h2 className="text-2xl font-bold text-[#F1F5F9]">玩家热议</h2>
+            <h2 className="text-2xl font-bold text-[#F1F5F9] heading-glow">玩家热议</h2>
             <span className="px-2 py-0.5 text-xs font-semibold bg-[#E94560]/15 text-[#E94560] rounded-full animate-pulse">HOT</span>
           </div>
           <LinkNoPrefetch href="/forum" className="text-sm text-[#06B6D4] hover:text-[#22D3EE] transition-colors">进入论坛 →</LinkNoPrefetch>

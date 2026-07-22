@@ -49,8 +49,8 @@ export default function LatestLeaks() {
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-3">
           <Flame className="w-6 h-6 text-[#F59E0B]" />
-          <h2 className="text-2xl font-bold text-[#F1F5F9]">最新爆料</h2>
-          <span className="px-2 py-0.5 text-xs font-semibold bg-[#F59E0B]/15 text-[#F59E0B] rounded-full animate-pulse">LIVE</span>
+          <h2 className="text-2xl font-bold text-[#F1F5F9] heading-glow">最新爆料</h2>
+          <span className="px-2.5 py-0.5 text-[11px] font-bold bg-[#E94560]/12 text-[#E94560] border border-[#E94560]/25 rounded-md animate-[neon-flicker_2s_ease-in-out_infinite] tracking-wider">● LIVE</span>
         </div>
         <LinkNoPrefetch href="/leaks" className="flex items-center gap-1.5 text-sm text-[#06B6D4] hover:text-[#22D3EE] transition-colors">全部爆料 <ArrowRight className="w-4 h-4" /></LinkNoPrefetch>
       </div>
@@ -59,8 +59,14 @@ export default function LatestLeaks() {
           <LinkNoPrefetch key={leak.id} href={`/leaks/detail?id=${leak.id}`} className="block active:scale-[0.98] transition-transform">
             <motion.article initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }} className="glass-card p-6 cursor-pointer group">
               <div className="flex items-start justify-between mb-3">
-                <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${leak.credibility === "confirmed" ? "bg-[#10B981]/15 text-[#10B981] border border-[#10B981]/20" : leak.credibility === "likely" ? "bg-[#06B6D4]/15 text-[#06B6D4] border border-[#06B6D4]/20" : "bg-[#F59E0B]/15 text-[#F59E0B] border border-[#F59E0B]/20"}`}>
-                  {leak.credibility === "confirmed" ? "已确认" : leak.credibility === "likely" ? "高可信" : "传闻"}
+                <span className={
+                  leak.credibility === "confirmed"
+                    ? "text-xs font-semibold px-2.5 py-0.5 rounded-md bg-[#10B981]/12 text-[#10B981] border border-[#10B981]/20"
+                    : leak.credibility === "likely"
+                      ? "text-xs font-semibold px-2.5 py-0.5 rounded-md bg-[#06B6D4]/12 text-[#06B6D4] border border-[#06B6D4]/20"
+                      : "tag-leak"
+                }>
+                  {leak.credibility === "confirmed" ? "✓ 已确认" : leak.credibility === "likely" ? "◈ 高可信" : "传闻"}
                 </span>
                 <span className="text-xs text-[#64748B] flex items-center gap-1"><Eye className="w-3 h-3" /> {leak.viewCount?.toLocaleString()}</span>
               </div>

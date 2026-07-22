@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabase/client";
 import { useCachedQuery } from "@/lib/data-cache";
 import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { Gamepad2, Flame, Users, TrendingUp, Star, Crown } from "lucide-react";
+import CountUp from "@/components/ui/react-bits/CountUp";
 
 interface StatsData {
   stats: { games: number; leaks: number; members: number };
@@ -78,7 +79,9 @@ export default function StatsDashboard() {
           ].map(s => (
             <div key={s.label} className="text-center p-4 rounded-xl bg-[#1E293B]/30">
               <s.icon className={`w-7 h-7 ${s.color} mx-auto mb-2`} />
-              <div className="text-2xl font-black text-[#F1F5F9]">{s.value}</div>
+              <div className="text-2xl font-black text-[#F1F5F9]">
+                {typeof s.value === "number" ? <CountUp to={s.value} duration={1.5} separator="," /> : s.value}
+              </div>
               <div className="text-xs text-[#64748B] mt-1">{s.label}</div>
             </div>
           ))}

@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import ClientLayout from "@/components/ClientLayout";
 import RecoveryRedirect from "@/components/RecoveryRedirect";
 import { WebsiteSchema } from "@/components/StructuredData";
+import { OrganizationSchema } from "@/components/StructuredData";
 import { Analytics } from "@/components/Analytics";
 
 export const metadata: Metadata = {
@@ -44,9 +45,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="format-detection" content="telephone=no" />
         <meta name="theme-color" content="#0F172A" />
         <WebsiteSchema />
+        <OrganizationSchema />
         <Analytics />
         <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
         <meta name="baidu-site-verification" content="codeva-E9bFTKckBU" />
+        <meta name="msvalidate.01" content="09B719C5C652DCD06D86E1EC550A1FE4" />
         {/* 🔒 CSP — 防 XSS，静态导出用 meta 标签实现 */}
         <meta httpEquiv="Content-Security-Policy" content={
           "default-src 'self'; " +

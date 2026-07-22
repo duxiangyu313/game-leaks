@@ -4,6 +4,8 @@ import { useState, useEffect, useCallback } from "react";
 import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { supabase } from "@/lib/supabase/client";
 import { useCachedQuery } from "@/lib/data-cache";
+import BlurText from "@/components/ui/react-bits/BlurText";
+import ShinyText from "@/components/ui/react-bits/ShinyText";
 
 interface Slide { id: string; title: string; subtitle: string; link: string; tag: string; }
 
@@ -77,11 +79,16 @@ export default function HeroCarousel() {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Cinematic Dark 氛围背景 */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#080A0D] via-[#0F1117] to-[#080A0D]">
-        <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-[#F5A623]/5 blur-[80px]" />
-        <div className="absolute -bottom-20 left-20 w-60 h-60 rounded-full bg-[#E94560]/3 blur-[60px]" />
-        <div className="absolute top-1/3 left-1/4 w-60 h-60 rounded-full bg-[#3880FF]/2 blur-[70px]" />
+      {/* Cinematic Dark 氛围背景 v2 */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#040608] via-[#0A0D12] to-[#06080A]">
+        {/* 主光源 — 金色暖光 */}
+        <div className="absolute -top-10 -right-10 w-96 h-96 rounded-full bg-[#F5A623]/6 blur-[100px] animate-[pulse_8s_ease-in-out_infinite]" />
+        {/* 辅助光源 — 红色爆料感 */}
+        <div className="absolute -bottom-16 left-10 w-72 h-72 rounded-full bg-[#E94560]/4 blur-[80px] animate-[pulse_10s_ease-in-out_infinite_2s]" />
+        {/* 冷光点缀 — 增加层次 */}
+        <div className="absolute top-1/3 left-1/4 w-48 h-48 rounded-full bg-[#3880FF]/2 blur-[70px] animate-[pulse_12s_ease-in-out_infinite_4s]" />
+        {/* 微扫光线 — 横向光条 */}
+        <div className="absolute top-1/4 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#F5A623]/8 to-transparent animate-[scanline_8s_linear_infinite]" />
       </div>
 
       {/* 幻灯片 — CSS transition 替代 framer-motion AnimatePresence */}
@@ -91,15 +98,31 @@ export default function HeroCarousel() {
           className="max-w-2xl z-10 animate-slide-in"
         >
           {slide.tag && (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold bg-[#F5A623]/15 text-[#F5A623] border border-[#F5A623]/20 rounded-full mb-4">
-              <ZapIcon />{slide.tag}
-            </span>
+            <div className="mb-4">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold bg-[#F5A623]/15 border border-[#F5A623]/20 rounded-full">
+                <ZapIcon />
+                <ShinyText text={slide.tag} color="#F5A623" shineColor="#FFFFFF" speed={2} />
+              </span>
+            </div>
           )}
-          <h2 className="text-xl md:text-6xl font-black tracking-tighter text-[#F1F5F9] mb-3 md:mb-4 leading-[1.05]">{slide.title}</h2>
+          <h2 className="text-xl md:text-6xl font-black tracking-tighter text-[#F1F5F9] mb-3 md:mb-4 leading-[1.05]">
+            <BlurText
+              text={slide.title}
+              animateBy="words"
+              delay={120}
+              direction="top"
+              stepDuration={0.5}
+              animationFrom={{ filter: "blur(20px)", opacity: 0, y: -80 }}
+              animationTo={[
+                { filter: "blur(8px)", opacity: 0.6, y: 10 },
+                { filter: "blur(0px)", opacity: 1, y: 0 },
+              ]}
+            />
+          </h2>
           <p className="text-sm md:text-lg text-[#94A3B8] mb-6 md:mb-8 max-w-lg leading-relaxed">{slide.subtitle}</p>
           <LinkNoPrefetch
             href={slide.link || "/leaks/"}
-            className="inline-flex items-center gap-2 px-5 py-2.5 md:px-6 md:py-3 bg-gradient-to-r from-[#F5A623] to-[#D4891A] text-white text-sm md:text-base font-semibold rounded-xl hover:shadow-[0_0_30px_rgba(245,166,35,0.35)] transition-all"
+            className="btn-cta inline-flex items-center gap-2 px-5 py-2.5 md:px-6 md:py-3 text-sm md:text-base"
           >
             查看详情 <RightArrow />
           </LinkNoPrefetch>

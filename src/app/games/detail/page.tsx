@@ -11,6 +11,7 @@ import GameProgressCard from "@/components/game/GameProgressCard";
 import GameTabs from "@/components/game/GameTabs";
 import RelatedGames from "@/components/game/RelatedGames";
 import Lightbox from "@/components/game/Lightbox";
+import { BreadcrumbListSchema } from "@/components/StructuredData";
 
 type Tab = "intro" | "requirements" | "reviews" | "preorders" | "scores" | "prices" | "dlc" | "videos" | "wiki" | "leaks" | "gallery" | "comments";
 
@@ -37,6 +38,16 @@ function DetailContent() {
   useEffect(() => {
     if (detail?.game) {
       document.title = `${detail.game.title} · 国游爆料`;
+      const desc = detail.game.description || `${detail.game.title} — ${detail.game.developer || "国产游戏"}，最新动态、评测、攻略`;
+      let meta = document.querySelector("meta[name='description']");
+      if (meta) { meta.setAttribute("content", desc); }
+      else { meta = document.createElement("meta"); meta.setAttribute("name", "description"); meta.setAttribute("content", desc); document.head.appendChild(meta); }
+      // OG tags
+      let ogTitle = document.querySelector("meta[property='og:title']");
+      if (ogTitle) { ogTitle.setAttribute("content", `${detail.game.title} · 国游爆料`); }
+      let ogDesc = document.querySelector("meta[property='og:description']");
+      if (ogDesc) { ogDesc.setAttribute("content", desc); }
+
       addHistory({ id: detail.game.id, title: detail.game.title, link: `/games/detail?id=${detail.game.id}`, type: "game" });
     }
   }, [detail]);
@@ -100,6 +111,13 @@ function DetailContent() {
   // ── Render ──
   return (
     <div className="pt-20 pb-20">
+      {detail?.game && (
+        <BreadcrumbListSchema items={[
+          { name: "首页", url: "https://news.guoyouwenduji.cc/" },
+          { name: "游戏库", url: "https://news.guoyouwenduji.cc/games/" },
+          { name: detail.game.title, url: `https://news.guoyouwenduji.cc/games/detail/?id=${detail.game.id}` },
+        ]} />
+      )}
       <div className="max-w-5xl mx-auto px-4 md:px-6">
         <GameHeader game={detail.game} />
         <GameProgressCard

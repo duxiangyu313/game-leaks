@@ -34,7 +34,7 @@ export default function AuthPage() {
   // 通知管理员（前端直调 Edge Function）
   const doNotify = async () => {
     const username = email.split('@')[0];
-    notifyAdmin(
+    await notifyAdmin(
       mode === 'register' ? 'user_signup' : 'user_login',
       (mode === 'register' ? '新用户注册：' : '用户登录：') + username,
       (mode === 'register' ? '注册' : '登录') + '账号：' + username + '\n时间：' + new Date().toLocaleString('zh-CN'),

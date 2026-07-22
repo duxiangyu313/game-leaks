@@ -8,6 +8,7 @@ import { ArrowLeft, Eye, Clock, Shield, AlertTriangle } from "lucide-react";
 import { formatDate } from "@/lib/article-utils";
 import { useLeakDetail } from "@/data/hooks";
 import { addHistory } from "@/components/account/BrowsingHistory";
+import { BreadcrumbListSchema } from "@/components/StructuredData";
 
 export default function LeakDetailPage() {
   return (
@@ -24,7 +25,17 @@ function LeakDetailContent() {
 
   useEffect(() => {
     if (!leak) return;
+    // SEO — 标题 + meta 描述 + OG
     document.title = `${leak.title} · 国游爆料`;
+    const desc = leak.summary || leak.title || "";
+    let meta = document.querySelector("meta[name='description']");
+    if (meta) { meta.setAttribute("content", desc); }
+    else { meta = document.createElement("meta"); meta.setAttribute("name", "description"); meta.setAttribute("content", desc); document.head.appendChild(meta); }
+    let ogTitle = document.querySelector("meta[property='og:title']");
+    if (ogTitle) { ogTitle.setAttribute("content", `${leak.title} · 国游爆料`); }
+    let ogDesc = document.querySelector("meta[property='og:description']");
+    if (ogDesc) { ogDesc.setAttribute("content", desc); }
+
     addHistory({ id: leak.id, title: leak.title, link: `/leaks/detail?id=${leak.id}`, type: "leak" });
   }, [leak]);
 
@@ -69,6 +80,11 @@ function LeakDetailContent() {
 
   return (
     <div className="pt-24 pb-20">
+      <BreadcrumbListSchema items={[
+        { name: "首页", url: "https://news.guoyouwenduji.cc/" },
+        { name: "爆料专区", url: "https://news.guoyouwenduji.cc/leaks/" },
+        { name: leak.title, url: `https://news.guoyouwenduji.cc/leaks/detail/?id=${leak.id}` },
+      ]} />
       <div className="max-w-3xl mx-auto px-4">
         <LinkNoPrefetch href="/leaks" className="inline-flex items-center gap-2 text-sm text-[#94A3B8] hover:text-[#F1F5F9] mb-6 transition-colors">
           <ArrowLeft className="w-4 h-4" /> 返回爆料列表

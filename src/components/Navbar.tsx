@@ -51,11 +51,11 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#080A0D]/90 backdrop-blur-xl border-b border-[rgba(255,255,255,0.04)]">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#06080A]/80 backdrop-blur-2xl border-b border-[rgba(245,166,35,0.06)] shadow-[0_1px_0_rgba(245,166,35,0.03)]">
       <div className="max-w-[1280px] mx-auto px-6 h-16 flex items-center justify-between gap-4">
         {/* Logo */}
         <LinkNoPrefetch href="/" className="flex items-center gap-2 shrink-0 group">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#F5A623] to-[#E8960F] flex items-center justify-center text-white font-bold text-sm shadow-[0_0_16px_rgba(245,166,35,0.25)]">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#F5A623] to-[#D4891A] flex items-center justify-center text-[#0A0A0A] font-bold text-sm shadow-[0_0_20px_rgba(245,166,35,0.3)] group-hover:shadow-[0_0_32px_rgba(245,166,35,0.5)] transition-shadow">
             G
           </div>
           <span className="text-lg font-bold text-[#F1F5F9] hidden sm:block group-hover:text-[#F5A623] transition-colors">

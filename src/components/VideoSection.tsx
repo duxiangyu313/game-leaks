@@ -27,7 +27,7 @@ export default function VideoSection() {
       <div className="max-w-[1280px] mx-auto px-4 md:px-6">
         <div className="flex items-center gap-3 mb-8">
           <Play className="w-6 h-6 text-[#E94560]" />
-          <h2 className="text-2xl font-bold text-[#F1F5F9]">往期视频</h2>
+          <h2 className="text-2xl font-bold text-[#F1F5F9] heading-glow">往期视频</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {videos.map((v) => {
