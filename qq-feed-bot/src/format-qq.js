@@ -61,7 +61,7 @@ function formatQQMessage(items) {
 
   const header = `【${date} 新游早报】`;
   const body = items.map((item, i) => formatOneItem(item, i + 1)).join("\n\n");
-  const footer = "————\n深度解析后续会发在网站，想看完整爆料合集的群友可以私聊我~";
+  const footer = "————\n🔗 更多国产3A爆料 & 深度解析：news.guoyouwenduji.cc\n游戏库 · 独家爆料 · 深度解析 · 玩家论坛";
 
   return `${header}\n${body}\n\n${footer}`;
 }
