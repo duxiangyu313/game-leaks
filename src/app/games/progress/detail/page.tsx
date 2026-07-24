@@ -77,7 +77,7 @@ function StarRating({ score }: { score: number }) {
 }
 
 /** 简单 Markdown 转 HTML（处理加粗和换行），先转义 HTML 防 XSS */
-function simpleMarkdown(text: string): string {
+function simpleMarkdown(text: string | null | undefined): string {
   if (!text) return "";
   return text
     .replace(/&/g, "&amp;")
@@ -88,6 +88,11 @@ function simpleMarkdown(text: string): string {
     .replace(/\n-/g, "\n<br/>-")
     .replace(/^/, "<p class='mb-3'>")
     .replace(/$/, "</p>");
+}
+
+/** 检查字符串是否有实际内容（非空、非纯空白） */
+function hasText(s?: string | null): boolean {
+  return !!s && s.trim().length > 0;
 }
 
 function DetailContent() {
@@ -313,7 +318,7 @@ function DetailContent() {
         {/* ========== 内容分区 ========== */}
 
         {/* 公开信息 */}
-        {game.public_info && game.public_info.trim() && (
+        {hasText(game.public_info) && (
           <section className="glass-card p-6 mb-4">
             <h2 className="text-lg font-bold text-[#F1F5F9] flex items-center gap-2 mb-4">
               <Globe className="w-5 h-5 text-[#06B6D4]" />
@@ -330,7 +335,7 @@ function DetailContent() {
         )}
 
         {/* 黄金会员专属 */}
-        {(game.gold_info || game.risk_assessment) && (
+        {(hasText(game.gold_info) || hasText(game.risk_assessment)) && (
           <section className="glass-card p-6 mb-4">
             <h2 className="text-lg font-bold text-[#F1F5F9] flex items-center gap-2 mb-4">
               <Lock className="w-5 h-5 text-[#F59E0B]" />
@@ -366,7 +371,7 @@ function DetailContent() {
         )}
 
         {/* 钻石会员专属 */}
-        {game.diamond_info && game.diamond_info.trim() && (
+        {hasText(game.diamond_info) && (
           <section className="glass-card p-6 mb-8">
             <h2 className="text-lg font-bold text-[#F1F5F9] flex items-center gap-2 mb-4">
               <Lock className="w-5 h-5 text-[#E94560]" />
@@ -390,7 +395,7 @@ function DetailContent() {
         )}
 
         {/* 全空状态兜底 */}
-        {!game.public_info && !game.gold_info && !game.diamond_info && !game.risk_assessment && (
+        {!hasText(game.public_info) && !hasText(game.gold_info) && !hasText(game.diamond_info) && !hasText(game.risk_assessment) && (
           <div className="glass-card p-12 text-center">
             <Globe className="w-12 h-12 text-[#334155] mx-auto mb-4" />
             <p className="text-[#64748B]">该游戏暂无详细信息</p>
