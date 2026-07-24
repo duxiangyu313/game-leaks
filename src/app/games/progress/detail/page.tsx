@@ -313,75 +313,90 @@ function DetailContent() {
         {/* ========== 内容分区 ========== */}
 
         {/* 公开信息 */}
-        <section className="glass-card p-6 mb-4">
-          <h2 className="text-lg font-bold text-[#F1F5F9] flex items-center gap-2 mb-4">
-            <Globe className="w-5 h-5 text-[#06B6D4]" />
-            📋 公开信息
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#64748B]/10 text-[#64748B] border border-[#64748B]/20">
-              免费可见
-            </span>
-          </h2>
-          <div
-            className="prose prose-invert prose-sm max-w-none text-[#94A3B8] leading-relaxed"
-            dangerouslySetInnerHTML={{ __html: simpleMarkdown(game.public_info) }}
-          />
-        </section>
-
-        {/* 黄金会员专属 */}
-        <section className="glass-card p-6 mb-4">
-          <h2 className="text-lg font-bold text-[#F1F5F9] flex items-center gap-2 mb-4">
-            <Lock className="w-5 h-5 text-[#F59E0B]" />
-            🥇 黄金会员专属
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#F59E0B]/10 text-[#F59E0B] border border-[#F59E0B]/20">
-              深度内幕 & 风险评估
-            </span>
-          </h2>
-          <PaywallBlur
-            membershipLevel={userLevel}
-            requiredTier="gold"
-            articleId={game.id}
-            blurStartPct={20}
-          >
-            {game.gold_info && (
-              <div
-                className="prose prose-invert prose-sm max-w-none text-[#94A3B8] leading-relaxed mb-4"
-                dangerouslySetInnerHTML={{ __html: simpleMarkdown(game.gold_info) }}
-              />
-            )}
-            {game.risk_assessment && (
-              <>
-                <hr className="border-[#1E293B] my-4" />
-                <h3 className="text-sm font-bold text-[#F59E0B] mb-2">⚠️ 开发风险评估</h3>
-                <div
-                  className="prose prose-invert prose-sm max-w-none text-[#94A3B8] leading-relaxed"
-                  dangerouslySetInnerHTML={{ __html: simpleMarkdown(game.risk_assessment) }}
-                />
-              </>
-            )}
-          </PaywallBlur>
-        </section>
-
-        {/* 钻石会员专属 */}
-        <section className="glass-card p-6 mb-8">
-          <h2 className="text-lg font-bold text-[#F1F5F9] flex items-center gap-2 mb-4">
-            <Lock className="w-5 h-5 text-[#E94560]" />
-            💎 钻石会员专属
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#E94560]/10 text-[#E94560] border border-[#E94560]/20">
-              顶级情报
-            </span>
-          </h2>
-          <PaywallBlur
-            membershipLevel={userLevel}
-            requiredTier="diamond"
-            articleId={game.id}
-            blurStartPct={15}
-          >
+        {game.public_info && game.public_info.trim() && (
+          <section className="glass-card p-6 mb-4">
+            <h2 className="text-lg font-bold text-[#F1F5F9] flex items-center gap-2 mb-4">
+              <Globe className="w-5 h-5 text-[#06B6D4]" />
+              📋 公开信息
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#64748B]/10 text-[#64748B] border border-[#64748B]/20">
+                免费可见
+              </span>
+            </h2>
             <div
               className="prose prose-invert prose-sm max-w-none text-[#94A3B8] leading-relaxed"
-              dangerouslySetInnerHTML={{ __html: simpleMarkdown(game.diamond_info) || '<p class="text-[#64748B] italic">暂无钻石专属内容，敬请期待。</p>' }}
+              dangerouslySetInnerHTML={{ __html: simpleMarkdown(game.public_info) }}
             />
-          </PaywallBlur>
-        </section>
+          </section>
+        )}
+
+        {/* 黄金会员专属 */}
+        {(game.gold_info || game.risk_assessment) && (
+          <section className="glass-card p-6 mb-4">
+            <h2 className="text-lg font-bold text-[#F1F5F9] flex items-center gap-2 mb-4">
+              <Lock className="w-5 h-5 text-[#F59E0B]" />
+              🥇 黄金会员专属
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#F59E0B]/10 text-[#F59E0B] border border-[#F59E0B]/20">
+                深度内幕 & 风险评估
+              </span>
+            </h2>
+            <PaywallBlur
+              membershipLevel={userLevel}
+              requiredTier="gold"
+              articleId={game.id}
+              blurStartPct={20}
+            >
+              {game.gold_info && (
+                <div
+                  className="prose prose-invert prose-sm max-w-none text-[#94A3B8] leading-relaxed mb-4"
+                  dangerouslySetInnerHTML={{ __html: simpleMarkdown(game.gold_info) }}
+                />
+              )}
+              {game.risk_assessment && (
+                <>
+                  <hr className="border-[#1E293B] my-4" />
+                  <h3 className="text-sm font-bold text-[#F59E0B] mb-2">⚠️ 开发风险评估</h3>
+                  <div
+                    className="prose prose-invert prose-sm max-w-none text-[#94A3B8] leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: simpleMarkdown(game.risk_assessment) }}
+                  />
+                </>
+              )}
+            </PaywallBlur>
+          </section>
+        )}
+
+        {/* 钻石会员专属 */}
+        {game.diamond_info && game.diamond_info.trim() && (
+          <section className="glass-card p-6 mb-8">
+            <h2 className="text-lg font-bold text-[#F1F5F9] flex items-center gap-2 mb-4">
+              <Lock className="w-5 h-5 text-[#E94560]" />
+              💎 钻石会员专属
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#E94560]/10 text-[#E94560] border border-[#E94560]/20">
+                顶级情报
+              </span>
+            </h2>
+            <PaywallBlur
+              membershipLevel={userLevel}
+              requiredTier="diamond"
+              articleId={game.id}
+              blurStartPct={15}
+            >
+              <div
+                className="prose prose-invert prose-sm max-w-none text-[#94A3B8] leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: simpleMarkdown(game.diamond_info) }}
+              />
+            </PaywallBlur>
+          </section>
+        )}
+
+        {/* 全空状态兜底 */}
+        {!game.public_info && !game.gold_info && !game.diamond_info && !game.risk_assessment && (
+          <div className="glass-card p-12 text-center">
+            <Globe className="w-12 h-12 text-[#334155] mx-auto mb-4" />
+            <p className="text-[#64748B]">该游戏暂无详细信息</p>
+            <p className="text-xs text-[#475569] mt-2">我们正在持续追踪，请关注后续更新</p>
+          </div>
+        )}
 
         {/* ========== 相关游戏推荐 ========== */}
         {related.length > 0 && (
