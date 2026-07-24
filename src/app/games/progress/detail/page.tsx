@@ -4,10 +4,11 @@ import { useEffect, useState, Suspense, startTransition } from "react";
 import { useSearchParams } from "next/navigation";
 import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { supabase } from "@/lib/supabase/client";
-import { ArrowLeft, Calendar, Users, Star, Shield, Clock, Loader2, Globe, Lock, Gamepad2, Heart } from "lucide-react";
+import { ArrowLeft, Calendar, Users, Star, Shield, Clock, Loader2, Globe, Lock, Gamepad2, Heart, Share2 } from "lucide-react";
 import { getUserLevel, type MembershipLevel } from "@/lib/auth";
 import PaywallBlur from "@/components/article/PaywallBlur";
 import DevProgressCard from "@/components/DevProgressCard";
+import SharePanel from "@/components/SharePanel";
 import { useFollowedGames } from "@/lib/hooks/useFollowedGames";
 import type { GameProgress } from "@/types";
 
@@ -105,6 +106,7 @@ function DetailContent() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { isFollowed, toggle } = useFollowedGames();
+  const [showShare, setShowShare] = useState(false);
 
   useEffect(() => {
     if (!id) {
@@ -285,6 +287,13 @@ function DetailContent() {
                   <Heart className={`w-3.5 h-3.5 ${isFollowed(game.id) ? "fill-[#E94560]" : ""}`} />
                   {isFollowed(game.id) ? "已关注" : "关注"}
                 </button>
+                <button
+                  onClick={() => setShowShare(true)}
+                  className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full bg-[#0F172A]/40 text-[#94A3B8] border border-[#334155] hover:border-[#06B6D4]/50 hover:text-[#06B6D4] transition-colors"
+                >
+                  <Share2 className="w-3.5 h-3.5" />
+                  分享
+                </button>
               </div>
             </div>
           </div>
@@ -444,6 +453,9 @@ function DetailContent() {
           </section>
         )}
       </div>
+      {showShare && game && (
+        <SharePanel game={game} onClose={() => setShowShare(false)} />
+      )}
     </div>
   );
 }
