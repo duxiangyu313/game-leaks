@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import type { GameProgress } from "@/types";
 
-const STAGES = ["概念阶段", "原型开发", "Alpha测试", "Beta测试", "压盘阶段", "已发售"] as const;
+const STAGES = ["概念阶段", "原型开发", "开发中", "Alpha测试", "Beta测试", "已获版号", "压盘阶段", "即将发售", "已发售"] as const;
 
 export default function AdminGameProgressPage() {
   const [records, setRecords] = useState<GameProgress[]>([]);
