@@ -6,16 +6,19 @@ import { Gamepad2, Search, SlidersHorizontal, X, LayoutGrid, List, Zap, Trending
 import DevProgressCard from "@/components/DevProgressCard";
 import type { GameProgress } from "@/types";
 
-const STAGES = ["全部", "概念阶段", "原型开发", "Alpha测试", "Beta测试", "压盘阶段", "已发售"] as const;
+const STAGES = ["全部", "概念阶段", "原型开发", "开发中", "Alpha测试", "Beta测试", "已获版号", "压盘阶段", "即将发售", "已发售"] as const;
 
 // 阶段对应的视觉颜色（用于统计条）
 const STAGE_BAR_COLORS: Record<string, string> = {
   "概念阶段": "bg-[#64748B]",
   "原型开发": "bg-[#F59E0B]",
+  "开发中": "bg-[#8B5CF6]",
   "Alpha测试": "bg-[#06B6D4]",
   "Beta测试": "bg-[#22D3EE]",
+  "已获版号": "bg-[#34D399]",
   "压盘阶段": "bg-[#10B981]",
-  "已发售": "bg-[#10B981]/60",
+  "即将发售": "bg-[#34D399]/60",
+  "已发售": "bg-[#10B981]/40",
 };
 
 // 静态回退数据（Supabase 不可用时使用）

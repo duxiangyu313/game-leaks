@@ -14,9 +14,12 @@ interface DevProgressCardProps {
 const STAGE_COLORS: Record<string, string> = {
   "概念阶段": "bg-[#64748B]/10 text-[#64748B] border-[#64748B]/20",
   "原型开发": "bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]/20",
+  "开发中": "bg-[#8B5CF6]/10 text-[#8B5CF6] border-[#8B5CF6]/20",
   "Alpha测试": "bg-[#06B6D4]/10 text-[#06B6D4] border-[#06B6D4]/20",
   "Beta测试": "bg-[#22D3EE]/10 text-[#22D3EE] border-[#22D3EE]/20",
+  "已获版号": "bg-[#34D399]/10 text-[#34D399] border-[#34D399]/20",
   "压盘阶段": "bg-[#10B981]/10 text-[#10B981] border-[#10B981]/20",
+  "即将发售": "bg-[#34D399]/60 text-white border-[#34D399]",
   "已发售": "bg-[#10B981]/80 text-white border-[#10B981]",
 };
 
