@@ -2,8 +2,9 @@
 
 import { useEffect, useState, useMemo } from "react";
 import { supabase } from "@/lib/supabase/client";
-import { Gamepad2, Search, SlidersHorizontal, X, LayoutGrid, List, Zap, TrendingUp, Heart } from "lucide-react";
+import { Gamepad2, Search, SlidersHorizontal, X, LayoutGrid, List, Zap, TrendingUp, Heart, Calendar } from "lucide-react";
 import DevProgressCard from "@/components/DevProgressCard";
+import TimelineView from "@/components/TimelineView";
 import { parseGenre } from "@/lib/utils/parseGenre";
 import { useFollowedGames } from "@/lib/hooks/useFollowedGames";
 import type { GameProgress } from "@/types";
@@ -72,7 +73,7 @@ export default function GameProgressListPage() {
   const [devFilter, setDevFilter] = useState<string>("全部");
   const [sortBy, setSortBy] = useState<string>("updated");
   const [showFilters, setShowFilters] = useState(false);
-  const [view, setView] = useState<"grid" | "list">("grid");
+  const [view, setView] = useState<"grid" | "list" | "timeline">("grid");
   const [onlyRecent, setOnlyRecent] = useState(false);
   const [onlyFollowed, setOnlyFollowed] = useState(false);
   const [visibleCount, setVisibleCount] = useState(12);
@@ -383,6 +384,15 @@ export default function GameProgressListPage() {
               >
                 <List className="w-4 h-4" />
               </button>
+              <button
+                onClick={() => setView("timeline")}
+                className={`p-1.5 rounded-md transition-colors duration-200 ${
+                  view === "timeline" ? "bg-[#1E293B] text-[#06B6D4]" : "text-[#64748B] hover:text-[#94A3B8]"
+                }`}
+                title="时间线视图"
+              >
+                <Calendar className="w-4 h-4" />
+              </button>
             </div>
 
             <button
@@ -589,15 +599,17 @@ export default function GameProgressListPage() {
                   <DevProgressCard key={game.id} game={game} view="grid" />
                 ))}
               </div>
-            ) : (
+            ) : view === "list" ? (
               <div className="space-y-2">
                 {filtered.slice(0, visibleCount).map((game) => (
                   <DevProgressCard key={game.id} game={game} view="list" />
                 ))}
               </div>
+            ) : (
+              <TimelineView games={filtered} />
             )}
 
-            {filtered.length > visibleCount && (
+            {view !== "timeline" && filtered.length > visibleCount && (
               <div className="text-center mt-8">
                 <button
                   onClick={() => setVisibleCount((c) => c + 12)}
