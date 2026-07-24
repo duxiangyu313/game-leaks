@@ -135,27 +135,38 @@ function DetailContent() {
         // 更新页面标题
         document.title = `${g.name} 开发进度 · 国游爆料`;
 
-        // 相关游戏（同类型，排除当前，最多3个）
-        if (g.genre) {
-          const { data: rel } = await supabase
-            .from("game_progress")
-            .select("*")
-            .neq("id", id)
-            .eq("genre", g.genre)
-            .limit(3);
-          if (rel) setRelated(rel as GameProgress[]);
-        }
-
-        // 如果同类型不够3个，补充最新游戏
-        if (related.length < 3) {
-          const { data: fill } = await supabase
+        // 相关游戏：同类型优先，不够补最新
+        const [genreResult, latestResult] = await Promise.all([
+          g.genre
+            ? supabase
+                .from("game_progress")
+                .select("*")
+                .neq("id", id)
+                .eq("genre", g.genre)
+                .limit(3)
+            : Promise.resolve({ data: null, error: null }),
+          supabase
             .from("game_progress")
             .select("*")
             .neq("id", id)
             .order("last_updated", { ascending: false })
-            .limit(3);
-          if (fill) setRelated(fill as GameProgress[]);
+            .limit(3),
+        ]);
+
+        const genreGames = (genreResult.data as GameProgress[]) || [];
+        const latestGames = (latestResult.data as GameProgress[]) || [];
+
+        // 合并去重，取前3个
+        const seen = new Set<string>();
+        const merged: GameProgress[] = [];
+        for (const game of [...genreGames, ...latestGames]) {
+          if (!seen.has(game.id)) {
+            seen.add(game.id);
+            merged.push(game);
+            if (merged.length >= 3) break;
+          }
         }
+        setRelated(merged);
 
         setLoading(false);
       } catch {
@@ -165,7 +176,7 @@ function DetailContent() {
     };
 
     loadData();
-  }, [id, related.length]);
+  }, [id]);
 
   // 加载态
   if (loading) {
