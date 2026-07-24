@@ -2,9 +2,10 @@
 
 import { useEffect, useState, useMemo } from "react";
 import { supabase } from "@/lib/supabase/client";
-import { Gamepad2, Search, SlidersHorizontal, X, LayoutGrid, List, Zap, TrendingUp } from "lucide-react";
+import { Gamepad2, Search, SlidersHorizontal, X, LayoutGrid, List, Zap, TrendingUp, Heart } from "lucide-react";
 import DevProgressCard from "@/components/DevProgressCard";
 import { parseGenre } from "@/lib/utils/parseGenre";
+import { useFollowedGames } from "@/lib/hooks/useFollowedGames";
 import type { GameProgress } from "@/types";
 
 const STAGES = ["全部", "概念阶段", "原型开发", "开发中", "Alpha测试", "Beta测试", "已获版号", "压盘阶段", "即将发售", "已发售"] as const;
@@ -73,9 +74,11 @@ export default function GameProgressListPage() {
   const [showFilters, setShowFilters] = useState(false);
   const [view, setView] = useState<"grid" | "list">("grid");
   const [onlyRecent, setOnlyRecent] = useState(false);
+  const [onlyFollowed, setOnlyFollowed] = useState(false);
   const [visibleCount, setVisibleCount] = useState(12);
   const [genreFilter, setGenreFilter] = useState<string>("全部");
   const [credibilityTier, setCredibilityTier] = useState<string>("全部");
+  const { followed, isFollowed } = useFollowedGames();
 
   useEffect(() => {
     Promise.resolve(
@@ -177,6 +180,11 @@ export default function GameProgressListPage() {
       result = result.filter((g) => isRecent(g.last_updated));
     }
 
+    // 只看关注
+    if (onlyFollowed) {
+      result = result.filter((g) => isFollowed(g.id));
+    }
+
     // 排序
     result.sort((a, b) => {
       switch (sortBy) {
@@ -194,14 +202,14 @@ export default function GameProgressListPage() {
     });
 
     return result;
-  }, [games, search, stageFilter, devFilter, onlyRecent, sortBy, genreFilter, credibilityTier]);
+  }, [games, search, stageFilter, devFilter, onlyRecent, onlyFollowed, followed, isFollowed, sortBy, genreFilter, credibilityTier]);
 
   // 筛选/搜索/排序变化时重置分页
   useEffect(() => {
     setVisibleCount(12);
-  }, [search, stageFilter, devFilter, onlyRecent, sortBy, genreFilter, credibilityTier]);
+  }, [search, stageFilter, devFilter, onlyRecent, onlyFollowed, sortBy, genreFilter, credibilityTier]);
 
-  const hasActiveFilters = search || stageFilter !== "全部" || devFilter !== "全部" || onlyRecent || genreFilter !== "全部" || credibilityTier !== "全部";
+  const hasActiveFilters = search || stageFilter !== "全部" || devFilter !== "全部" || onlyRecent || onlyFollowed || genreFilter !== "全部" || credibilityTier !== "全部";
 
   return (
     <div className="min-h-screen pt-20 pb-20">
@@ -320,6 +328,22 @@ export default function GameProgressListPage() {
               <Zap className="w-3.5 h-3.5" />
               本周更新
               {onlyRecent && <span className="tabular-nums">({stats.recentCount})</span>}
+            </button>
+
+            {/* 我的关注快捷按钮 */}
+            <button
+              onClick={() => setOnlyFollowed(!onlyFollowed)}
+              className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full transition-colors duration-200 ${
+                onlyFollowed
+                  ? "bg-[#E94560]/20 text-[#E94560] border border-[#E94560]/30"
+                  : "bg-[#1E293B]/40 text-[#94A3B8] border border-[#1E293B] hover:border-[#334155]"
+              }`}
+            >
+              <Heart className={`w-3.5 h-3.5 ${onlyFollowed ? "fill-[#E94560]" : ""}`} />
+              我的关注
+              {followed.length > 0 && (
+                <span className="tabular-nums">({followed.length})</span>
+              )}
             </button>
 
             {/* 排序 */}
@@ -527,6 +551,7 @@ export default function GameProgressListPage() {
                   setGenreFilter("全部");
                   setCredibilityTier("全部");
                   setOnlyRecent(false);
+                  setOnlyFollowed(false);
                 }}
                 className="mt-3 text-sm text-[#06B6D4] hover:text-[#22D3EE] transition-colors"
               >
@@ -547,6 +572,7 @@ export default function GameProgressListPage() {
                 {genreFilter !== "全部" && ` · 类型: ${genreFilter}`}
                 {credibilityTier !== "全部" && ` · 可信度: ${credibilityTier === "high" ? "高" : credibilityTier === "mid" ? "中" : "存疑"}`}
                 {onlyRecent && ` · 本周更新`}
+                {onlyFollowed && ` · 我的关注`}
                 {search && ` · 搜索: "${search}"`}
               </div>
               {onlyRecent && (

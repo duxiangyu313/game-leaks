@@ -4,10 +4,11 @@ import { useEffect, useState, Suspense, startTransition } from "react";
 import { useSearchParams } from "next/navigation";
 import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { supabase } from "@/lib/supabase/client";
-import { ArrowLeft, Calendar, Users, Star, Shield, Clock, Loader2, Globe, Lock, Gamepad2 } from "lucide-react";
+import { ArrowLeft, Calendar, Users, Star, Shield, Clock, Loader2, Globe, Lock, Gamepad2, Heart } from "lucide-react";
 import { getUserLevel, type MembershipLevel } from "@/lib/auth";
 import PaywallBlur from "@/components/article/PaywallBlur";
 import DevProgressCard from "@/components/DevProgressCard";
+import { useFollowedGames } from "@/lib/hooks/useFollowedGames";
 import type { GameProgress } from "@/types";
 
 /** 阶段颜色映射（与卡片一致） */
@@ -103,6 +104,7 @@ function DetailContent() {
   const [userLevel, setUserLevel] = useState<MembershipLevel>("free");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { isFollowed, toggle } = useFollowedGames();
 
   useEffect(() => {
     if (!id) {
@@ -268,8 +270,21 @@ function DetailContent() {
                   )}
                 </div>
               </div>
-              <div className={`text-xs px-3 py-1 rounded-full border ${stageColor}`}>
-                {game.development_stage}
+              <div className="flex items-center gap-2">
+                <div className={`text-xs px-3 py-1 rounded-full border ${stageColor}`}>
+                  {game.development_stage}
+                </div>
+                <button
+                  onClick={() => toggle(game.id)}
+                  className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border transition-colors ${
+                    isFollowed(game.id)
+                      ? "bg-[#E94560]/20 text-[#E94560] border-[#E94560]/30"
+                      : "bg-[#0F172A]/40 text-[#94A3B8] border-[#334155] hover:border-[#E94560]/50"
+                  }`}
+                >
+                  <Heart className={`w-3.5 h-3.5 ${isFollowed(game.id) ? "fill-[#E94560]" : ""}`} />
+                  {isFollowed(game.id) ? "已关注" : "关注"}
+                </button>
               </div>
             </div>
           </div>
