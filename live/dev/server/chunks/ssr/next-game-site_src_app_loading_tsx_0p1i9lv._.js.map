@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///D:/cc%E9%A1%B9%E7%9B%AE/.fourth.cc/next-game-site/src/app/loading.tsx"],"sourcesContent":["export default function Loading() {\r\n  return (\r\n    <div className=\"pt-20 pb-20 min-h-screen flex items-center justify-center\">\r\n      <div className=\"text-center\">\r\n        <div className=\"w-10 h-10 border-2 border-[#06B6D4] border-t-transparent rounded-full animate-spin mx-auto mb-4\" />\r\n        <p className=\"text-[#64748B] text-sm\">加载中...</p>\r\n      </div>\r\n    </div>\r\n  );\r\n}\r\n"],"names":["Loading","className"],"mappings":";;;;;;AAAe,SAASA;IACtB,qBACE,sQAAC;QAAIC,WAAU;kBACb,cAAA,sQAAC;YAAIA,WAAU;;8BACb,sQAAC;oBAAIA,WAAU;;;;;;8BACf,sQAAC;oBAAEA,WAAU;8BAAyB;;;;;;;;;;;;;;;;;AAI9C"}}]
-}
