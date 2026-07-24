@@ -2,13 +2,14 @@
 
 import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { Calendar, Users, Star, Clock, Sparkles, Heart } from "lucide-react";
-import { useFollowedGames } from "@/lib/hooks/useFollowedGames";
 import type { GameProgress } from "@/types";
 
 interface DevProgressCardProps {
   game: GameProgress;
   compact?: boolean;
   view?: "grid" | "list";
+  isFollowed?: boolean;
+  onToggleFollow?: (id: string) => void;
 }
 
 /** 开发阶段 → 颜色映射 */
@@ -76,11 +77,9 @@ function formatDate(dateStr?: string): string {
   }
 }
 
-export default function DevProgressCard({ game, compact, view = "grid" }: DevProgressCardProps) {
+export default function DevProgressCard({ game, compact, view = "grid", isFollowed: followed = false, onToggleFollow }: DevProgressCardProps) {
   const stageColor = STAGE_COLORS[game.development_stage] || STAGE_COLORS["概念阶段"];
   const isNew = isUpdatedThisWeek(game.last_updated);
-  const { isFollowed, toggle } = useFollowedGames();
-  const followed = isFollowed(game.id);
 
   // ═══ 列表视图：横向紧凑布局 ═══
   if (view === "list") {
@@ -147,7 +146,7 @@ export default function DevProgressCard({ game, compact, view = "grid" }: DevPro
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            toggle(game.id);
+            onToggleFollow?.(game.id);
           }}
           className="p-2 rounded-full hover:bg-[#1E293B] transition-colors shrink-0"
           title={followed ? "取消关注" : "关注游戏"}
@@ -211,7 +210,7 @@ export default function DevProgressCard({ game, compact, view = "grid" }: DevPro
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            toggle(game.id);
+            onToggleFollow?.(game.id);
           }}
           className="absolute top-3 right-3 p-1.5 rounded-full bg-[#0F172A]/60 backdrop-blur-sm hover:bg-[#0F172A]/80 transition-colors"
           title={followed ? "取消关注" : "关注游戏"}

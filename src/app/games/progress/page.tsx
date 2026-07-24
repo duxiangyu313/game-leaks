@@ -79,7 +79,7 @@ export default function GameProgressListPage() {
   const [visibleCount, setVisibleCount] = useState(12);
   const [genreFilter, setGenreFilter] = useState<string>("全部");
   const [credibilityTier, setCredibilityTier] = useState<string>("全部");
-  const { followed, isFollowed } = useFollowedGames();
+  const { followed, isFollowed, toggle } = useFollowedGames();
 
   useEffect(() => {
     Promise.resolve(
@@ -160,9 +160,9 @@ export default function GameProgressListPage() {
       result = result.filter((g) => g.developer === devFilter);
     }
 
-    // 类型筛选
+    // 类型筛选（模糊匹配：选"动作"也能匹配"动作RPG""动作ACT"）
     if (genreFilter !== "全部") {
-      result = result.filter((g) => parseGenre(g.genre).includes(genreFilter));
+      result = result.filter((g) => parseGenre(g.genre).some((gen) => gen.includes(genreFilter)));
     }
 
     // 可信度筛选
@@ -596,13 +596,13 @@ export default function GameProgressListPage() {
             {view === "grid" ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {filtered.slice(0, visibleCount).map((game) => (
-                  <DevProgressCard key={game.id} game={game} view="grid" />
+                  <DevProgressCard key={game.id} game={game} view="grid" isFollowed={isFollowed(game.id)} onToggleFollow={toggle} />
                 ))}
               </div>
             ) : view === "list" ? (
               <div className="space-y-2">
                 {filtered.slice(0, visibleCount).map((game) => (
-                  <DevProgressCard key={game.id} game={game} view="list" />
+                  <DevProgressCard key={game.id} game={game} view="list" isFollowed={isFollowed(game.id)} onToggleFollow={toggle} />
                 ))}
               </div>
             ) : (
