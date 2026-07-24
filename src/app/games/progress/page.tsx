@@ -364,14 +364,14 @@ export default function GameProgressListPage() {
             <button
               onClick={() => setShowFilters(!showFilters)}
               className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full transition-colors duration-200 ${
-                showFilters || devFilter !== "全部"
+                showFilters || devFilter !== "全部" || genreFilter !== "全部" || credibilityTier !== "全部"
                   ? "bg-[#06B6D4]/20 text-[#06B6D4] border border-[#06B6D4]/30"
                   : "bg-[#1E293B]/40 text-[#94A3B8] border border-[#1E293B] hover:border-[#334155]"
               }`}
             >
               <SlidersHorizontal className="w-3.5 h-3.5" />
               高级筛选
-              {(stageFilter !== "全部" || devFilter !== "全部") && (
+              {(stageFilter !== "全部" || devFilter !== "全部" || genreFilter !== "全部" || credibilityTier !== "全部") && (
                 <span className="w-1.5 h-1.5 rounded-full bg-[#F59E0B]" />
               )}
             </button>
@@ -482,7 +482,7 @@ export default function GameProgressListPage() {
                 ].map((tier) => (
                   <button
                     key={tier.value}
-                    onClick={() => setCredibilityTier(tier.value)}
+                    onClick={() => setCredibilityTier(credibilityTier === tier.value ? "全部" : tier.value)}
                     className={`text-xs px-2.5 py-1 rounded-full transition-colors duration-200 ${
                       credibilityTier === tier.value
                         ? "bg-[#06B6D4]/20 text-[#06B6D4] border border-[#06B6D4]/30"
