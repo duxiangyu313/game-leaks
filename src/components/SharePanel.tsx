@@ -28,19 +28,28 @@ export default function SharePanel({ game, onClose }: SharePanelProps) {
 
   const shareUrl = `https://news.guoyouwenduji.cc/games/progress/detail?id=${game.id}`;
 
-  const copyLink = async () => {
+  const copyToClipboard = async (text: string): Promise<boolean> => {
     try {
-      await navigator.clipboard.writeText(shareUrl);
-      setCopiedLink(true);
-      setTimeout(() => setCopiedLink(false), 2000);
+      await navigator.clipboard.writeText(text);
+      return true;
     } catch {
-      // fallback
-      const input = document.createElement("input");
-      input.value = shareUrl;
-      document.body.appendChild(input);
-      input.select();
-      document.execCommand("copy");
-      document.body.removeChild(input);
+      try {
+        const input = document.createElement("input");
+        input.value = text;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand("copy");
+        document.body.removeChild(input);
+        return true;
+      } catch {
+        return false;
+      }
+    }
+  };
+
+  const copyLink = async () => {
+    const ok = await copyToClipboard(shareUrl);
+    if (ok) {
       setCopiedLink(true);
       setTimeout(() => setCopiedLink(false), 2000);
     }
@@ -48,12 +57,10 @@ export default function SharePanel({ game, onClose }: SharePanelProps) {
 
   const copyText = async () => {
     const text = `【${game.name}】开发进度：${game.development_stage} | 可信度 ${game.credibility_score}/10 | 关注国游温度计获取最新动态 ${shareUrl}`;
-    try {
-      await navigator.clipboard.writeText(text);
+    const ok = await copyToClipboard(text);
+    if (ok) {
       setCopiedText(true);
       setTimeout(() => setCopiedText(false), 2000);
-    } catch {
-      // ignore
     }
   };
 
