@@ -1,7 +1,8 @@
 "use client";
 
 import LinkNoPrefetch from "@/components/LinkNoPrefetch";
-import { Calendar, Users, Star, Clock, Sparkles } from "lucide-react";
+import { Calendar, Users, Star, Clock, Sparkles, Heart } from "lucide-react";
+import { useFollowedGames } from "@/lib/hooks/useFollowedGames";
 import type { GameProgress } from "@/types";
 
 interface DevProgressCardProps {
@@ -14,9 +15,12 @@ interface DevProgressCardProps {
 const STAGE_COLORS: Record<string, string> = {
   "概念阶段": "bg-[#64748B]/10 text-[#64748B] border-[#64748B]/20",
   "原型开发": "bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]/20",
+  "开发中": "bg-[#8B5CF6]/10 text-[#8B5CF6] border-[#8B5CF6]/20",
   "Alpha测试": "bg-[#06B6D4]/10 text-[#06B6D4] border-[#06B6D4]/20",
   "Beta测试": "bg-[#22D3EE]/10 text-[#22D3EE] border-[#22D3EE]/20",
+  "已获版号": "bg-[#34D399]/10 text-[#34D399] border-[#34D399]/20",
   "压盘阶段": "bg-[#10B981]/10 text-[#10B981] border-[#10B981]/20",
+  "即将发售": "bg-[#34D399]/60 text-white border-[#34D399]",
   "已发售": "bg-[#10B981]/80 text-white border-[#10B981]",
 };
 
@@ -75,6 +79,8 @@ function formatDate(dateStr?: string): string {
 export default function DevProgressCard({ game, compact, view = "grid" }: DevProgressCardProps) {
   const stageColor = STAGE_COLORS[game.development_stage] || STAGE_COLORS["概念阶段"];
   const isNew = isUpdatedThisWeek(game.last_updated);
+  const { isFollowed, toggle } = useFollowedGames();
+  const followed = isFollowed(game.id);
 
   // ═══ 列表视图：横向紧凑布局 ═══
   if (view === "list") {
@@ -135,6 +141,23 @@ export default function DevProgressCard({ game, compact, view = "grid" }: DevPro
             </span>
           </div>
         </div>
+
+        {/* 收藏按钮 */}
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggle(game.id);
+          }}
+          className="p-2 rounded-full hover:bg-[#1E293B] transition-colors shrink-0"
+          title={followed ? "取消关注" : "关注游戏"}
+        >
+          <Heart
+            className={`w-4 h-4 transition-all ${
+              followed ? "fill-[#E94560] text-[#E94560]" : "text-[#64748B]"
+            }`}
+          />
+        </button>
       </LinkNoPrefetch>
     );
   }
@@ -167,21 +190,38 @@ export default function DevProgressCard({ game, compact, view = "grid" }: DevPro
           </div>
         )}
 
-        {/* 精选标记 */}
+        {/* 精选标记（底部右侧，与阶段标签同行） */}
         {game.is_featured && (
-          <div className="absolute top-3 left-3 flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#F5A623]/20 border border-[#F5A623]/30 backdrop-blur-sm">
+          <div className="absolute bottom-3 right-3 flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#F5A623]/20 border border-[#F5A623]/30 backdrop-blur-sm">
             <Sparkles className="w-3 h-3 text-[#F5A623]" />
             <span className="text-[10px] font-semibold text-[#F5A623]">精选</span>
           </div>
         )}
 
-        {/* 本周更新角标 */}
+        {/* 本周更新角标（左上角） */}
         {isNew && (
-          <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#10B981]/20 border border-[#10B981]/30 backdrop-blur-sm">
+          <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#10B981]/20 border border-[#10B981]/30 backdrop-blur-sm">
             <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse" />
             <span className="text-[10px] font-semibold text-[#10B981]">本周更新</span>
           </div>
         )}
+
+        {/* 收藏按钮（右上角） */}
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggle(game.id);
+          }}
+          className="absolute top-3 right-3 p-1.5 rounded-full bg-[#0F172A]/60 backdrop-blur-sm hover:bg-[#0F172A]/80 transition-colors"
+          title={followed ? "取消关注" : "关注游戏"}
+        >
+          <Heart
+            className={`w-4 h-4 transition-all ${
+              followed ? "fill-[#E94560] text-[#E94560]" : "text-[#94A3B8]"
+            }`}
+          />
+        </button>
 
         {/* 阶段标签（封面左下角） */}
         <div className={`absolute bottom-3 left-3 text-[10px] px-2 py-0.5 rounded-full border ${stageColor}`}>
@@ -209,7 +249,7 @@ export default function DevProgressCard({ game, compact, view = "grid" }: DevPro
               {formatDate(game.estimated_release_date)}
             </span>
           )}
-          {!compact && game.team_size && (
+          {!compact && game.team_size && game.team_size > 0 && (
             <span className="flex items-center gap-1">
               <Users className="w-3 h-3" />
               {game.team_size}人

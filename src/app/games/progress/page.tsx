@@ -2,20 +2,26 @@
 
 import { useEffect, useState, useMemo } from "react";
 import { supabase } from "@/lib/supabase/client";
-import { Gamepad2, Search, SlidersHorizontal, X, LayoutGrid, List, Zap, TrendingUp } from "lucide-react";
+import { Gamepad2, Search, SlidersHorizontal, X, LayoutGrid, List, Zap, TrendingUp, Heart, Calendar } from "lucide-react";
 import DevProgressCard from "@/components/DevProgressCard";
+import TimelineView from "@/components/TimelineView";
+import { parseGenre } from "@/lib/utils/parseGenre";
+import { useFollowedGames } from "@/lib/hooks/useFollowedGames";
 import type { GameProgress } from "@/types";
 
-const STAGES = ["全部", "概念阶段", "原型开发", "Alpha测试", "Beta测试", "压盘阶段", "已发售"] as const;
+const STAGES = ["全部", "概念阶段", "原型开发", "开发中", "Alpha测试", "Beta测试", "已获版号", "压盘阶段", "即将发售", "已发售"] as const;
 
 // 阶段对应的视觉颜色（用于统计条）
 const STAGE_BAR_COLORS: Record<string, string> = {
   "概念阶段": "bg-[#64748B]",
   "原型开发": "bg-[#F59E0B]",
+  "开发中": "bg-[#8B5CF6]",
   "Alpha测试": "bg-[#06B6D4]",
   "Beta测试": "bg-[#22D3EE]",
+  "已获版号": "bg-[#34D399]",
   "压盘阶段": "bg-[#10B981]",
-  "已发售": "bg-[#10B981]/60",
+  "即将发售": "bg-[#34D399]/60",
+  "已发售": "bg-[#10B981]/40",
 };
 
 // 静态回退数据（Supabase 不可用时使用）
@@ -67,8 +73,13 @@ export default function GameProgressListPage() {
   const [devFilter, setDevFilter] = useState<string>("全部");
   const [sortBy, setSortBy] = useState<string>("updated");
   const [showFilters, setShowFilters] = useState(false);
-  const [view, setView] = useState<"grid" | "list">("grid");
+  const [view, setView] = useState<"grid" | "list" | "timeline">("grid");
   const [onlyRecent, setOnlyRecent] = useState(false);
+  const [onlyFollowed, setOnlyFollowed] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(12);
+  const [genreFilter, setGenreFilter] = useState<string>("全部");
+  const [credibilityTier, setCredibilityTier] = useState<string>("全部");
+  const { followed, isFollowed } = useFollowedGames();
 
   useEffect(() => {
     Promise.resolve(
@@ -114,6 +125,17 @@ export default function GameProgressListPage() {
       .map(([name]) => name);
   }, [games]);
 
+  // ═══ 游戏类型列表 ═══
+  const genres = useMemo(() => {
+    const set = new Set<string>();
+    for (const g of games) {
+      for (const genre of parseGenre(g.genre)) {
+        set.add(genre);
+      }
+    }
+    return Array.from(set).sort();
+  }, [games]);
+
   // ═══ 客户端筛选 + 排序 ═══
   const filtered = useMemo(() => {
     let result = [...games];
@@ -138,9 +160,30 @@ export default function GameProgressListPage() {
       result = result.filter((g) => g.developer === devFilter);
     }
 
+    // 类型筛选
+    if (genreFilter !== "全部") {
+      result = result.filter((g) => parseGenre(g.genre).includes(genreFilter));
+    }
+
+    // 可信度筛选
+    if (credibilityTier !== "全部") {
+      result = result.filter((g) => {
+        const score = g.credibility_score || 0;
+        if (credibilityTier === "high") return score >= 8;
+        if (credibilityTier === "mid") return score >= 5 && score < 8;
+        if (credibilityTier === "low") return score < 5;
+        return true;
+      });
+    }
+
     // 本周更新筛选
     if (onlyRecent) {
       result = result.filter((g) => isRecent(g.last_updated));
+    }
+
+    // 只看关注
+    if (onlyFollowed) {
+      result = result.filter((g) => isFollowed(g.id));
     }
 
     // 排序
@@ -160,9 +203,14 @@ export default function GameProgressListPage() {
     });
 
     return result;
-  }, [games, search, stageFilter, devFilter, onlyRecent, sortBy]);
+  }, [games, search, stageFilter, devFilter, onlyRecent, onlyFollowed, followed, isFollowed, sortBy, genreFilter, credibilityTier]);
 
-  const hasActiveFilters = search || stageFilter !== "全部" || devFilter !== "全部" || onlyRecent;
+  // 筛选/搜索/排序变化时重置分页
+  useEffect(() => {
+    setVisibleCount(12);
+  }, [search, stageFilter, devFilter, onlyRecent, onlyFollowed, sortBy, genreFilter, credibilityTier]);
+
+  const hasActiveFilters = search || stageFilter !== "全部" || devFilter !== "全部" || onlyRecent || onlyFollowed || genreFilter !== "全部" || credibilityTier !== "全部";
 
   return (
     <div className="min-h-screen pt-20 pb-20">
@@ -283,6 +331,22 @@ export default function GameProgressListPage() {
               {onlyRecent && <span className="tabular-nums">({stats.recentCount})</span>}
             </button>
 
+            {/* 我的关注快捷按钮 */}
+            <button
+              onClick={() => setOnlyFollowed(!onlyFollowed)}
+              className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full transition-colors duration-200 ${
+                onlyFollowed
+                  ? "bg-[#E94560]/20 text-[#E94560] border border-[#E94560]/30"
+                  : "bg-[#1E293B]/40 text-[#94A3B8] border border-[#1E293B] hover:border-[#334155]"
+              }`}
+            >
+              <Heart className={`w-3.5 h-3.5 ${onlyFollowed ? "fill-[#E94560]" : ""}`} />
+              我的关注
+              {followed.length > 0 && (
+                <span className="tabular-nums">({followed.length})</span>
+              )}
+            </button>
+
             {/* 排序 */}
             <div className="flex items-center gap-1.5">
               {SORTS.map((s) => (
@@ -320,26 +384,35 @@ export default function GameProgressListPage() {
               >
                 <List className="w-4 h-4" />
               </button>
+              <button
+                onClick={() => setView("timeline")}
+                className={`p-1.5 rounded-md transition-colors duration-200 ${
+                  view === "timeline" ? "bg-[#1E293B] text-[#06B6D4]" : "text-[#64748B] hover:text-[#94A3B8]"
+                }`}
+                title="时间线视图"
+              >
+                <Calendar className="w-4 h-4" />
+              </button>
             </div>
 
             <button
               onClick={() => setShowFilters(!showFilters)}
               className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full transition-colors duration-200 ${
-                showFilters || devFilter !== "全部"
+                showFilters || devFilter !== "全部" || genreFilter !== "全部" || credibilityTier !== "全部"
                   ? "bg-[#06B6D4]/20 text-[#06B6D4] border border-[#06B6D4]/30"
                   : "bg-[#1E293B]/40 text-[#94A3B8] border border-[#1E293B] hover:border-[#334155]"
               }`}
             >
               <SlidersHorizontal className="w-3.5 h-3.5" />
               高级筛选
-              {(stageFilter !== "全部" || devFilter !== "全部") && (
+              {(stageFilter !== "全部" || devFilter !== "全部" || genreFilter !== "全部" || credibilityTier !== "全部") && (
                 <span className="w-1.5 h-1.5 rounded-full bg-[#F59E0B]" />
               )}
             </button>
           </div>
 
           {/* 展开的高级筛选 */}
-          {(showFilters || devFilter !== "全部") && (
+          {(showFilters || devFilter !== "全部" || genreFilter !== "全部" || credibilityTier !== "全部") && (
             <div className="space-y-2 pt-2 border-t border-[#1E293B]">
               {/* 开发阶段筛选 */}
               <div className="flex items-center gap-2 flex-wrap">
@@ -397,6 +470,63 @@ export default function GameProgressListPage() {
                   ))}
                 </div>
               )}
+
+              {/* 类型筛选 */}
+              {genres.length > 0 && (
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-[10px] text-[#64748B] uppercase tracking-wider mr-1 w-16">
+                    游戏类型
+                  </span>
+                  <button
+                    onClick={() => setGenreFilter("全部")}
+                    className={`text-xs px-2.5 py-1 rounded-full transition-colors duration-200 ${
+                      genreFilter === "全部"
+                        ? "bg-[#06B6D4]/20 text-[#06B6D4] border border-[#06B6D4]/30"
+                        : "bg-[#1E293B]/40 text-[#94A3B8] border border-[#1E293B] hover:border-[#334155]"
+                    }`}
+                  >
+                    全部
+                  </button>
+                  {genres.map((genre) => (
+                    <button
+                      key={genre}
+                      onClick={() => setGenreFilter(genreFilter === genre ? "全部" : genre)}
+                      className={`text-xs px-2.5 py-1 rounded-full transition-colors duration-200 ${
+                        genreFilter === genre
+                          ? "bg-[#06B6D4]/20 text-[#06B6D4] border border-[#06B6D4]/30"
+                          : "bg-[#1E293B]/40 text-[#94A3B8] border border-[#1E293B] hover:border-[#334155]"
+                      }`}
+                    >
+                      {genre}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* 可信度筛选 */}
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-[10px] text-[#64748B] uppercase tracking-wider mr-1 w-16">
+                  可信度
+                </span>
+                {[
+                  { value: "全部", label: "全部" },
+                  { value: "high", label: "高可信 8-10" },
+                  { value: "mid", label: "中等 5-7" },
+                  { value: "low", label: "存疑 <5" },
+                ].map((tier) => (
+                  <button
+                    key={tier.value}
+                    onClick={() => setCredibilityTier(credibilityTier === tier.value ? "全部" : tier.value)}
+                    className={`text-xs px-2.5 py-1 rounded-full transition-colors duration-200 ${
+                      credibilityTier === tier.value
+                        ? "bg-[#06B6D4]/20 text-[#06B6D4] border border-[#06B6D4]/30"
+                        : "bg-[#1E293B]/40 text-[#94A3B8] border border-[#1E293B] hover:border-[#334155]"
+                    }`}
+                  >
+                    {tier.label}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
         </div>
@@ -428,7 +558,10 @@ export default function GameProgressListPage() {
                   setSearch("");
                   setStageFilter("全部");
                   setDevFilter("全部");
+                  setGenreFilter("全部");
+                  setCredibilityTier("全部");
                   setOnlyRecent(false);
+                  setOnlyFollowed(false);
                 }}
                 className="mt-3 text-sm text-[#06B6D4] hover:text-[#22D3EE] transition-colors"
               >
@@ -446,7 +579,10 @@ export default function GameProgressListPage() {
                 共 <span className="text-[#94A3B8] tabular-nums">{filtered.length}</span> 个游戏
                 {stageFilter !== "全部" && ` · 阶段: ${stageFilter}`}
                 {devFilter !== "全部" && ` · 开发商: ${devFilter}`}
+                {genreFilter !== "全部" && ` · 类型: ${genreFilter}`}
+                {credibilityTier !== "全部" && ` · 可信度: ${credibilityTier === "high" ? "高" : credibilityTier === "mid" ? "中" : "存疑"}`}
                 {onlyRecent && ` · 本周更新`}
+                {onlyFollowed && ` · 我的关注`}
                 {search && ` · 搜索: "${search}"`}
               </div>
               {onlyRecent && (
@@ -459,15 +595,28 @@ export default function GameProgressListPage() {
 
             {view === "grid" ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filtered.map((game) => (
+                {filtered.slice(0, visibleCount).map((game) => (
                   <DevProgressCard key={game.id} game={game} view="grid" />
                 ))}
               </div>
-            ) : (
+            ) : view === "list" ? (
               <div className="space-y-2">
-                {filtered.map((game) => (
+                {filtered.slice(0, visibleCount).map((game) => (
                   <DevProgressCard key={game.id} game={game} view="list" />
                 ))}
+              </div>
+            ) : (
+              <TimelineView games={filtered} />
+            )}
+
+            {view !== "timeline" && filtered.length > visibleCount && (
+              <div className="text-center mt-8">
+                <button
+                  onClick={() => setVisibleCount((c) => c + 12)}
+                  className="px-6 py-2.5 rounded-full bg-[#1E293B] border border-[#334155] text-sm text-[#94A3B8] hover:border-[#06B6D4]/50 hover:text-[#06B6D4] transition-colors duration-200"
+                >
+                  加载更多（剩余 {filtered.length - visibleCount} 个）
+                </button>
               </div>
             )}
           </>

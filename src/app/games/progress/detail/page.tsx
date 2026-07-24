@@ -4,19 +4,24 @@ import { useEffect, useState, Suspense, startTransition } from "react";
 import { useSearchParams } from "next/navigation";
 import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { supabase } from "@/lib/supabase/client";
-import { ArrowLeft, Calendar, Users, Star, Shield, Clock, Loader2, Globe, Lock, Gamepad2 } from "lucide-react";
+import { ArrowLeft, Calendar, Users, Star, Shield, Clock, Loader2, Globe, Lock, Gamepad2, Heart, Share2 } from "lucide-react";
 import { getUserLevel, type MembershipLevel } from "@/lib/auth";
 import PaywallBlur from "@/components/article/PaywallBlur";
 import DevProgressCard from "@/components/DevProgressCard";
+import SharePanel from "@/components/SharePanel";
+import { useFollowedGames } from "@/lib/hooks/useFollowedGames";
 import type { GameProgress } from "@/types";
 
 /** 阶段颜色映射（与卡片一致） */
 const STAGE_COLORS: Record<string, string> = {
   "概念阶段": "bg-[#64748B]/10 text-[#64748B] border-[#64748B]/20",
   "原型开发": "bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]/20",
+  "开发中": "bg-[#8B5CF6]/10 text-[#8B5CF6] border-[#8B5CF6]/20",
   "Alpha测试": "bg-[#06B6D4]/10 text-[#06B6D4] border-[#06B6D4]/20",
   "Beta测试": "bg-[#22D3EE]/10 text-[#22D3EE] border-[#22D3EE]/20",
+  "已获版号": "bg-[#34D399]/10 text-[#34D399] border-[#34D399]/20",
   "压盘阶段": "bg-[#10B981]/10 text-[#10B981] border-[#10B981]/20",
+  "即将发售": "bg-[#34D399]/60 text-white border-[#34D399]",
   "已发售": "bg-[#10B981]/80 text-white border-[#10B981]",
 };
 
@@ -74,7 +79,7 @@ function StarRating({ score }: { score: number }) {
 }
 
 /** 简单 Markdown 转 HTML（处理加粗和换行），先转义 HTML 防 XSS */
-function simpleMarkdown(text: string): string {
+function simpleMarkdown(text: string | null | undefined): string {
   if (!text) return "";
   return text
     .replace(/&/g, "&amp;")
@@ -87,6 +92,11 @@ function simpleMarkdown(text: string): string {
     .replace(/$/, "</p>");
 }
 
+/** 检查字符串是否有实际内容（非空、非纯空白） */
+function hasText(s?: string | null): boolean {
+  return !!s && s.trim().length > 0;
+}
+
 function DetailContent() {
   const params = useSearchParams();
   const id = params.get("id");
@@ -95,6 +105,8 @@ function DetailContent() {
   const [userLevel, setUserLevel] = useState<MembershipLevel>("free");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { isFollowed, toggle } = useFollowedGames();
+  const [showShare, setShowShare] = useState(false);
 
   useEffect(() => {
     if (!id) {
@@ -127,27 +139,38 @@ function DetailContent() {
         // 更新页面标题
         document.title = `${g.name} 开发进度 · 国游爆料`;
 
-        // 相关游戏（同类型，排除当前，最多3个）
-        if (g.genre) {
-          const { data: rel } = await supabase
-            .from("game_progress")
-            .select("*")
-            .neq("id", id)
-            .eq("genre", g.genre)
-            .limit(3);
-          if (rel) setRelated(rel as GameProgress[]);
-        }
-
-        // 如果同类型不够3个，补充最新游戏
-        if (related.length < 3) {
-          const { data: fill } = await supabase
+        // 相关游戏：同类型优先，不够补最新
+        const [genreResult, latestResult] = await Promise.all([
+          g.genre
+            ? supabase
+                .from("game_progress")
+                .select("*")
+                .neq("id", id)
+                .eq("genre", g.genre)
+                .limit(3)
+            : Promise.resolve({ data: null, error: null }),
+          supabase
             .from("game_progress")
             .select("*")
             .neq("id", id)
             .order("last_updated", { ascending: false })
-            .limit(3);
-          if (fill) setRelated(fill as GameProgress[]);
+            .limit(3),
+        ]);
+
+        const genreGames = (genreResult.data as GameProgress[]) || [];
+        const latestGames = (latestResult.data as GameProgress[]) || [];
+
+        // 合并去重，取前3个
+        const seen = new Set<string>();
+        const merged: GameProgress[] = [];
+        for (const game of [...genreGames, ...latestGames]) {
+          if (!seen.has(game.id)) {
+            seen.add(game.id);
+            merged.push(game);
+            if (merged.length >= 3) break;
+          }
         }
+        setRelated(merged);
 
         setLoading(false);
       } catch {
@@ -157,7 +180,7 @@ function DetailContent() {
     };
 
     loadData();
-  }, [id, related.length]);
+  }, [id]);
 
   // 加载态
   if (loading) {
@@ -249,8 +272,28 @@ function DetailContent() {
                   )}
                 </div>
               </div>
-              <div className={`text-xs px-3 py-1 rounded-full border ${stageColor}`}>
-                {game.development_stage}
+              <div className="flex items-center gap-2">
+                <div className={`text-xs px-3 py-1 rounded-full border ${stageColor}`}>
+                  {game.development_stage}
+                </div>
+                <button
+                  onClick={() => toggle(game.id)}
+                  className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border transition-colors ${
+                    isFollowed(game.id)
+                      ? "bg-[#E94560]/20 text-[#E94560] border-[#E94560]/30"
+                      : "bg-[#0F172A]/40 text-[#94A3B8] border-[#334155] hover:border-[#E94560]/50"
+                  }`}
+                >
+                  <Heart className={`w-3.5 h-3.5 ${isFollowed(game.id) ? "fill-[#E94560]" : ""}`} />
+                  {isFollowed(game.id) ? "已关注" : "关注"}
+                </button>
+                <button
+                  onClick={() => setShowShare(true)}
+                  className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full bg-[#0F172A]/40 text-[#94A3B8] border border-[#334155] hover:border-[#06B6D4]/50 hover:text-[#06B6D4] transition-colors"
+                >
+                  <Share2 className="w-3.5 h-3.5" />
+                  分享
+                </button>
               </div>
             </div>
           </div>
@@ -280,7 +323,7 @@ function DetailContent() {
                 团队规模
               </p>
               <p className="text-sm font-semibold text-[#F1F5F9]">
-                {game.team_size ? `${game.team_size} 人` : "未知"}
+                {game.team_size && game.team_size > 0 ? `${game.team_size} 人` : "未公开"}
               </p>
             </div>
             <div>
@@ -310,75 +353,90 @@ function DetailContent() {
         {/* ========== 内容分区 ========== */}
 
         {/* 公开信息 */}
-        <section className="glass-card p-6 mb-4">
-          <h2 className="text-lg font-bold text-[#F1F5F9] flex items-center gap-2 mb-4">
-            <Globe className="w-5 h-5 text-[#06B6D4]" />
-            📋 公开信息
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#64748B]/10 text-[#64748B] border border-[#64748B]/20">
-              免费可见
-            </span>
-          </h2>
-          <div
-            className="prose prose-invert prose-sm max-w-none text-[#94A3B8] leading-relaxed"
-            dangerouslySetInnerHTML={{ __html: simpleMarkdown(game.public_info) }}
-          />
-        </section>
-
-        {/* 黄金会员专属 */}
-        <section className="glass-card p-6 mb-4">
-          <h2 className="text-lg font-bold text-[#F1F5F9] flex items-center gap-2 mb-4">
-            <Lock className="w-5 h-5 text-[#F59E0B]" />
-            🥇 黄金会员专属
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#F59E0B]/10 text-[#F59E0B] border border-[#F59E0B]/20">
-              深度内幕 & 风险评估
-            </span>
-          </h2>
-          <PaywallBlur
-            membershipLevel={userLevel}
-            requiredTier="gold"
-            articleId={game.id}
-            blurStartPct={20}
-          >
-            {game.gold_info && (
-              <div
-                className="prose prose-invert prose-sm max-w-none text-[#94A3B8] leading-relaxed mb-4"
-                dangerouslySetInnerHTML={{ __html: simpleMarkdown(game.gold_info) }}
-              />
-            )}
-            {game.risk_assessment && (
-              <>
-                <hr className="border-[#1E293B] my-4" />
-                <h3 className="text-sm font-bold text-[#F59E0B] mb-2">⚠️ 开发风险评估</h3>
-                <div
-                  className="prose prose-invert prose-sm max-w-none text-[#94A3B8] leading-relaxed"
-                  dangerouslySetInnerHTML={{ __html: simpleMarkdown(game.risk_assessment) }}
-                />
-              </>
-            )}
-          </PaywallBlur>
-        </section>
-
-        {/* 钻石会员专属 */}
-        <section className="glass-card p-6 mb-8">
-          <h2 className="text-lg font-bold text-[#F1F5F9] flex items-center gap-2 mb-4">
-            <Lock className="w-5 h-5 text-[#E94560]" />
-            💎 钻石会员专属
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#E94560]/10 text-[#E94560] border border-[#E94560]/20">
-              顶级情报
-            </span>
-          </h2>
-          <PaywallBlur
-            membershipLevel={userLevel}
-            requiredTier="diamond"
-            articleId={game.id}
-            blurStartPct={15}
-          >
+        {hasText(game.public_info) && (
+          <section className="glass-card p-6 mb-4">
+            <h2 className="text-lg font-bold text-[#F1F5F9] flex items-center gap-2 mb-4">
+              <Globe className="w-5 h-5 text-[#06B6D4]" />
+              📋 公开信息
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#64748B]/10 text-[#64748B] border border-[#64748B]/20">
+                免费可见
+              </span>
+            </h2>
             <div
               className="prose prose-invert prose-sm max-w-none text-[#94A3B8] leading-relaxed"
-              dangerouslySetInnerHTML={{ __html: simpleMarkdown(game.diamond_info) || '<p class="text-[#64748B] italic">暂无钻石专属内容，敬请期待。</p>' }}
+              dangerouslySetInnerHTML={{ __html: simpleMarkdown(game.public_info) }}
             />
-          </PaywallBlur>
-        </section>
+          </section>
+        )}
+
+        {/* 黄金会员专属 */}
+        {(hasText(game.gold_info) || hasText(game.risk_assessment)) && (
+          <section className="glass-card p-6 mb-4">
+            <h2 className="text-lg font-bold text-[#F1F5F9] flex items-center gap-2 mb-4">
+              <Lock className="w-5 h-5 text-[#F59E0B]" />
+              🥇 黄金会员专属
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#F59E0B]/10 text-[#F59E0B] border border-[#F59E0B]/20">
+                深度内幕 & 风险评估
+              </span>
+            </h2>
+            <PaywallBlur
+              membershipLevel={userLevel}
+              requiredTier="gold"
+              articleId={game.id}
+              blurStartPct={20}
+            >
+              {game.gold_info && (
+                <div
+                  className="prose prose-invert prose-sm max-w-none text-[#94A3B8] leading-relaxed mb-4"
+                  dangerouslySetInnerHTML={{ __html: simpleMarkdown(game.gold_info) }}
+                />
+              )}
+              {game.risk_assessment && (
+                <>
+                  <hr className="border-[#1E293B] my-4" />
+                  <h3 className="text-sm font-bold text-[#F59E0B] mb-2">⚠️ 开发风险评估</h3>
+                  <div
+                    className="prose prose-invert prose-sm max-w-none text-[#94A3B8] leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: simpleMarkdown(game.risk_assessment) }}
+                  />
+                </>
+              )}
+            </PaywallBlur>
+          </section>
+        )}
+
+        {/* 钻石会员专属 */}
+        {hasText(game.diamond_info) && (
+          <section className="glass-card p-6 mb-8">
+            <h2 className="text-lg font-bold text-[#F1F5F9] flex items-center gap-2 mb-4">
+              <Lock className="w-5 h-5 text-[#E94560]" />
+              💎 钻石会员专属
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#E94560]/10 text-[#E94560] border border-[#E94560]/20">
+                顶级情报
+              </span>
+            </h2>
+            <PaywallBlur
+              membershipLevel={userLevel}
+              requiredTier="diamond"
+              articleId={game.id}
+              blurStartPct={15}
+            >
+              <div
+                className="prose prose-invert prose-sm max-w-none text-[#94A3B8] leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: simpleMarkdown(game.diamond_info) }}
+              />
+            </PaywallBlur>
+          </section>
+        )}
+
+        {/* 全空状态兜底 */}
+        {!hasText(game.public_info) && !hasText(game.gold_info) && !hasText(game.diamond_info) && !hasText(game.risk_assessment) && (
+          <div className="glass-card p-12 text-center">
+            <Globe className="w-12 h-12 text-[#334155] mx-auto mb-4" />
+            <p className="text-[#64748B]">该游戏暂无详细信息</p>
+            <p className="text-xs text-[#475569] mt-2">我们正在持续追踪，请关注后续更新</p>
+          </div>
+        )}
 
         {/* ========== 相关游戏推荐 ========== */}
         {related.length > 0 && (
@@ -395,6 +453,9 @@ function DetailContent() {
           </section>
         )}
       </div>
+      {showShare && game && (
+        <SharePanel game={game} onClose={() => setShowShare(false)} />
+      )}
     </div>
   );
 }
