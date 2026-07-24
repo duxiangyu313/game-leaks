@@ -4,5 +4,7 @@ Disallow: /admin/
 Disallow: /auth/
 Disallow: /account/
 Disallow: /api/
+Disallow: /member/
+Disallow: /trial/
 
 Sitemap: https://news.guoyouwenduji.cc/sitemap.xml
