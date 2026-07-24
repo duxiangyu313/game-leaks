@@ -11,7 +11,7 @@ import GameProgressCard from "@/components/game/GameProgressCard";
 import GameTabs from "@/components/game/GameTabs";
 import RelatedGames from "@/components/game/RelatedGames";
 import Lightbox from "@/components/game/Lightbox";
-import { BreadcrumbListSchema } from "@/components/StructuredData";
+import { BreadcrumbListSchema, VideoGameSchema } from "@/components/StructuredData";
 
 type Tab = "intro" | "requirements" | "reviews" | "preorders" | "scores" | "prices" | "dlc" | "videos" | "wiki" | "leaks" | "gallery" | "comments";
 
@@ -112,11 +112,24 @@ function DetailContent() {
   return (
     <div className="pt-20 pb-20">
       {detail?.game && (
-        <BreadcrumbListSchema items={[
-          { name: "首页", url: "https://news.guoyouwenduji.cc/" },
-          { name: "游戏库", url: "https://news.guoyouwenduji.cc/games/" },
-          { name: detail.game.title, url: `https://news.guoyouwenduji.cc/games/detail/?id=${detail.game.id}` },
-        ]} />
+        <>
+          <BreadcrumbListSchema items={[
+            { name: "首页", url: "https://news.guoyouwenduji.cc/" },
+            { name: "游戏库", url: "https://news.guoyouwenduji.cc/games/" },
+            { name: detail.game.title, url: `https://news.guoyouwenduji.cc/games/detail/?id=${detail.game.id}` },
+          ]} />
+          <VideoGameSchema
+            title={detail.game.title}
+            description={detail.game.description}
+            developer={detail.game.developer}
+            publisher={detail.game.publisher}
+            releaseDate={detail.game.release_date}
+            rating={detail.game.rating}
+            hypeScore={detail.game.hype_score}
+            url={`https://news.guoyouwenduji.cc/games/detail/?id=${detail.game.id}`}
+            platform={detail.game.platform}
+          />
+        </>
       )}
       <div className="max-w-5xl mx-auto px-4 md:px-6">
         <GameHeader game={detail.game} />

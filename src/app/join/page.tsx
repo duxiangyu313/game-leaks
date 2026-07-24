@@ -4,6 +4,7 @@ import { PenLine, Search, Video, Users, Heart, Mail } from "lucide-react";
 export const metadata: Metadata = {
   title: "加入我们",
   description: "加入国游爆料团队 — 内容作者、资讯编辑、视频剪辑、社群运营招募中",
+  alternates: { canonical: "/join/" },
 };
 
 const POSITIONS = [

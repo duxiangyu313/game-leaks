@@ -4,6 +4,7 @@ import { Target, Eye, Gamepad2, MessageCircle, TrendingUp } from "lucide-react";
 export const metadata: Metadata = {
   title: "关于我们",
   description: "国游爆料 — 有温度的国产3A游戏观察者。黑神话悟空之后，国产3A正在爆发。我们追踪每一款值得关注的国产大作。",
+  alternates: { canonical: "/about/" },
 };
 
 const HIGHLIGHTS = [

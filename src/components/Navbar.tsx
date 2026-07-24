@@ -75,6 +75,13 @@ export default function Navbar() {
               {link.label}
             </LinkNoPrefetch>
           ))}
+          <LinkNoPrefetch
+            href="/cj2026"
+            prefetch={false}
+            className="ml-1 px-3 py-2 text-sm font-bold text-[#E94560] bg-[#E94560]/10 border border-[#E94560]/30 hover:bg-[#E94560]/20 hover:border-[#E94560]/50 rounded-lg transition-all animate-pulse"
+          >
+            🔥 CJ2026
+          </LinkNoPrefetch>
         </div>
 
         {/* Search + Auth */}
@@ -127,6 +134,9 @@ export default function Navbar() {
                 {link.label}
               </LinkNoPrefetch>
             ))}
+            <LinkNoPrefetch href="/cj2026" prefetch={false} className="px-3 py-2.5 text-sm font-bold text-[#E94560] bg-[#E94560]/10 border border-[#E94560]/20 rounded-lg animate-pulse" onClick={() => setOpen(false)}>
+              🔥 ChinaJoy 2026
+            </LinkNoPrefetch>
             <div className="mt-3 pt-3 border-t border-[rgba(30,41,59,0.4)] flex gap-2">
               {user ? (
                 <>

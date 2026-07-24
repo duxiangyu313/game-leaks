@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "用户协议",
   description: "国游爆料用户协议 — 注册、会员、发帖规则与平台权责说明",
+  alternates: { canonical: "/agreement/" },
 };
 
 export default function AgreementPage() {

@@ -8,6 +8,7 @@ import ForumCategoryCards from "@/components/ForumCategoryCards";
 export const metadata: Metadata = {
   title: "论坛",
   description: "国产3A游戏玩家社区 - 讨论游戏攻略、分享心得、交流爆料",
+  alternates: { canonical: "/forum/" },
 };
 
 export default function ForumPage() {

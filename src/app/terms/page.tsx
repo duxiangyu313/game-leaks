@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "服务条款",
   description: "国游爆料服务条款 — 用户注册、会员订阅、内容使用、免责声明等使用协议",
+  alternates: { canonical: "/terms/" },
 };
 
 export default function TermsPage() {

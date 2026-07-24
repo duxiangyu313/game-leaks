@@ -8,7 +8,7 @@ import { ArrowLeft, Eye, Clock, Shield, AlertTriangle } from "lucide-react";
 import { formatDate } from "@/lib/article-utils";
 import { useLeakDetail } from "@/data/hooks";
 import { addHistory } from "@/components/account/BrowsingHistory";
-import { BreadcrumbListSchema } from "@/components/StructuredData";
+import { BreadcrumbListSchema, NewsArticleSchema } from "@/components/StructuredData";
 
 export default function LeakDetailPage() {
   return (
@@ -85,6 +85,13 @@ function LeakDetailContent() {
         { name: "爆料专区", url: "https://news.guoyouwenduji.cc/leaks/" },
         { name: leak.title, url: `https://news.guoyouwenduji.cc/leaks/detail/?id=${leak.id}` },
       ]} />
+      <NewsArticleSchema
+        title={leak.title}
+        description={leak.summary || leak.title}
+        datePublished={leak.published_at || new Date().toISOString()}
+        url={`https://news.guoyouwenduji.cc/leaks/detail/?id=${leak.id}`}
+        category={leak.game_name || "国产3A"}
+      />
       <div className="max-w-3xl mx-auto px-4">
         <LinkNoPrefetch href="/leaks" className="inline-flex items-center gap-2 text-sm text-[#94A3B8] hover:text-[#F1F5F9] mb-6 transition-colors">
           <ArrowLeft className="w-4 h-4" /> 返回爆料列表

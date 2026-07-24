@@ -1,12 +1,13 @@
 "use client";
 
 import LinkNoPrefetch from "@/components/LinkNoPrefetch";
-import { Calendar, Users, Star, Clock } from "lucide-react";
+import { Calendar, Users, Star, Clock, Sparkles } from "lucide-react";
 import type { GameProgress } from "@/types";
 
 interface DevProgressCardProps {
   game: GameProgress;
   compact?: boolean;
+  view?: "grid" | "list";
 }
 
 /** 开发阶段 → 颜色映射 */
@@ -71,10 +72,74 @@ function formatDate(dateStr?: string): string {
   }
 }
 
-export default function DevProgressCard({ game, compact }: DevProgressCardProps) {
+export default function DevProgressCard({ game, compact, view = "grid" }: DevProgressCardProps) {
   const stageColor = STAGE_COLORS[game.development_stage] || STAGE_COLORS["概念阶段"];
   const isNew = isUpdatedThisWeek(game.last_updated);
 
+  // ═══ 列表视图：横向紧凑布局 ═══
+  if (view === "list") {
+    return (
+      <LinkNoPrefetch
+        href={`/games/progress/detail?id=${game.id}`}
+        className="glass-card flex items-center gap-4 group hover:border-[#06B6D4]/30 transition-all duration-200 p-3 overflow-hidden"
+      >
+        {/* 缩略图 */}
+        <div className="relative w-32 h-18 shrink-0 rounded-lg overflow-hidden bg-[#1E293B]" style={{ width: "128px", height: "72px" }}>
+          {game.cover_url ? (
+            <img
+              src={game.cover_url}
+              alt={game.name}
+              loading="lazy"
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-[#1E293B] to-[#0F172A] flex items-center justify-center">
+              <div className="text-center px-1">
+                <span className="text-[9px] text-[#64748B]">暂无封面</span>
+              </div>
+            </div>
+          )}
+          <div className={`absolute bottom-1 left-1 text-[9px] px-1.5 py-0.5 rounded-full border ${stageColor}`}>
+            {game.development_stage}
+          </div>
+        </div>
+
+        {/* 信息 */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2">
+            <h3 className="font-semibold text-[#F1F5F9] group-hover:text-[#06B6D4] transition-colors truncate text-sm">
+              {game.name}
+            </h3>
+            {game.is_featured && (
+              <Sparkles className="w-3.5 h-3.5 text-[#F5A623] shrink-0" />
+            )}
+            {isNew && (
+              <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-[#10B981]/20 border border-[#10B981]/30 text-[#10B981] shrink-0">
+                NEW
+              </span>
+            )}
+          </div>
+          {game.developer && (
+            <p className="text-xs text-[#64748B] mt-0.5 truncate">{game.developer}</p>
+          )}
+          <div className="flex items-center gap-3 mt-1.5 text-xs text-[#64748B]">
+            {game.estimated_release_date && (
+              <span className="flex items-center gap-1">
+                <Calendar className="w-3 h-3" />
+                {formatDate(game.estimated_release_date)}
+              </span>
+            )}
+            <span className="flex items-center gap-1">
+              <Star className="w-3 h-3 fill-[#F59E0B] text-[#F59E0B]" />
+              <span className="tabular-nums">{game.credibility_score}/10</span>
+            </span>
+          </div>
+        </div>
+      </LinkNoPrefetch>
+    );
+  }
+
+  // ═══ 网格视图：原有卡片布局 ═══
   return (
     <LinkNoPrefetch
       href={`/games/progress/detail?id=${game.id}`}
@@ -96,10 +161,17 @@ export default function DevProgressCard({ game, compact }: DevProgressCardProps)
           </>
         ) : (
           /* 无封面占位 */
-          <div className="w-full h-full bg-gradient-to-br from-[#1E293B] to-[#0F172A] flex items-center justify-center">
-            <span className="text-5xl font-black text-[#334155] select-none">
-              {game.name.charAt(0)}
-            </span>
+          <div className="w-full h-full bg-gradient-to-br from-[#1E293B] to-[#0F172A] flex flex-col items-center justify-center gap-2">
+            <span className="text-xs text-[#475569]">封面</span>
+            <span className="text-sm text-[#64748B]">暂无公开信息</span>
+          </div>
+        )}
+
+        {/* 精选标记 */}
+        {game.is_featured && (
+          <div className="absolute top-3 left-3 flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#F5A623]/20 border border-[#F5A623]/30 backdrop-blur-sm">
+            <Sparkles className="w-3 h-3 text-[#F5A623]" />
+            <span className="text-[10px] font-semibold text-[#F5A623]">精选</span>
           </div>
         )}
 

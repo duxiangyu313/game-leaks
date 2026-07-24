@@ -220,10 +220,9 @@ function DetailContent() {
               <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A] via-[#0F172A]/60 to-transparent" />
             </>
           ) : (
-            <div className="w-full h-full bg-gradient-to-br from-[#1E293B] to-[#0F172A] flex items-center justify-center">
-              <span className="text-8xl font-black text-[#334155] select-none">
-                {game.name.charAt(0)}
-              </span>
+            <div className="w-full h-full bg-gradient-to-br from-[#1E293B] to-[#0F172A] flex flex-col items-center justify-center gap-3">
+              <span className="text-sm text-[#475569]">游戏封面</span>
+              <span className="text-lg text-[#64748B]">暂无公开信息</span>
             </div>
           )}
 
@@ -325,35 +324,13 @@ function DetailContent() {
           />
         </section>
 
-        {/* 白银会员专属 */}
-        <section className="glass-card p-6 mb-4">
-          <h2 className="text-lg font-bold text-[#F1F5F9] flex items-center gap-2 mb-4">
-            <Lock className="w-5 h-5 text-[#94A3B8]" />
-            🥈 白银会员专属
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#94A3B8]/10 text-[#94A3B8] border border-[#94A3B8]/20">
-              深度分析
-            </span>
-          </h2>
-          <PaywallBlur
-            membershipLevel={userLevel}
-            requiredTier="gold"
-            articleId={game.id}
-            blurStartPct={30}
-          >
-            <div
-              className="prose prose-invert prose-sm max-w-none text-[#94A3B8] leading-relaxed"
-              dangerouslySetInnerHTML={{ __html: simpleMarkdown(game.gold_info) }}
-            />
-          </PaywallBlur>
-        </section>
-
         {/* 黄金会员专属 */}
         <section className="glass-card p-6 mb-4">
           <h2 className="text-lg font-bold text-[#F1F5F9] flex items-center gap-2 mb-4">
             <Lock className="w-5 h-5 text-[#F59E0B]" />
             🥇 黄金会员专属
             <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#F59E0B]/10 text-[#F59E0B] border border-[#F59E0B]/20">
-              独家内幕
+              深度内幕 & 风险评估
             </span>
           </h2>
           <PaywallBlur
@@ -362,31 +339,43 @@ function DetailContent() {
             articleId={game.id}
             blurStartPct={20}
           >
-            <div
-              className="prose prose-invert prose-sm max-w-none text-[#94A3B8] leading-relaxed"
-              dangerouslySetInnerHTML={{ __html: simpleMarkdown(game.gold_info) }}
-            />
+            {game.gold_info && (
+              <div
+                className="prose prose-invert prose-sm max-w-none text-[#94A3B8] leading-relaxed mb-4"
+                dangerouslySetInnerHTML={{ __html: simpleMarkdown(game.gold_info) }}
+              />
+            )}
+            {game.risk_assessment && (
+              <>
+                <hr className="border-[#1E293B] my-4" />
+                <h3 className="text-sm font-bold text-[#F59E0B] mb-2">⚠️ 开发风险评估</h3>
+                <div
+                  className="prose prose-invert prose-sm max-w-none text-[#94A3B8] leading-relaxed"
+                  dangerouslySetInnerHTML={{ __html: simpleMarkdown(game.risk_assessment) }}
+                />
+              </>
+            )}
           </PaywallBlur>
         </section>
 
-        {/* 风险评估 */}
+        {/* 钻石会员专属 */}
         <section className="glass-card p-6 mb-8">
           <h2 className="text-lg font-bold text-[#F1F5F9] flex items-center gap-2 mb-4">
-            <Shield className="w-5 h-5 text-[#F59E0B]" />
-            ⚠️ 开发风险评估
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#F59E0B]/10 text-[#F59E0B] border border-[#F59E0B]/20">
-              黄金会员
+            <Lock className="w-5 h-5 text-[#E94560]" />
+            💎 钻石会员专属
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#E94560]/10 text-[#E94560] border border-[#E94560]/20">
+              顶级情报
             </span>
           </h2>
           <PaywallBlur
             membershipLevel={userLevel}
-            requiredTier="gold"
+            requiredTier="diamond"
             articleId={game.id}
             blurStartPct={15}
           >
             <div
               className="prose prose-invert prose-sm max-w-none text-[#94A3B8] leading-relaxed"
-              dangerouslySetInnerHTML={{ __html: simpleMarkdown(game.risk_assessment) }}
+              dangerouslySetInnerHTML={{ __html: simpleMarkdown(game.diamond_info) || '<p class="text-[#64748B] italic">暂无钻石专属内容，敬请期待。</p>' }}
             />
           </PaywallBlur>
         </section>

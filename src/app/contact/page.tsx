@@ -4,6 +4,7 @@ import { Mail, MessageCircle, Send, Users } from "lucide-react";
 export const metadata: Metadata = {
   title: "联系我们",
   description: "联系国游爆料 — 客服支持、广告合作、内容投稿、意见反馈",
+  alternates: { canonical: "/contact/" },
 };
 
 export default function ContactPage() {

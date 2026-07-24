@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "隐私政策",
   description: "国游爆料隐私政策 — 信息收集、数据存储、用户权利说明",
+  alternates: { canonical: "/privacy/" },
 };
 
 export default function PrivacyPage() {

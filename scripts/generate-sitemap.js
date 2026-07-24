@@ -40,9 +40,17 @@ const PAGES = [
   { url: "/auth/", priority: "0.3", changefreq: "monthly" },
   { url: "/about/", priority: "0.4", changefreq: "monthly" },
   { url: "/contact/", priority: "0.3", changefreq: "monthly" },
+  { url: "/cj2026/", priority: "0.9", changefreq: "daily" },
   { url: "/privacy/", priority: "0.2", changefreq: "yearly" },
   { url: "/terms/", priority: "0.2", changefreq: "yearly" },
 ];
+
+// 不应出现在 sitemap 中的路径前缀
+const EXCLUDED_PREFIXES = ["/admin/", "/auth/", "/account/", "/member/", "/404", "/_not-found/"];
+
+function isExcluded(url) {
+  return EXCLUDED_PREFIXES.some(p => url.startsWith(p));
+}
 
 function findPages(dir, base = "") {
   const results = [];
@@ -55,10 +63,11 @@ function findPages(dir, base = "") {
     if (entry.isDirectory()) {
       results.push(...findPages(fullPath, relative));
     } else if (entry.name === "index.html") {
-      const url = base + "/" + (base ? "/" : "");
-      const normalized = url.replace(/\/\//g, "/") + "/";
-      const exists = PAGES.find(p => p.url === normalized);
-      if (!exists) results.push({ url: normalized, priority: "0.5", changefreq: "weekly" });
+      // 修复: 不再产生双斜杠 (旧: base + "/" + (base ? "/" : "") 会生成 /about//)
+      const url = base ? base + "/" : "/";
+      if (isExcluded(url)) continue;
+      const exists = PAGES.find(p => p.url === url);
+      if (!exists) results.push({ url, priority: "0.5", changefreq: "weekly" });
     }
   }
   return results;

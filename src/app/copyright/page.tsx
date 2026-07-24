@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "版权声明",
   description: "国游爆料版权声明 — 原创内容保护、游戏素材归属、付费内容防盗说明",
+  alternates: { canonical: "/copyright/" },
 };
 
 export default function CopyrightPage() {

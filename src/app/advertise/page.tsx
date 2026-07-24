@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "广告合作",
   description: "国游爆料专注国产3A游戏领域，覆盖主机/PC硬核玩家群体。欢迎游戏厂商、硬件品牌洽谈图文推广、视频合作、游戏激活码派发、定制内容。",
+  alternates: { canonical: "/advertise/" },
 };
 
 export default function Page() {

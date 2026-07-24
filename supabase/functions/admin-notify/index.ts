@@ -17,12 +17,13 @@ const FROM = Deno.env.get("NOTIFY_FROM") || "国游温度计 <onboarding@resend.
 const WEBHOOK_SECRET = "admin-notify-wh-20260718";
 
 interface NotifyPayload {
-  type: "user_signup" | "user_login" | "forum_post" | "ugc_submission";
+  type: "user_signup" | "user_login" | "forum_post" | "ugc_submission" | "custom";
   title: string;
   body: string;
   timestamp?: string;
   link?: string;
   secret?: string;
+  custom_html?: string;  // 如果提供，直接作为邮件 HTML 正文，忽略模板
 }
 
 const EMOJI: Record<string, string> = {
@@ -71,7 +72,8 @@ serve(async (req) => {
     const time = payload.timestamp ? new Date(payload.timestamp).toLocaleString("zh-CN", { timeZone: "Asia/Shanghai" }) : "";
     const link = payload.link || SITE;
 
-    const html = `<!DOCTYPE html>
+    // 如果提供了 custom_html，直接使用；否则使用默认通知模板
+    const html = payload.custom_html || `<!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width"></head>
 <body style="margin:0;padding:0;background:#080A0D;color:#F1F5F9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">

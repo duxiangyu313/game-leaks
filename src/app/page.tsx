@@ -6,11 +6,15 @@ import EmailSubscribe from "@/components/EmailSubscribe";
 // ClickSpark 点击火花 — 全局点击反馈
 const ClickSparkWrapper = dynamic(() => import("@/components/ui/react-bits/ClickSparkWrapper"));
 
+// PromoHero 宣传片 — 首次访问全屏动画（需客户端 wrapper）
+const PromoHeroWrapper = dynamic(() => import("@/components/promo/PromoHeroWrapper"));
+
 // Above-fold — dynamic for code splitting (framer-motion heavy)
 const HeroWrapper = dynamic(() => import("@/components/HeroWrapper"), {
   loading: () => <div className="h-[420px] md:h-[520px] bg-[#0F172A] animate-pulse rounded-2xl" />,
 });
 const FreeTrialBanner = dynamic(() => import("@/components/FreeTrialBanner"));
+const CjBanner = dynamic(() => import("@/components/CjBanner"));
 const CyberParticles = dynamic(() => import("@/components/cyber/CyberParticles"));
 
 // Above-fold lazy — reduces initial JS bundle
@@ -30,6 +34,9 @@ const MemberStatsBar = dynamic(() => import("@/components/MemberStatsBar"));
 export default function Home() {
   return (
     <div className="pt-16 relative cyber-scanline-bg" suppressHydrationWarning>
+      {/* 宣传片 — 首次访问全屏动画 */}
+      <PromoHeroWrapper />
+
       {/* 全息粒子背景 — 移动端禁用 */}
       <div className="fixed inset-0 pointer-events-none z-0 hidden md:block">
         <CyberParticles count={30} />
@@ -38,6 +45,7 @@ export default function Home() {
 
       <div className="relative z-10">
         <FreeTrialBanner />
+        <CjBanner />
         {/* 邮件订阅 — 首页顶部 */}
         <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-4 md:pt-6">
           <EmailSubscribe compact />

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "免责声明",
   description: "国游爆料免责声明 — 爆料信息来源说明、内容责任界定、侵权处理流程",
+  alternates: { canonical: "/disclaimer/" },
 };
 
 export default function DisclaimerPage() {
