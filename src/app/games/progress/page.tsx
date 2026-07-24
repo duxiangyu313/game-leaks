@@ -72,6 +72,7 @@ export default function GameProgressListPage() {
   const [showFilters, setShowFilters] = useState(false);
   const [view, setView] = useState<"grid" | "list">("grid");
   const [onlyRecent, setOnlyRecent] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(12);
 
   useEffect(() => {
     Promise.resolve(
@@ -164,6 +165,11 @@ export default function GameProgressListPage() {
 
     return result;
   }, [games, search, stageFilter, devFilter, onlyRecent, sortBy]);
+
+  // 筛选/搜索/排序变化时重置分页
+  useEffect(() => {
+    setVisibleCount(12);
+  }, [search, stageFilter, devFilter, onlyRecent, sortBy]);
 
   const hasActiveFilters = search || stageFilter !== "全部" || devFilter !== "全部" || onlyRecent;
 
@@ -462,15 +468,26 @@ export default function GameProgressListPage() {
 
             {view === "grid" ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filtered.map((game) => (
+                {filtered.slice(0, visibleCount).map((game) => (
                   <DevProgressCard key={game.id} game={game} view="grid" />
                 ))}
               </div>
             ) : (
               <div className="space-y-2">
-                {filtered.map((game) => (
+                {filtered.slice(0, visibleCount).map((game) => (
                   <DevProgressCard key={game.id} game={game} view="list" />
                 ))}
+              </div>
+            )}
+
+            {filtered.length > visibleCount && (
+              <div className="text-center mt-8">
+                <button
+                  onClick={() => setVisibleCount((c) => c + 12)}
+                  className="px-6 py-2.5 rounded-full bg-[#1E293B] border border-[#334155] text-sm text-[#94A3B8] hover:border-[#06B6D4]/50 hover:text-[#06B6D4] transition-colors duration-200"
+                >
+                  加载更多（剩余 {filtered.length - visibleCount} 个）
+                </button>
               </div>
             )}
           </>
