@@ -283,7 +283,7 @@ function DetailContent() {
                 团队规模
               </p>
               <p className="text-sm font-semibold text-[#F1F5F9]">
-                {game.team_size ? `${game.team_size} 人` : "未知"}
+                {game.team_size && game.team_size > 0 ? `${game.team_size} 人` : "未公开"}
               </p>
             </div>
             <div>

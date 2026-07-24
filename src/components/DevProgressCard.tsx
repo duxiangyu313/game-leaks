@@ -212,7 +212,7 @@ export default function DevProgressCard({ game, compact, view = "grid" }: DevPro
               {formatDate(game.estimated_release_date)}
             </span>
           )}
-          {!compact && game.team_size && (
+          {!compact && game.team_size && game.team_size > 0 && (
             <span className="flex items-center gap-1">
               <Users className="w-3 h-3" />
               {game.team_size}人
