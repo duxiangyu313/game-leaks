@@ -31,6 +31,19 @@ export const MEMBERSHIP_TIERS = {
   },
 } as const;
 
+// ═══ CJ2026 云逛展陪伴团 · 一次性支付产品 ═══
+export const CJ2026_PRICE_CONFIG = {
+  earlyBird: { amount: 990, label: '早鸟 ¥9.9' },    // 单位：分
+  normal: { amount: 1990, label: '正价 ¥19.9' },
+  replay: { amount: 1490, label: '回放 ¥14.9' },
+} as const;
+// ⚠️ 已配置真实 Price ID
+export const CJ2026_STRIPE_PRICE_IDS = {
+  earlyBird: 'price_1Tx11jQ9NyBUwMBMhleRoFc51',
+  normal: 'price_1Tx11jQ9NyBUwMBMkPHv647V',
+  replay: 'price_1Tx11jQ9NyBUwMBMkPHv647V', // 回放期复用正价 ID，后续可新增
+} as const;
+
 export type { MembershipTier };
 
 export const CONTENT_LEVEL_META: Record<ContentLevel, {

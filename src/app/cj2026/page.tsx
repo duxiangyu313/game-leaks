@@ -1,12 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase/client";
+import { supabase, db } from "@/lib/supabase/client";
 import LinkNoPrefetch from "@/components/LinkNoPrefetch";
+import Cj2026Paywall from "@/components/Cj2026Paywall";
+import { getPrice, getEarlyBirdEnd } from "@/lib/cj2026-utils";
 import { BreadcrumbListSchema } from "@/components/StructuredData";
 import {
   Calendar, MapPin, ExternalLink, Clock, Gamepad2,
-  ChevronRight, Play, Users, Monitor, Globe
+  ChevronRight, Play, Users, Monitor, Globe, Sparkles, Shield,
+  Star, Zap, MessageCircle, TrendingUp, Timer
 } from "lucide-react";
 
 // ── CJ 倒计时 Hook（每秒刷新）──
@@ -279,8 +282,13 @@ function BilibiliCard({ bvid, title, desc, live }: { bvid: string | null; title:
 // ── 主页面 ──
 export default function Cj2026Page() {
   const countdown = useCountdown("2026-07-31T09:00:00+08:00");
+  const earlyBirdEnd = getEarlyBirdEnd();
+  const earlyBirdCountdown = useCountdown(earlyBirdEnd.toISOString());
   const [leaks, setLeaks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [buyerCount, setBuyerCount] = useState(0);
+  const [recentBuyers, setRecentBuyers] = useState<string[]>([]);
+  const price = getPrice();
 
   // 拉取 CJ 相关爆料
   useEffect(() => {
@@ -293,6 +301,23 @@ export default function Cj2026Page() {
       .then(({ data }) => {
         setLeaks(data || []);
         setLoading(false);
+      });
+
+    // 拉取购买人数 + 最近购买
+    db
+      .from("cj2026_purchases")
+      .select("email, created_at")
+      .eq("status", "confirmed")
+      .order("created_at", { ascending: false })
+      .then(({ data }: { data: Array<{ email: string; created_at: string }> | null }) => {
+        if (data) {
+          setBuyerCount(data.length);
+          setRecentBuyers(
+            data.slice(0, 5).map((r: { email: string }) =>
+              r.email ? `${r.email.slice(0, 3)}****` : "匿名用户"
+            )
+          );
+        }
       });
   }, []);
 
@@ -361,6 +386,124 @@ export default function Cj2026Page() {
       </section>
 
       <div className="max-w-[1280px] mx-auto px-4 md:px-6 space-y-20">
+        {/* ═══════════ 云逛展陪伴团 · 付费转化卡 ═══════════ */}
+        <section id="cj2026-payment">
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#1A1A2E] via-[#0F172A] to-[#1A1A2E] border border-[#F5A623]/20 shadow-[0_0_60px_rgba(245,166,35,0.05)]">
+            {/* 装饰光晕 */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[#F5A623]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#E94560]/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4" />
+
+            <div className="relative grid grid-cols-1 lg:grid-cols-5 gap-0">
+              {/* 左：权益信息 */}
+              <div className="lg:col-span-3 p-8 md:p-10 flex flex-col justify-center">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F5A623]/15 border border-[#F5A623]/20 text-[#F5A623] text-xs font-semibold mb-4 w-fit">
+                  <Sparkles className="w-3.5 h-3.5" /> 云逛展陪伴团
+                </div>
+                <h2 className="text-3xl md:text-4xl font-black text-[#F1F5F9] mb-3 leading-tight">
+                  去不了现场？<br />
+                  <span className="text-[#F5A623]">我们帮你看。</span>
+                </h2>
+                <p className="text-[#94A3B8] mb-6 max-w-lg">
+                  16款游戏深度评分 + 4天每日速递 + 读者群，一个专栏搞定 CJ2026 所有重点
+                </p>
+
+                {/* 4项权益 */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+                  <div className="flex items-start gap-3 p-3 rounded-xl bg-[#1E293B]/30">
+                    <Star className="w-5 h-5 text-[#F5A623] shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-bold text-[#F1F5F9]">16款游戏评分表</p>
+                      <p className="text-xs text-[#64748B]">5维深度评测，省时避坑</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 p-3 rounded-xl bg-[#1E293B]/30">
+                    <Zap className="w-5 h-5 text-[#06B6D4] shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-bold text-[#F1F5F9]">4天每日速递</p>
+                      <p className="text-xs text-[#64748B]">当天重点提炼，不再信息焦虑</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 p-3 rounded-xl bg-[#1E293B]/30">
+                    <MessageCircle className="w-5 h-5 text-[#10B981] shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-bold text-[#F1F5F9]">读者群</p>
+                      <p className="text-xs text-[#64748B]">和同好聊 CJ，一起云逛展</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 p-3 rounded-xl bg-[#1E293B]/30">
+                    <Shield className="w-5 h-5 text-[#8B5CF6] shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-bold text-[#F1F5F9]">一次购买，永不过期</p>
+                      <p className="text-xs text-[#64748B]">CJ 后可随时回看</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Social Proof */}
+                {buyerCount > 0 && (
+                  <div className="flex items-center gap-2 text-xs text-[#94A3B8] mb-4">
+                    <Users className="w-4 h-4 text-[#F5A623]" />
+                    <span>已有 <strong className="text-[#F5A623]">{buyerCount}</strong> 人加入</span>
+                    {recentBuyers.length > 0 && (
+                      <span className="text-[#64748B]">
+                        · {recentBuyers[0]} 刚刚加入
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* 右：价格 + 购买 */}
+              <div className="lg:col-span-2 p-8 md:p-10 flex flex-col items-center justify-center bg-[#0F172A]/60 border-t lg:border-t-0 lg:border-l border-[rgba(245,166,35,0.1)]">
+                {/* 价格展示 */}
+                <div className="text-center mb-2">
+                  {price.isEarlyBird && (
+                    <div className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#E94560]/15 text-[#E94560] text-[10px] font-bold rounded-full mb-3">
+                      <Timer className="w-3 h-3" /> 早鸟特惠
+                    </div>
+                  )}
+                </div>
+                <div className="text-center mb-2">
+                  <span className="text-5xl md:text-6xl font-black text-[#F1F5F9]">¥{price.amount}</span>
+                  {price.isEarlyBird && (
+                    <span className="text-sm text-[#64748B] line-through ml-2">¥19.9</span>
+                  )}
+                </div>
+                <p className="text-xs text-[#64748B] mb-4">{price.label}</p>
+
+                {/* 早鸟倒计时 */}
+                {price.isEarlyBird && (
+                  <div className="flex items-center gap-1.5 mb-4 text-xs">
+                    <span className="text-[#E94560]">早鸟截止</span>
+                    <span className="text-[#F1F5F9] font-mono font-bold">
+                      {String(earlyBirdCountdown.days).padStart(2, "0")}天
+                      {String(earlyBirdCountdown.hours).padStart(2, "0")}时
+                      {String(earlyBirdCountdown.minutes).padStart(2, "0")}分
+                      {String(earlyBirdCountdown.seconds).padStart(2, "0")}秒
+                    </span>
+                  </div>
+                )}
+
+                {/* 购买按钮 */}
+                <div className="w-full space-y-3">
+                  <a
+                    href="https://buy.stripe.com/test_5kQ28tgsrfWW1Hr57Wdby00"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-full py-3.5 bg-gradient-to-r from-[#F5A623] to-[#F59E0B] text-[#0F172A] text-base font-bold rounded-xl hover:shadow-[0_0_25px_rgba(245,166,35,0.4)] transition-all text-center"
+                  >
+                    立即购买
+                  </a>
+                </div>
+
+                <p className="text-[10px] text-[#475569] mt-3 text-center">
+                  支持支付宝 · 微信支付 · 银行卡 · 一次购买永不过期
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* ═══════════ B站联动区 ═══════════ */}
         <section>
           <div className="flex items-center justify-between mb-6">
@@ -517,6 +660,126 @@ export default function Cj2026Page() {
             </div>
           )}
         </section>
+
+        {/* ═══════════ 付费内容区 ═══════════ */}
+        <Cj2026Paywall onUnlock={() => {
+          const el = document.getElementById("cj2026-payment");
+          el?.scrollIntoView({ behavior: "smooth" });
+        }}>
+          <section id="premium-content">
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-[#F1F5F9] heading-glow">
+                <Sparkles className="w-5 h-5 inline text-[#F5A623] mr-2" />
+                云逛展陪伴团 · 专属内容
+              </h2>
+              <p className="text-sm text-[#64748B] mt-1">16款游戏深度评分 · 4天速递 · 读者群</p>
+            </div>
+
+            <div className="space-y-8">
+              {/* 区块1：评级入口 */}
+              <div className="glass-card p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-[#F5A623]/15 flex items-center justify-center">
+                    <Star className="w-5 h-5 text-[#F5A623]" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-[#F1F5F9]">16款游戏深度评分</h3>
+                    <p className="text-xs text-[#64748B]">画面 · 玩法 · 创新 · 完成度 · 期待值 五维评测</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                  {EXHIBITORS.slice(0, 8).map((g, i) => (
+                    <div key={i} className="p-3 rounded-xl bg-[#1E293B]/20 border border-[rgba(30,41,59,0.4)]">
+                      <p className="text-xs font-bold text-[#F1F5F9] truncate">{g.title}</p>
+                      <div className="flex items-center gap-1 mt-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <div
+                            key={star}
+                            className="w-2.5 h-2.5 rounded-full"
+                            style={{ backgroundColor: star <= (g.tags.length > 2 ? 4 : 3) ? "#F5A623" : "#334155" }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-xs text-[#475569] mt-3 text-center">
+                  评分在 CJ 期间根据试玩/媒体报道实时更新
+                </p>
+              </div>
+
+              {/* 区块2：每日速递入口 */}
+              <div className="glass-card p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-[#06B6D4]/15 flex items-center justify-center">
+                    <Zap className="w-5 h-5 text-[#06B6D4]" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-[#F1F5F9]">4天每日速递</h3>
+                    <p className="text-xs text-[#64748B]">每日重点提炼，不再信息焦虑</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {[
+                    { day: 1, date: "7/31", label: "开幕日" },
+                    { day: 2, date: "8/1", label: "公众日" },
+                    { day: 3, date: "8/2", label: "高峰日" },
+                    { day: 4, date: "8/3", label: "闭幕日" },
+                  ].map((d) => {
+                    const now = new Date();
+                    const publishDate = new Date(`2026-08-0${d.day}T09:00:00+08:00`);
+                    const isAvailable = now >= publishDate;
+                    return (
+                      <LinkNoPrefetch
+                        key={d.day}
+                        href={`/cj2026/day/?d=${d.day}`}
+                        className={`p-4 rounded-xl border transition-all text-center ${
+                          isAvailable
+                            ? "bg-[#1E293B]/20 border-[rgba(245,166,35,0.2)] hover:border-[#F5A623]/40"
+                            : "bg-[#1E293B]/10 border-[rgba(30,41,59,0.3)] opacity-60"
+                        }`}
+                      >
+                        <div className="text-lg font-black text-[#F1F5F9]">Day {d.day}</div>
+                        <div className="text-xs text-[#64748B]">{d.date}</div>
+                        <div className="text-[10px] text-[#475569] mt-1">{d.label}</div>
+                        {isAvailable ? (
+                          <span className="inline-block mt-2 px-2 py-0.5 bg-[#10B981]/15 text-[#10B981] text-[10px] rounded-full">
+                            已发布
+                          </span>
+                        ) : (
+                          <span className="inline-block mt-2 px-2 py-0.5 bg-[#F5A623]/15 text-[#F5A623] text-[10px] rounded-full">
+                            待发布
+                          </span>
+                        )}
+                      </LinkNoPrefetch>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* 区块3：读者群 */}
+              <div className="glass-card p-6 text-center">
+                <div className="w-10 h-10 rounded-xl bg-[#10B981]/15 flex items-center justify-center mx-auto mb-3">
+                  <MessageCircle className="w-5 h-5 text-[#10B981]" />
+                </div>
+                <h3 className="text-lg font-bold text-[#F1F5F9] mb-2">加入读者群</h3>
+                <p className="text-sm text-[#94A3B8] mb-4">
+                  和同好一起聊 CJ，第一时间获取最新速递推送
+                </p>
+                <div className="w-48 h-48 mx-auto mb-3 bg-[#1E293B]/40 rounded-xl border border-dashed border-[#10B981]/20 flex items-center justify-center">
+                  <span className="text-xs text-[#64748B]">
+                    [微信群二维码]
+                    <br />
+                    上传到 public/cj2026/wechat-group-qrcode.png
+                  </span>
+                </div>
+                <p className="text-xs text-[#475569]">
+                  满 200 人后可联系客服手动邀请
+                </p>
+              </div>
+            </div>
+          </section>
+        </Cj2026Paywall>
 
         {/* ═══════════ 底部 CTA ═══════════ */}
         <section className="text-center py-12 glass-card px-6">

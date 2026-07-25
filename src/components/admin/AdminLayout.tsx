@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useAdmin } from "./AdminAuth";
 import {
   LayoutDashboard, FileText, Flame, Gamepad2, Users, CreditCard,
-  LogOut, ChevronLeft, Menu, X, Send, DollarSign, Wallet
+  LogOut, ChevronLeft, Menu, X, Send, DollarSign, Wallet, Calendar
 } from "lucide-react";
 import { useState } from "react";
 import { supabase } from "@/lib/supabase/client";
@@ -20,6 +20,7 @@ const NAV_ITEMS = [
   { icon: CreditCard, label: "订单管理", href: "/admin/orders" },
   { icon: DollarSign, label: "收益管理", href: "/admin/revenue" },
   { icon: Wallet, label: "提现审核", href: "/admin/withdrawals" },
+  { icon: Calendar, label: "CJ2026 订单", href: "/admin/cj2026" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

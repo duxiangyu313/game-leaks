@@ -11,3 +11,7 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
     autoRefreshToken: true,
   },
 });
+
+/** 无类型约束的查询 — 用于新增表（尚未收入 Database 类型）如 cj2026_* */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const db: any = supabase;

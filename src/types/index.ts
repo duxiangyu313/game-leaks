@@ -243,3 +243,63 @@ export interface ReferralRecord {
 export interface PlatformSetting {
   key: string; value: Record<string, unknown>; updatedAt: string;
 }
+
+// ═══ CJ2026 云逛展陪伴团类型 ═══
+export interface Cj2026Purchase {
+  id: string;
+  email: string;
+  amount: number;
+  payment_method: 'stripe' | 'alipay';
+  status: 'pending' | 'confirmed' | 'refunded';
+  stripe_session_id?: string;
+  alipay_transaction_id?: string;
+  notes?: string;
+  created_at: string;
+  confirmed_at?: string;
+  confirmed_by?: string;
+}
+
+export interface Cj2026Rating {
+  id: string;
+  game_name: string;
+  game_slug: string;
+  developer?: string;
+  publisher?: string;
+  genre?: string;
+  cover_url?: string;
+  graphics: number;
+  gameplay: number;
+  innovation: number;
+  completeness: number;
+  hype: number;
+  overall_score: number;
+  recommendation: 'must_play' | 'worth_playing' | 'wait_and_see' | 'skip';
+  summary?: string;
+  review?: string;
+  trial_available: boolean;
+  trial_duration?: string;
+  display_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Cj2026DailyBriefing {
+  id: string;
+  day: number;
+  date: string;
+  title: string;
+  highlights: Cj2026Highlight[];
+  summary?: string;
+  is_published: boolean;
+  publish_at?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Cj2026Highlight {
+  title: string;
+  description: string;
+  image_url: string;
+  game_slug?: string;
+  importance: 'high' | 'medium' | 'low';
+}
