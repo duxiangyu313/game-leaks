@@ -487,7 +487,7 @@ export default function Cj2026Page() {
                 {/* 购买按钮 */}
                 <div className="w-full space-y-3">
                   <a
-                    href="https://buy.stripe.com/test_5kQ28tgsrfWW1Hr57Wdby00"
+                    href={price.isEarlyBird ? "https://buy.stripe.com/test_aFaaEZ6RReSS2LvgQEdby02" : "https://buy.stripe.com/test_3cIdRba433aa99T9ocdby03"}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="block w-full py-3.5 bg-gradient-to-r from-[#F5A623] to-[#F59E0B] text-[#0F172A] text-base font-bold rounded-xl hover:shadow-[0_0_25px_rgba(245,166,35,0.4)] transition-all text-center"
