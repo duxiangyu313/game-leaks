@@ -100,12 +100,12 @@ export default function Cj2026AlipayPage() {
         {/* 收款码区 */}
         <div className="glass-card p-6 mb-6 text-center">
           <p className="text-sm text-[#94A3B8] mb-4">请使用支付宝扫描以下二维码付款</p>
-          <div className="w-48 h-48 mx-auto mb-4 bg-[#1E293B]/40 rounded-xl border border-dashed border-[#F5A623]/20 flex items-center justify-center">
-            <span className="text-xs text-[#64748B]">
-              [支付宝收款码]
-              <br />
-              需手动上传到 public/cj2026/alipay-qrcode.png
-            </span>
+          <div className="w-48 h-48 mx-auto mb-4 rounded-xl overflow-hidden border-2 border-[#F5A623]/30">
+            <img
+              src="/cj2026/alipay-qrcode.jpg"
+              alt="支付宝收款码"
+              className="w-full h-full object-cover"
+            />
           </div>
           <div className="text-sm text-[#F1F5F9] font-mono bg-[#1E293B]/40 rounded-lg py-2 px-4 inline-block">
             账号：待配置

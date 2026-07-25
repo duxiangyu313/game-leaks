@@ -766,12 +766,12 @@ export default function Cj2026Page() {
                 <p className="text-sm text-[#94A3B8] mb-4">
                   和同好一起聊 CJ，第一时间获取最新速递推送
                 </p>
-                <div className="w-48 h-48 mx-auto mb-3 bg-[#1E293B]/40 rounded-xl border border-dashed border-[#10B981]/20 flex items-center justify-center">
-                  <span className="text-xs text-[#64748B]">
-                    [微信群二维码]
-                    <br />
-                    上传到 public/cj2026/wechat-group-qrcode.png
-                  </span>
+                <div className="w-48 h-48 mx-auto mb-3 rounded-xl overflow-hidden border-2 border-[#10B981]/30">
+                  <img
+                    src="/cj2026/wechat-group-qrcode.jpg"
+                    alt="微信群二维码"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <p className="text-xs text-[#475569]">
                   满 200 人后可联系客服手动邀请
