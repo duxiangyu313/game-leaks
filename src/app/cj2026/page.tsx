@@ -486,18 +486,16 @@ export default function Cj2026Page() {
 
                 {/* 购买按钮 */}
                 <div className="w-full space-y-3">
-                  <a
-                    href={price.isEarlyBird ? "https://buy.stripe.com/test_aFaaEZ6RReSS2LvgQEdby02" : "https://buy.stripe.com/test_3cIdRba433aa99T9ocdby03"}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <LinkNoPrefetch
+                    href="/cj2026/pay/"
                     className="block w-full py-3.5 bg-gradient-to-r from-[#F5A623] to-[#F59E0B] text-[#0F172A] text-base font-bold rounded-xl hover:shadow-[0_0_25px_rgba(245,166,35,0.4)] transition-all text-center"
                   >
                     立即购买
-                  </a>
+                  </LinkNoPrefetch>
                 </div>
 
                 <p className="text-[10px] text-[#475569] mt-3 text-center">
-                  支持支付宝 · 微信支付 · 银行卡 · 一次购买永不过期
+                  支持微信支付 · 支付宝 · 一次购买永不过期
                 </p>
               </div>
             </div>

@@ -121,6 +121,12 @@
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>https://news.guoyouwenduji.cc/cj2026/pay/</loc>
+    <lastmod>2026-07-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://news.guoyouwenduji.cc/cj2026/success/</loc>
     <lastmod>2026-07-25</lastmod>
     <changefreq>weekly</changefreq>
