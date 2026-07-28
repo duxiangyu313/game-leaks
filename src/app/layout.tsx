@@ -70,7 +70,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <RecoveryRedirect />
         <ClientLayout>
           <Navbar />
-          <main className="flex-1">{children}</main>
+          <main className="flex-1">
+            {/* SEO: h1 必须在 RSC Suspense 边界之外才能被 Bingbot 看到。
+                Next.js 静态导出会把 {children} 放入 <div hidden>，
+                Bingbot 不执行 JS，只读取可见静态 HTML。 */}
+            <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-6 md:pt-8 pb-2">
+              <h1 className="text-lg md:text-2xl font-bold text-[#F1F5F9] text-center">
+                国游爆料 · 国产3A游戏资讯平台
+              </h1>
+              <p className="text-xs md:text-sm text-[#94A3B8] text-center mt-1">
+                追踪黑神话悟空、影之刃零、归唐等国产大作最新动态
+              </p>
+            </div>
+            {children}
+          </main>
           <Footer />
         </ClientLayout>
       </body>

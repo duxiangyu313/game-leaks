@@ -34,15 +34,6 @@ const MemberStatsBar = dynamic(() => import("@/components/MemberStatsBar"));
 export default function Home() {
   return (
     <div className="pt-16 relative cyber-scanline-bg" suppressHydrationWarning>
-      {/* SEO: 可见 h1 页面主标题 — 放在 Hero 上方作为页面内容的首要标识 */}
-      <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-6 md:pt-8 pb-2">
-        <h1 className="text-lg md:text-2xl font-bold text-[#F1F5F9] text-center">
-          国产3A游戏资讯平台
-        </h1>
-        <p className="text-xs md:text-sm text-[#94A3B8] text-center mt-1">
-          追踪黑神话悟空、影之刃零、归唐等国产大作最新动态
-        </p>
-      </div>
       {/* 宣传片 — 首次访问全屏动画 */}
       <PromoHeroWrapper />
 
