@@ -29,30 +29,45 @@ export default function AdminCj2026OrdersPage() {
 
   async function handleConfirm(orderId: string) {
     setConfirming(orderId);
-    const { data: { user } } = await supabase.auth.getUser();
-    await db
-      .from("cj2026_purchases")
-      .update({
-        status: "confirmed",
-        confirmed_at: new Date().toISOString(),
-        confirmed_by: user?.email || "admin",
-      })
-      .eq("id", orderId);
-    setOrders((prev) =>
-      prev.map((o) =>
-        o.id === orderId
-          ? { ...o, status: "confirmed", confirmed_at: new Date().toISOString(), confirmed_by: user?.email || "admin" }
-          : o
-      )
-    );
-    setConfirming(null);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      const { error: updateError } = await db
+        .from("cj2026_purchases")
+        .update({
+          status: "confirmed",
+          confirmed_at: new Date().toISOString(),
+          confirmed_by: user?.email || "admin",
+        })
+        .eq("id", orderId);
 
-    // 写入管理日志
-    await supabase.from("admin_logs").insert({
-      action: "confirm_cj2026_order",
-      detail: orderId,
-      user_id: user?.id,
-    });
+      if (updateError) {
+        alert("确认失败: " + (updateError.message || JSON.stringify(updateError)));
+        setConfirming(null);
+        return;
+      }
+
+      setOrders((prev) =>
+        prev.map((o) =>
+          o.id === orderId
+            ? { ...o, status: "confirmed" as const, confirmed_at: new Date().toISOString(), confirmed_by: user?.email || "admin" }
+            : o
+        )
+      );
+
+      // 写入管理日志（可选，失败不阻塞）
+      try {
+        await supabase.from("admin_logs").insert({
+          action: "confirm_cj2026_order",
+          detail: orderId,
+          user_id: user?.id || null,
+        });
+      } catch {}
+
+      setConfirming(null);
+    } catch (err: any) {
+      alert("确认失败: " + (err?.message || "未知错误"));
+      setConfirming(null);
+    }
   }
 
   const stats = {
@@ -115,9 +130,9 @@ export default function AdminCj2026OrdersPage() {
                 <tr>
                   <th className="text-left p-3 text-[#94A3B8] text-xs">邮箱</th>
                   <th className="text-left p-3 text-[#94A3B8] text-xs">金额</th>
-                  <th className="text-left p-3 text-[#94A3B8] text-xs hidden md:table-cell">支付方式</th>
+                  <th className="text-left p-3 text-[#94A3B8] text-xs hidden md:table-cell">付款时间</th>
                   <th className="text-left p-3 text-[#94A3B8] text-xs">状态</th>
-                  <th className="text-left p-3 text-[#94A3B8] text-xs hidden md:table-cell">时间</th>
+                  <th className="text-left p-3 text-[#94A3B8] text-xs hidden md:table-cell">提交时间</th>
                   <th className="text-right p-3 text-[#94A3B8] text-xs">操作</th>
                 </tr>
               </thead>
@@ -128,9 +143,11 @@ export default function AdminCj2026OrdersPage() {
                   return (
                     <tr key={o.id} className="border-t border-[rgba(30,41,59,0.3)]">
                       <td className="p-3 text-[#F1F5F9] text-xs">{o.email}</td>
-                      <td className="p-3 text-[#F1F5F9] font-semibold">¥{Number(o.amount).toFixed(2)}</td>
+                      <td className="p-3 text-[#10B981] font-bold">¥{Number(o.amount).toFixed(2)}</td>
                       <td className="p-3 text-[#94A3B8] text-xs hidden md:table-cell">
-                        {o.payment_method === "stripe" ? "Stripe" : "支付宝"}
+                        {o.notes?.includes("付款时间:")
+                          ? o.notes.split("付款时间:")[1]?.trim()
+                          : "—"}
                       </td>
                       <td className="p-3">
                         <span className={`inline-flex items-center gap-1 px-2 py-0.5 text-[10px] rounded-full ${sc.color}`}>
@@ -138,10 +155,10 @@ export default function AdminCj2026OrdersPage() {
                         </span>
                       </td>
                       <td className="p-3 text-[#64748B] text-xs hidden md:table-cell">
-                        {new Date(o.created_at).toLocaleDateString("zh-CN")}
+                        {new Date(o.created_at).toLocaleString("zh-CN")}
                       </td>
                       <td className="p-3 text-right">
-                        {o.status === "pending" && o.payment_method === "alipay" && (
+                        {o.status === "pending" && (
                           <button
                             onClick={() => handleConfirm(o.id)}
                             disabled={confirming === o.id}

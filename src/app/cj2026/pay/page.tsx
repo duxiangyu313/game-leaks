@@ -22,7 +22,13 @@ export default function Cj2026PayPage() {
     setError("");
 
     if (!email || !email.includes("@")) {
-      setError("请输入有效的邮箱地址，用于接收开通通知");
+      setError("请输入有效的邮箱地址");
+      return;
+    }
+
+    const payTimeInput = (document.getElementById("payTime") as HTMLInputElement)?.value;
+    if (!payTimeInput) {
+      setError("请填写付款时间");
       return;
     }
 
@@ -32,7 +38,7 @@ export default function Cj2026PayPage() {
       amount: price.amount,
       payment_method: "wechat",
       status: "pending",
-      notes: `用户自主提交 · ${price.label}`,
+      notes: `${price.label} | 付款时间: ${payTimeInput}`,
     });
 
     if (insertError) {
@@ -92,9 +98,11 @@ export default function Cj2026PayPage() {
           <div className="glass-card p-6 text-center">
             <div className="text-sm font-bold text-[#10B981] mb-3">微信支付</div>
             <div className="w-48 h-48 mx-auto mb-3 rounded-xl overflow-hidden border-2 border-[#10B981]/30">
-              <div className="w-full h-full bg-[#1E293B]/40 flex items-center justify-center text-xs text-[#64748B]">
-                请上传微信收款码到<br/>public/cj2026/wechat-pay-qrcode.jpg
-              </div>
+              <img
+                src="/cj2026/wechat-pay-qrcode.jpg"
+                alt="微信收款码"
+                className="w-full h-full object-cover"
+              />
             </div>
             <div className="text-2xl font-black text-[#F1F5F9]">¥{price.amount}</div>
             <div className="text-xs text-[#64748B] mt-1">{price.label}</div>
@@ -117,8 +125,8 @@ export default function Cj2026PayPage() {
 
         {/* 提交表单 */}
         <form onSubmit={handleSubmit} className="glass-card p-6 max-w-md mx-auto space-y-4">
-          <h3 className="text-lg font-bold text-[#F1F5F9]">付款后请填写邮箱</h3>
-          <p className="text-xs text-[#64748B]">用于接收开通通知和找回购买记录</p>
+          <h3 className="text-lg font-bold text-[#F1F5F9]">付款后请填写以下信息</h3>
+          <p className="text-xs text-[#64748B]">用于核对收款记录，请如实填写</p>
 
           <div>
             <label className="block text-xs text-[#94A3B8] mb-1.5">邮箱地址 *</label>
@@ -133,6 +141,30 @@ export default function Cj2026PayPage() {
                 className="w-full pl-9 pr-3 py-2.5 bg-[#1E293B] border border-[rgba(30,41,59,0.8)] text-[#F1F5F9] text-sm rounded-lg focus:outline-none focus:border-[#F5A623]/30 placeholder:text-[#475569]"
               />
             </div>
+          </div>
+
+          <div>
+            <label className="block text-xs text-[#94A3B8] mb-1.5">付款金额 *（请精确填写）</label>
+            <input
+              type="text"
+              value={`¥${price.amount}`}
+              readOnly
+              className="w-full px-3 py-2.5 bg-[#0F172A] border border-[#10B981]/30 text-[#10B981] text-sm font-bold rounded-lg cursor-default"
+            />
+            <p className="text-xs text-[#475569] mt-1">
+              请确认你支付了 <span className="text-[#F5A623] font-semibold">¥{price.amount}</span>，管理员会核对金额
+            </p>
+          </div>
+
+          <div>
+            <label className="block text-xs text-[#94A3B8] mb-1.5">付款时间 *</label>
+            <input
+              type="datetime-local"
+              id="payTime"
+              required
+              className="w-full px-3 py-2.5 bg-[#1E293B] border border-[rgba(30,41,59,0.8)] text-[#F1F5F9] text-sm rounded-lg focus:outline-none focus:border-[#F5A623]/30"
+              defaultValue={new Date().toISOString().slice(0, 16)}
+            />
           </div>
 
           {error && (

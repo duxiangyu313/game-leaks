@@ -41,6 +41,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://gumpxfxbxxyljikaizsh.supabase.co" crossOrigin="anonymous" />
         {/* 🖼️ 预加载首页数据 — 让 LCP 更快 */}
         <link rel="prefetch" href="/homepage-cache.json" as="fetch" crossOrigin="anonymous" />
+        {/* 🌐 SEO: 显式声明 charset（覆盖 Next.js 静态导出可能产生的 charSet 非标准属性） */}
+        <meta charset="utf-8" />
         {/* 📱 移动端 viewport 优化 */}
         <meta name="format-detection" content="telephone=no" />
         <meta name="theme-color" content="#0F172A" />
