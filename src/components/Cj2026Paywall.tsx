@@ -110,7 +110,7 @@ export default function Cj2026Paywall({ children, onUnlock }: Cj2026PaywallProps
             解锁 CJ2026 专属内容
           </h3>
           <p className="text-sm text-[#94A3B8] mb-4">
-            16款游戏深度评分 · 4天每日速递 · 读者群
+            4天每日速递 · 读者群 · CJ总结报告
           </p>
 
           {!showRecover ? (

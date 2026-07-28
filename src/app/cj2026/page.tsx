@@ -464,18 +464,11 @@ export default function Cj2026Page() {
                   <span className="text-[#F5A623]">我们帮你看。</span>
                 </h2>
                 <p className="text-[#94A3B8] mb-6 max-w-lg">
-                  16款游戏深度评分 + 4天每日速递 + 读者群，一个专栏搞定 CJ2026 所有重点
+                  4天每日速递 + 读者群 + 总结报告，¥{price.amount} 搞定 CJ2026 所有重点
                 </p>
 
-                {/* 4项权益 */}
+                {/* 权益说明 */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-                  <div className="flex items-start gap-3 p-3 rounded-xl bg-[#1E293B]/30">
-                    <Star className="w-5 h-5 text-[#F5A623] shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-sm font-bold text-[#F1F5F9]">16款游戏评分表</p>
-                      <p className="text-xs text-[#64748B]">5维深度评测，省时避坑</p>
-                    </div>
-                  </div>
                   <div className="flex items-start gap-3 p-3 rounded-xl bg-[#1E293B]/30">
                     <Zap className="w-5 h-5 text-[#06B6D4] shrink-0 mt-0.5" />
                     <div>
@@ -495,6 +488,13 @@ export default function Cj2026Page() {
                     <div>
                       <p className="text-sm font-bold text-[#F1F5F9]">一次购买，永不过期</p>
                       <p className="text-xs text-[#64748B]">CJ 后可随时回看</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 p-3 rounded-xl bg-[#1E293B]/30 border border-[#10B981]/20 bg-[#10B981]/5">
+                    <Star className="w-5 h-5 text-[#10B981] shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-bold text-[#10B981]">16款游戏评分表</p>
+                      <p className="text-xs text-[#64748B]">免费查看 · 无需购买</p>
                     </div>
                   </div>
                 </div>
@@ -719,7 +719,93 @@ export default function Cj2026Page() {
           )}
         </section>
 
-        {/* ═══════════ 付费内容区 ═══════════ */}
+        {/* ═══════════ 免费：16款游戏评分表 ═══════════ */}
+        <section id="ratings" className="mb-8">
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-[#F1F5F9] heading-glow">
+              <Star className="w-5 h-5 inline text-[#F5A623] mr-2" />
+              16款游戏深度评分
+            </h2>
+            <p className="text-sm text-[#64748B] mt-1">
+              画面 · 玩法 · 创新 · 完成度 · 期待值 五维评测 · 免费查看 · 综合均分
+            </p>
+          </div>
+
+          <div className="glass-card p-6">
+            {/* 评分标准说明 */}
+            <div className="mb-5 p-4 rounded-xl bg-[#1E293B]/30 border border-[rgba(245,166,35,0.1)]">
+              <p className="text-xs font-bold text-[#F5A623] mb-2">📐 评分标准</p>
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-2 text-[10px] text-[#94A3B8]">
+                <div><span className="text-[#F1F5F9]">画面</span>：美术风格·光影渲染·场景细节</div>
+                <div><span className="text-[#F1F5F9]">玩法</span>：操作手感·战斗系统·可玩深度</div>
+                <div><span className="text-[#F1F5F9]">创新</span>：题材突破·机制创新·叙事手法</div>
+                <div><span className="text-[#F1F5F9]">完成度</span>：优化状态·体量·打磨程度</div>
+                <div><span className="text-[#F1F5F9]">期待值</span>：热度·口碑·行业意义</div>
+              </div>
+              <div className="flex gap-3 mt-2 text-[10px]">
+                <span className="text-[#10B981]">9-10 标杆级</span>
+                <span className="text-[#F5A623]">7-8 优秀</span>
+                <span className="text-[#64748B]">5-6 合格</span>
+                <span className="text-[#E94560]">1-4 缺陷</span>
+              </div>
+            </div>
+
+            {/* 评分排行榜 */}
+            <div className="space-y-2">
+              {ratings.length === 0 ? (
+                <p className="text-xs text-[#64748B] text-center py-4">评分数据加载中...</p>
+              ) : (
+                ratings.filter((r: any) => r.recommendation === 'must_play').map((r: any) => (
+                  <div key={r.id} className="p-4 rounded-xl bg-[#1E293B]/20 border border-[#F5A623]/20 hover:border-[#F5A623]/40 transition-all">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-bold text-[#F1F5F9]">{r.game_name}</span>
+                        <span className="px-1.5 py-0.5 bg-[#E94560]/15 text-[#E94560] text-[10px] rounded font-bold">必玩</span>
+                      </div>
+                      <span className="text-lg font-black text-[#F5A623]">{r.overall_score}</span>
+                    </div>
+                    <div className="flex gap-3 text-[10px] text-[#64748B] mb-2">
+                      <span>画面 {r.graphics}</span><span>玩法 {r.gameplay}</span><span>创新 {r.innovation}</span><span>完成度 {r.completeness}</span><span>期待 {r.hype}</span>
+                    </div>
+                    <p className="text-xs text-[#94A3B8] leading-relaxed">{r.summary}</p>
+                  </div>
+                ))
+              )}
+              {ratings.filter((r: any) => r.recommendation === 'worth_playing').slice(0, 5).map((r: any) => (
+                <div key={r.id} className="p-3 rounded-xl bg-[#1E293B]/20 border border-[rgba(30,41,59,0.4)] flex items-center justify-between">
+                  <div>
+                    <span className="text-xs font-bold text-[#F1F5F9]">{r.game_name}</span>
+                    <span className="ml-2 px-1 py-0.5 bg-[#F5A623]/10 text-[#F5A623] text-[9px] rounded">值得玩</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-[10px] text-[#64748B]">{r.summary?.slice(0, 40)}...</span>
+                    <span className="text-sm font-bold text-[#F5A623]">{r.overall_score}</span>
+                  </div>
+                </div>
+              ))}
+              {ratings.filter((r: any) => r.recommendation === 'wait_and_see').length > 0 && (
+                <details className="mt-2">
+                  <summary className="text-[10px] text-[#64748B] cursor-pointer hover:text-[#94A3B8]">
+                    展开剩余 {ratings.filter((r: any) => r.recommendation === 'wait_and_see').length} 款「观望」游戏
+                  </summary>
+                  <div className="space-y-1 mt-2">
+                    {ratings.filter((r: any) => r.recommendation === 'wait_and_see').map((r: any) => (
+                      <div key={r.id} className="flex items-center justify-between px-3 py-1.5 rounded bg-[#1E293B]/10 text-xs">
+                        <span className="text-[#94A3B8]">{r.game_name}</span>
+                        <span className="text-[#64748B]">{r.overall_score}</span>
+                      </div>
+                    ))}
+                  </div>
+                </details>
+              )}
+            </div>
+            <p className="text-[10px] text-[#475569] mt-4 text-center">
+              评分依据已公开实机/试玩反馈/媒体评测 · CJ期间根据现场体验实时更新
+            </p>
+          </div>
+        </section>
+
+        {/* ═══════════ 付费：每日速递 + 读者群 ═══════════ */}
         <Cj2026Paywall onUnlock={() => {
           const el = document.getElementById("cj2026-payment");
           el?.scrollIntoView({ behavior: "smooth" });
@@ -730,97 +816,11 @@ export default function Cj2026Page() {
                 <Sparkles className="w-5 h-5 inline text-[#F5A623] mr-2" />
                 云逛展陪伴团 · 专属内容
               </h2>
-              <p className="text-sm text-[#64748B] mt-1">16款游戏深度评分 · 4天速递 · 读者群</p>
+              <p className="text-sm text-[#64748B] mt-1">4天每日速递 · 读者群 · 总结报告</p>
             </div>
 
             <div className="space-y-8">
-              {/* 区块1：评判标准 + 排行榜 */}
-              <div className="glass-card p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-[#F5A623]/15 flex items-center justify-center">
-                    <Star className="w-5 h-5 text-[#F5A623]" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-[#F1F5F9]">16款游戏深度评分</h3>
-                    <p className="text-xs text-[#64748B]">
-                      画面 · 玩法 · 创新 · 完成度 · 期待值 五维评测 · 综合均分
-                    </p>
-                  </div>
-                </div>
-
-                {/* 评分标准说明 */}
-                <div className="mb-5 p-4 rounded-xl bg-[#1E293B]/30 border border-[rgba(245,166,35,0.1)]">
-                  <p className="text-xs font-bold text-[#F5A623] mb-2">📐 评分标准</p>
-                  <div className="grid grid-cols-2 md:grid-cols-5 gap-2 text-[10px] text-[#94A3B8]">
-                    <div><span className="text-[#F1F5F9]">画面</span>：美术风格·光影渲染·场景细节</div>
-                    <div><span className="text-[#F1F5F9]">玩法</span>：操作手感·战斗系统·可玩深度</div>
-                    <div><span className="text-[#F1F5F9]">创新</span>：题材突破·机制创新·叙事手法</div>
-                    <div><span className="text-[#F1F5F9]">完成度</span>：优化状态·体量·打磨程度</div>
-                    <div><span className="text-[#F1F5F9]">期待值</span>：热度·口碑·行业意义</div>
-                  </div>
-                  <div className="flex gap-3 mt-2 text-[10px]">
-                    <span className="text-[#10B981]">9-10 标杆级</span>
-                    <span className="text-[#F5A623]">7-8 优秀</span>
-                    <span className="text-[#64748B]">5-6 合格</span>
-                    <span className="text-[#E94560]">1-4 缺陷</span>
-                  </div>
-                </div>
-
-                {/* 评分排行榜 */}
-                <div className="space-y-2">
-                  {ratings.length === 0 ? (
-                    <p className="text-xs text-[#64748B] text-center py-4">评分数据加载中...</p>
-                  ) : (
-                    ratings.filter((r: any) => r.recommendation === 'must_play').map((r: any) => (
-                      <div key={r.id} className="p-4 rounded-xl bg-[#1E293B]/20 border border-[#F5A623]/20 hover:border-[#F5A623]/40 transition-all">
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm font-bold text-[#F1F5F9]">{r.game_name}</span>
-                            <span className="px-1.5 py-0.5 bg-[#E94560]/15 text-[#E94560] text-[10px] rounded font-bold">必玩</span>
-                          </div>
-                          <span className="text-lg font-black text-[#F5A623]">{r.overall_score}</span>
-                        </div>
-                        <div className="flex gap-3 text-[10px] text-[#64748B] mb-2">
-                          <span>画面 {r.graphics}</span><span>玩法 {r.gameplay}</span><span>创新 {r.innovation}</span><span>完成度 {r.completeness}</span><span>期待 {r.hype}</span>
-                        </div>
-                        <p className="text-xs text-[#94A3B8] leading-relaxed">{r.summary}</p>
-                      </div>
-                    ))
-                  )}
-                  {ratings.filter((r: any) => r.recommendation === 'worth_playing').slice(0, 5).map((r: any) => (
-                    <div key={r.id} className="p-3 rounded-xl bg-[#1E293B]/20 border border-[rgba(30,41,59,0.4)] flex items-center justify-between">
-                      <div>
-                        <span className="text-xs font-bold text-[#F1F5F9]">{r.game_name}</span>
-                        <span className="ml-2 px-1 py-0.5 bg-[#F5A623]/10 text-[#F5A623] text-[9px] rounded">值得玩</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <span className="text-[10px] text-[#64748B]">{r.summary?.slice(0, 40)}...</span>
-                        <span className="text-sm font-bold text-[#F5A623]">{r.overall_score}</span>
-                      </div>
-                    </div>
-                  ))}
-                  {ratings.filter((r: any) => r.recommendation === 'wait_and_see').length > 0 && (
-                    <details className="mt-2">
-                      <summary className="text-[10px] text-[#64748B] cursor-pointer hover:text-[#94A3B8]">
-                        展开剩余 {ratings.filter((r: any) => r.recommendation === 'wait_and_see').length} 款「观望」游戏
-                      </summary>
-                      <div className="space-y-1 mt-2">
-                        {ratings.filter((r: any) => r.recommendation === 'wait_and_see').map((r: any) => (
-                          <div key={r.id} className="flex items-center justify-between px-3 py-1.5 rounded bg-[#1E293B]/10 text-xs">
-                            <span className="text-[#94A3B8]">{r.game_name}</span>
-                            <span className="text-[#64748B]">{r.overall_score}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </details>
-                  )}
-                </div>
-                <p className="text-[10px] text-[#475569] mt-4 text-center">
-                  评分依据已公开实机/试玩反馈/媒体评测 · CJ期间根据现场体验实时更新
-                </p>
-              </div>
-
-              {/* 区块2：每日速递入口 */}
+              {/* 每日速递入口 */}
               <div className="glass-card p-6">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 rounded-xl bg-[#06B6D4]/15 flex items-center justify-center">
