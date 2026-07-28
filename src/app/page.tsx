@@ -34,8 +34,10 @@ const MemberStatsBar = dynamic(() => import("@/components/MemberStatsBar"));
 export default function Home() {
   return (
     <div className="pt-16 relative cyber-scanline-bg" suppressHydrationWarning>
-      {/* SEO: Bingbot 不执行 JS，h1 必须在静态 HTML 源码中（不能放动态导入组件里） */}
-      <h1 className="sr-only">国游爆料 · 国产3A游戏资讯平台 — 追踪黑神话悟空、影之刃零、归唐等国产3A大作最新动态</h1>
+      {/* SEO: 可见的 h1，Bing 会忽略 sr-only 隐藏标题 */}
+      <h1 className="text-center text-xs md:text-sm text-[#94A3B8] font-normal tracking-wide mb-2 md:mb-3">
+        国产3A游戏资讯平台 — 追踪黑神话悟空、影之刃零、归唐等大作最新动态
+      </h1>
       {/* 宣传片 — 首次访问全屏动画 */}
       <PromoHeroWrapper />
 
