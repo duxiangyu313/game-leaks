@@ -39,6 +39,5 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           personal_token: ${{ secrets.DEPLOY_TOKEN }}
-          external_repository: duxiangyu313/game-leaks-news
           publish_dir: ./live
           cname: news.guoyouwenduji.cc
