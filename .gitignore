@@ -46,5 +46,6 @@ deploy/
 build_out/
 _next/
 !live/_next/
+live/dev/
 dist/
 publish/
