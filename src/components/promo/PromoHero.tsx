@@ -18,9 +18,12 @@ interface PromoHeroProps {
   onComplete?: () => void;
 }
 
+const PROMO_STORAGE_KEY = "promo-hero-seen-v1";
+
 /**
  * 宣传片触发条件：
- *  - 未登录 → 每次进入首页都播
+ *  - 已看过（localStorage）→ 跳过
+ *  - 未登录 → 首次播放，看完后记录
  *  - 管理员 → 每次进入都播
  *  - 已登录非管理员 → 跳过
  *
@@ -39,6 +42,7 @@ export default function PromoHero({ onComplete }: PromoHeroProps) {
 
   const finish = useCallback(() => {
     setVisible(false);
+    try { localStorage.setItem(PROMO_STORAGE_KEY, "true"); } catch {}
     window.setTimeout(() => onComplete?.(), 600);
   }, [onComplete]);
 
@@ -50,7 +54,7 @@ export default function PromoHero({ onComplete }: PromoHeroProps) {
     setCurrentScene((s) => Math.max(s - 1, 0));
   }, []);
 
-  // —— 初始化：auth 检查 + reduced-motion ——
+  // —— 初始化：localStorage + auth 检查 + reduced-motion ——
   useEffect(() => {
     setMounted(true);
 
@@ -58,6 +62,16 @@ export default function PromoHero({ onComplete }: PromoHeroProps) {
     setReducedMotion(mq.matches);
     const handleMq = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
     mq.addEventListener?.("change", handleMq);
+
+    // 检查 localStorage：已看过则跳过
+    try {
+      if (localStorage.getItem(PROMO_STORAGE_KEY) === "true") {
+        setVisible(false);
+        setAuthChecking(false);
+        onComplete?.();
+        return () => { mq.removeEventListener?.("change", handleMq); };
+      }
+    } catch {}
 
     let cancelled = false;
     (async () => {
@@ -68,7 +82,7 @@ export default function PromoHero({ onComplete }: PromoHeroProps) {
         if (cancelled) return;
 
         if (!user) {
-          // 未登录 → 播放
+          // 未登录 → 播放（首次）
         } else {
           const adminEmails = (process.env.NEXT_PUBLIC_ADMIN_EMAILS || "")
             .split(",").map((e) => e.trim().toLowerCase());
@@ -78,6 +92,8 @@ export default function PromoHero({ onComplete }: PromoHeroProps) {
             onComplete?.();
             return;
           }
+          // 管理员 → 每次播放，清除 localStorage 标记
+          try { localStorage.removeItem(PROMO_STORAGE_KEY); } catch {}
         }
       } catch {
         // 异常降级为播放
