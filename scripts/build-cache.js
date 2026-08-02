@@ -194,7 +194,7 @@ async function main() {
       // Fallback: 尝试 site_stats VIEW 获取 member count
       supabase
         .from("site_stats")
-        .select("total_members")
+        .select("total_users")
         .single(),
       supabase
         .from("games")
@@ -225,7 +225,7 @@ async function main() {
       .limit(3);
     if (featuredReviews?.length) cache["featuredReviews"] = featuredReviews;
 
-    const memberCount = membersCount || (siteStats?.total_members ?? 0);
+    const memberCount = membersCount || (siteStats?.total_users ?? 0);
     cache["stats"] = {
       games: gamesCount || 0,
       leaks: leaksCount || 0,

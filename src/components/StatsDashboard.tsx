@@ -36,13 +36,13 @@ export default function StatsDashboard() {
       supabase.from("leaks").select("id", { count: "exact", head: true }).eq("status", "published"),
       supabase.from("profiles").select("id", { count: "exact", head: true }),
       // Fallback: 如果 profiles RLS 阻止匿名计数，尝试 site_stats VIEW
-      supabase.from("site_stats").select("total_members").single(),
+      supabase.from("site_stats").select("total_users").single(),
       supabase.from("games").select("id,title,hype_score").order("hype_score", { ascending: false }).limit(3),
       supabase.from("games").select("id,title,rating").not("rating", "is", null).order("rating", { ascending: false }).limit(3),
     ]).then(([{ count: games }, { count: leaks }, { count: members }, siteStats, { data: hype }, { data: rated }]) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const siteStatsData = (siteStats as any)?.data;
-      const memberCount = members || siteStatsData?.total_members || 0;
+      const memberCount = members || siteStatsData?.total_users || 0;
       const result: StatsData = {
         stats: { games: games || 0, leaks: leaks || 0, members: memberCount },
         topHype: hype || [],
