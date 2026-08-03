@@ -18,7 +18,6 @@ const PromoHeroWrapper = dynamic(() => import("@/components/promo/PromoHeroWrapp
 const HeroWrapper = dynamic(() => import("@/components/HeroWrapper"), {
   loading: () => <div className="h-[420px] md:h-[520px] bg-[#0F172A] animate-pulse rounded-2xl" />,
 });
-const FreeTrialBanner = dynamic(() => import("@/components/FreeTrialBanner"));
 const CjBanner = dynamic(() => import("@/components/CjBanner"));
 const CyberParticles = dynamic(() => import("@/components/cyber/CyberParticles"));
 
@@ -48,7 +47,6 @@ export default function Home() {
 
 
       <div className="relative z-10">
-        <FreeTrialBanner />
         <CjBanner />
         {/* 邮件订阅 — 首页顶部 */}
         <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-4 md:pt-6">
