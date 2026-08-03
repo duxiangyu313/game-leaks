@@ -33,8 +33,7 @@ const FeaturedProgress = dynamic(() => import("@/components/FeaturedProgress"));
 const HotDiscussions = dynamic(() => import("@/components/HotDiscussions"));
 const VideoSection = dynamic(() => import("@/components/VideoSection"));
 const StatsDashboard = dynamic(() => import("@/components/StatsDashboard"));
-const MemberPromo = dynamic(() => import("@/components/MemberPromo"));
-const MemberStatsBar = dynamic(() => import("@/components/MemberStatsBar"));
+
 
 export default function Home() {
   return (
@@ -81,9 +80,8 @@ export default function Home() {
           <div className="mt-4 flex justify-end"><LastUpdated /></div>
         </div>
         <div className="lazy-section max-w-[1280px] mx-auto px-4 md:px-6 pt-8 md:pt-12">
-          <MemberStatsBar />
         </div>
-        <div className="lazy-section max-w-[1280px] mx-auto px-4 md:px-6 pt-8 md:pt-16 pb-12 md:pb-20"><MemberPromo /></div>
+
       </div>
     </div>
   );

@@ -112,9 +112,6 @@ export default function Navbar() {
               <LinkNoPrefetch href="/auth" className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-sm text-[#94A3B8] hover:text-[#F1F5F9] hover:bg-[#1E293B]/50 rounded-lg transition-all">
                 <User className="w-4 h-4" /> 登录
               </LinkNoPrefetch>
-              <LinkNoPrefetch href="/member" className="hidden sm:flex items-center gap-1.5 px-4 py-1.5 text-sm font-medium bg-gradient-to-r from-[#F5A623] to-[#D4891A] text-white rounded-lg hover:shadow-[0_0_20px_rgba(245,166,35,0.3)] transition-all">
-                <Crown className="w-3.5 h-3.5" /> 加入会员
-              </LinkNoPrefetch>
             </>
           )}
 
@@ -149,7 +146,6 @@ export default function Navbar() {
               ) : (
                 <>
                   <LinkNoPrefetch href="/auth" className="flex-1 text-center py-2 text-sm text-[#94A3B8] border border-[rgba(30,41,59,0.6)] rounded-lg" onClick={() => setOpen(false)}>登录</LinkNoPrefetch>
-                  <LinkNoPrefetch href="/member" className="flex-1 text-center py-2 text-sm font-medium bg-gradient-to-r from-[#F5A623] to-[#D4891A] text-white rounded-lg" onClick={() => setOpen(false)}>加入会员</LinkNoPrefetch>
                 </>
               )}
             </div>
