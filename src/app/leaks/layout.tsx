@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "爆料专区 · 国产3A游戏最新传闻官方确认独家爆料 · 国游爆料",
+  title: "爆料专区 · 国产3A游戏最新传闻官方确认独家爆料",
   description: "国游爆料专区汇集最新国产3A游戏爆料与传闻，追踪影之刃零、归唐、湮灭之潮、黑神话悟空等大作的开发动态、发售消息、实机演示与官方确认。汇集开发者访谈、行业内部消息与玩家分析，做你追踪国产3A的第一信源。",
   alternates: { canonical: "/leaks/" },
   openGraph: {

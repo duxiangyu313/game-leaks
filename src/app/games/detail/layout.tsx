@@ -4,7 +4,7 @@ import SEOPreloadScript from "@/components/SEOPreloadScript";
 export const metadata: Metadata = {
   title: "游戏详情 · 国产3A游戏介绍评测配置要求攻略预购 · 国游爆料",
   description: "国游爆料游戏详情页面，提供黑神话悟空、影之刃零、归唐、湮灭之潮、燕云十六声等国产3A游戏的详细介绍、专业评测、配置要求、发售日期、DLC信息、价格对比、玩家评论与最新动态，一站式了解每款国产大作的全部信息。",
-  alternates: { canonical: "" },
+  alternates: { canonical: "/games/detail/" },
   openGraph: {
     title: "游戏详情 · 国产3A游戏介绍评测配置攻略 · 国游爆料",
     description: "国游爆料游戏详情页面，提供黑神话悟空、影之刃零、归唐、湮灭之潮、燕云十六声等国产3A游戏的详细介绍、专业评测、配置要求、发售日期、DLC信息、价格对比、玩家评论与最新动态，一站式了解每款国产大作的全部信息。",

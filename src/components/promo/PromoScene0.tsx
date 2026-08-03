@@ -36,7 +36,7 @@ export default function PromoScene0({ active }: PromoScene0Props) {
         </motion.p>
 
         {/* 第二行：大字震撼 */}
-        <motion.h1
+        <motion.h2
           initial={{ opacity: 0, scale: 0.7, filter: "blur(16px)" }}
           animate={
             active
@@ -48,7 +48,7 @@ export default function PromoScene0({ active }: PromoScene0Props) {
           style={{ textShadow: "0 0 60px rgba(34, 211, 238, 0.5), 0 0 120px rgba(34, 211, 238, 0.2)" }}
         >
           情报中枢
-        </motion.h1>
+        </motion.h2>
 
         {/* 第三行：副标题 */}
         <motion.p

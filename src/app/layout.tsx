@@ -51,6 +51,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
         <meta name="baidu-site-verification" content="codeva-E9bFTKckBU" />
         <meta name="msvalidate.01" content="09B719C5C652DCD06D86E1EC550A1FE4" />
+        <meta name="indexnow" content="indexnow" />
         {/* 🔒 CSP — 防 XSS，静态导出用 meta 标签实现 */}
         <meta httpEquiv="Content-Security-Policy" content={
           "default-src 'self'; " +
