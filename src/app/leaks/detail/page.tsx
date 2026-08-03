@@ -12,9 +12,20 @@ import { BreadcrumbListSchema, NewsArticleSchema } from "@/components/Structured
 
 export default function LeakDetailPage() {
   return (
-    <Suspense fallback={<div className="pt-24 pb-20"><div className="max-w-3xl mx-auto px-4"><div className="animate-pulse space-y-4"><div className="h-8 w-64 bg-[#1E293B]/40 rounded" /><div className="h-64 bg-[#1E293B]/20 rounded-2xl" /></div></div></div>}>
-      <LeakDetailContent />
-    </Suspense>
+    <div className="pt-24 pb-20">
+      <div className="max-w-3xl mx-auto px-4">
+        <h1 id="seo-fallback-title" className="text-2xl font-bold text-[#F1F5F9] mb-4">爆料详情 · 国产3A游戏最新传闻官方确认消息 · 国游爆料</h1>
+        <p id="seo-fallback-desc" className="text-[#94A3B8] text-sm mb-6">国游爆料详情 — 黑神话悟空、影之刃零、归唐、湮灭之潮、燕云十六声等国产3A游戏的最新传闻、官方确认消息与独家爆料。</p>
+        <Suspense fallback={
+          <div className="animate-pulse space-y-4">
+            <div className="h-8 w-64 bg-[#1E293B]/40 rounded" />
+            <div className="h-64 bg-[#1E293B]/20 rounded-2xl" />
+          </div>
+        }>
+          <LeakDetailContent />
+        </Suspense>
+      </div>
+    </div>
   );
 }
 

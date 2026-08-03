@@ -84,5 +84,13 @@ function CompareContent() {
 }
 
 export default function ComparePage() {
-  return <Suspense><CompareContent /></Suspense>;
+  return (
+    <div className="pt-20 pb-20">
+      <div className="max-w-7xl mx-auto px-4 md:px-6">
+        <h1 className="text-2xl font-bold text-[#F1F5F9] mb-2">游戏对比 · 国产3A游戏参数配置画面对比评测</h1>
+        <p className="text-sm text-[#94A3B8] mb-6">对比黑神话悟空、影之刃零、归唐、湮灭之潮等国产3A游戏的开发商、发售日期、配置要求、平台等参数。</p>
+        <Suspense><CompareContent /></Suspense>
+      </div>
+    </div>
+  );
 }

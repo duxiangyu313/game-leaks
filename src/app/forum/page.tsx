@@ -6,8 +6,8 @@ import ForumLiveStats from "@/components/ForumLiveStats";
 import ForumCategoryCards from "@/components/ForumCategoryCards";
 
 export const metadata: Metadata = {
-  title: "论坛",
-  description: "国产3A游戏玩家社区 - 讨论游戏攻略、分享心得、交流爆料",
+  title: "社区论坛 · 国产3A游戏玩家讨论交流社区与攻略爆料",
+  description: "国游爆料玩家社区论坛，汇集黑神话悟空、影之刃零、归唐、湮灭之潮等国产3A游戏讨论。分享攻略心得、交流爆料信息、组队开黑，与热爱国产游戏的玩家一起互动。",
   alternates: { canonical: "/forum/" },
 };
 

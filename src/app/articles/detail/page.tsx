@@ -248,8 +248,23 @@ function DetailContent() {
 
 export default function ArticleDetailPage() {
   return (
-    <Suspense fallback={<div className="pt-20 pb-20 flex justify-center"><Loader2 className="w-6 h-6 text-[#06B6D4] animate-spin" /></div>}>
-      <DetailContent />
-    </Suspense>
+    <div className="pt-20 pb-20">
+      <div className="max-w-3xl mx-auto px-4">
+        <h1 id="seo-fallback-title" className="text-2xl font-bold text-[#F1F5F9] mb-4">文章详情 · 国产3A游戏深度解析评测爆料 · 国游爆料</h1>
+        <p id="seo-fallback-desc" className="text-[#94A3B8] text-sm mb-6">国游爆料文章详情 — 黑神话悟空、影之刃零、归唐、湮灭之潮、燕云十六声、百面千相等国产3A游戏的深度解析、评测、爆料与行业观察。</p>
+        <Suspense fallback={
+          <div className="animate-pulse space-y-4">
+            <div className="h-8 w-48 bg-[#1E293B]/30 rounded" />
+            <div className="h-64 bg-[#1E293B]/20 rounded-xl" />
+            <div className="h-8 w-3/4 bg-[#1E293B]/30 rounded" />
+            <div className="h-4 w-full bg-[#1E293B]/20 rounded" />
+            <div className="h-4 w-5/6 bg-[#1E293B]/20 rounded" />
+            <div className="h-4 w-4/6 bg-[#1E293B]/20 rounded" />
+          </div>
+        }>
+          <DetailContent />
+        </Suspense>
+      </div>
+    </div>
   );
 }

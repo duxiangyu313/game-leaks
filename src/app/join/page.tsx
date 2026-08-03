@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { PenLine, Search, Video, Users, Heart, Mail } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "加入我们",
-  description: "加入国游爆料团队 — 内容作者、资讯编辑、视频剪辑、社群运营招募中",
+  title: "加入我们 - 国游爆料国产3A游戏内容编辑/视频剪辑/社群运营招募",
+  description: "加入国游爆料与国游温度计创作团队，我们正在招募内容作者、资讯编辑、视频剪辑师与社群运营等兼职远程岗位，为你提供国产3A大作的一线资讯接触机会、原创作品曝光渠道、灵活协作方式与游戏测试福利，欢迎热爱国产游戏、熟悉B站抖音生态的伙伴投递简历与作品集。",
   alternates: { canonical: "/join/" },
 };
 

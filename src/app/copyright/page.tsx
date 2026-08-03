@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "版权声明",
-  description: "国游爆料版权声明 — 原创内容保护、游戏素材归属、付费内容防盗说明",
+  title: "版权声明 - 国游爆料国产3A游戏原创内容保护与付费素材授权",
+  description: "国游爆料版权声明明确原创文章、独家爆料、数据图表、分析视频等付费内容的版权归属，规范第三方授权转载申请流程、付费内容图片水印与用户ID的版权追溯机制、用户投稿作品的授权展示范围，以及游戏厂商官方素材的合理使用原则、侵权举报处理流程与法律责任界定。",
   alternates: { canonical: "/copyright/" },
 };
 

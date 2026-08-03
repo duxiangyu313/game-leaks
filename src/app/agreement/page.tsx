@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "用户协议",
-  description: "国游爆料用户协议 — 注册、会员、发帖规则与平台权责说明",
+  title: "用户协议 - 国游爆料国产3A游戏社区账号注册与会员服务条款",
+  description: "国游爆料用户协议全面说明平台账号注册与安全管理规则、会员等级与订阅扣费机制、新用户赠送活动限制条件、社区发帖与评论规范、付费内容的保护措施、禁止复制转发转卖等违规行为的具体情形，以及平台权责说明、服务变更条款和争议解决方式，账号仅限本人使用不得转让，注册或使用前请仔细阅读。",
   alternates: { canonical: "/agreement/" },
 };
 

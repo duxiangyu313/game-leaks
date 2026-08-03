@@ -1,7 +1,12 @@
 import dynamic from "next/dynamic";
+import type { Metadata } from "next";
 import LastUpdated from "@/components/LastUpdated";
 import LiveSignal from "@/components/LiveSignal";
 import EmailSubscribe from "@/components/EmailSubscribe";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 // ClickSpark 点击火花 — 全局点击反馈
 const ClickSparkWrapper = dynamic(() => import("@/components/ui/react-bits/ClickSparkWrapper"));
@@ -48,6 +53,8 @@ export default function Home() {
         <CjBanner />
         {/* 邮件订阅 — 首页顶部 */}
         <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-4 md:pt-6">
+          <h1 className="text-xl md:text-2xl font-bold text-[#F1F5F9] mb-2">国游爆料 · 国产3A游戏资讯平台</h1>
+          <p className="text-sm text-[#94A3B8] mb-4">追踪黑神话悟空、影之刃零、归唐、湮灭之潮等国产3A大作最新动态。深度解析、独家爆料、游戏评测、玩家社区。</p>
           <EmailSubscribe compact />
         </div>
 

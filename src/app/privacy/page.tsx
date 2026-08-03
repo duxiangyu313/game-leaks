@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "隐私政策",
-  description: "国游爆料隐私政策 — 信息收集、数据存储、用户权利说明",
+  title: "隐私政策 - 国游爆料国产3A游戏平台用户数据保护与Cookie说明",
+  description: "国游爆料隐私政策详细说明我们如何收集、使用、存储和保护你的个人信息，内容涵盖注册邮箱与昵称的用途、Stripe支付安全保障、浏览器Cookie与本地存储机制、付费内容图片水印的版权追溯用途，以及用户依法享有的查阅、更正、删除个人数据和取消邮件订阅等各项权利。",
   alternates: { canonical: "/privacy/" },
 };
 

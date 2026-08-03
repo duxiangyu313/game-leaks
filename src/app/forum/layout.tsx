@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "玩家论坛",
+  title: "社区论坛 · 国产3A游戏玩家讨论交流社区 · 国游爆料",
   description: "国产3A游戏玩家社区 — 黑神话、影之刃零、归唐、湮灭之潮讨论区。攻略交流、爆料分享、组队交友。",
   alternates: { canonical: "/forum/" },
   openGraph: {
-    title: "玩家论坛 · 国游爆料",
+    title: "社区论坛 · 国产3A游戏玩家讨论交流社区 · 国游爆料",
     description: "国产3A游戏玩家社区 — 黑神话、影之刃零、归唐、湮灭之潮讨论区。攻略交流、爆料分享、组队交友。",
     url: "https://news.guoyouwenduji.cc/forum/",
     siteName: "国游爆料",
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "玩家论坛 · 国游爆料",
+    title: "社区论坛 · 国产3A游戏玩家讨论交流社区 · 国游爆料",
     description: "国产3A游戏玩家社区 — 黑神话、影之刃零、归唐、湮灭之潮讨论区。攻略交流、爆料分享、组队交友。",
     images: ["https://news.guoyouwenduji.cc/og-image.png"],
   },

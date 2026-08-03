@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "广告合作",
-  description: "国游爆料专注国产3A游戏领域，覆盖主机/PC硬核玩家群体。欢迎游戏厂商、硬件品牌洽谈图文推广、视频合作、游戏激活码派发、定制内容。",
+  title: "广告合作 - 国游爆料国产3A游戏/黑神话悟空/影之刃零品牌推广",
+  description: "国游爆料专注国产3A游戏领域，覆盖主机与PC硬核玩家群体。欢迎游戏厂商、硬件品牌、外设厂商洽谈图文推广、视频合作、游戏激活码派发、定制内容与活动赞助等多元化合作，精准触达国产游戏核心受众。",
   alternates: { canonical: "/advertise/" },
 };
 

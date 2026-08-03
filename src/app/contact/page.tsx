@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Mail, MessageCircle, Send, Users } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "联系我们",
-  description: "联系国游爆料 — 客服支持、广告合作、内容投稿、意见反馈",
+  title: "联系我们 - 国游爆料国产3A游戏资讯合作与玩家反馈通道",
+  description: "联系国游爆料团队获取全方位的帮助与服务支持，包括账号登录与安全问题、会员等级与续费咨询、Stripe支付疑问、广告商务合作洽谈、国产3A游戏原创内容投稿、匿名爆料通道提交以及B站微博等社交媒体关注方式，我们一般会在二十四到四十八小时内邮件回复。",
   alternates: { canonical: "/contact/" },
 };
 

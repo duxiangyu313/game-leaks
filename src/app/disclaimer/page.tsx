@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "免责声明",
-  description: "国游爆料免责声明 — 爆料信息来源说明、内容责任界定、侵权处理流程",
+  title: "免责声明 - 国游爆料国产3A游戏爆料信息来源与责任界定",
+  description: "国游爆料免责声明说明本站发布的游戏爆料与行业消息均来源于海内外公开讨论、匿名投稿、招聘信息、财报资料及官方宣传物料的整合分析，未经游戏厂商官方最终证实，仅供玩家娱乐参考，不构成任何形式的消费建议、投资建议或具有法律效力的承诺，实际信息请以厂商官方公告为准。",
   alternates: { canonical: "/disclaimer/" },
 };
 
