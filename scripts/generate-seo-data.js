@@ -32,6 +32,7 @@ function loadEnv(filePath) {
 }
 
 loadEnv(path.join(__dirname, "..", ".env.local"));
+loadEnv(path.join(__dirname, "..", ".env.production"));
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;

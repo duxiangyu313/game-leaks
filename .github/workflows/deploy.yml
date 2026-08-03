@@ -19,19 +19,9 @@ jobs:
       - run: npm ci
 
       - name: Build cache
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-          NEXT_PUBLIC_BAIDU_TONGJI_ID: ${{ secrets.BAIDU_TONGJI_ID || '' }}
-          NEXT_PUBLIC_GA_MEASUREMENT_ID: ${{ secrets.GA_MEASUREMENT_ID || '' }}
         run: node scripts/build-cache.js
 
       - name: Build
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-          NEXT_PUBLIC_BAIDU_TONGJI_ID: ${{ secrets.BAIDU_TONGJI_ID || '' }}
-          NEXT_PUBLIC_GA_MEASUREMENT_ID: ${{ secrets.GA_MEASUREMENT_ID || '' }}
         run: npx next build
 
       - name: Fix RSC
