@@ -8,7 +8,6 @@ const FOOTER_LINKS = {
     { label: "爆料专区", href: "/leaks" },
     { label: "深度解析", href: "/analysis" },
     { label: "论坛", href: "/forum" },
-    { label: "邮件订阅", href: "/subscribe" },
   ],
   关于: [
     { label: "关于我们", href: "/about" },

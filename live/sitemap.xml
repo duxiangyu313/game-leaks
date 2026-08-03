@@ -523,6 +523,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://news.guoyouwenduji.cc/games/detail/?id=773b6c67-a1fd-4bc3-9044-8d4a54367072</loc>
+    <lastmod>2026-06-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://news.guoyouwenduji.cc/games/detail/?id=9ba771f7-cf39-4de0-882e-0d9290b0dced</loc>
     <lastmod>2026-06-02</lastmod>
     <changefreq>weekly</changefreq>
@@ -543,12 +549,6 @@
   <url>
     <loc>https://news.guoyouwenduji.cc/games/detail/?id=a257f57e-a2a7-4d10-bcba-3e7b99ce2110</loc>
     <lastmod>2026-06-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://news.guoyouwenduji.cc/games/detail/?id=773b6c67-a1fd-4bc3-9044-8d4a54367072</loc>
-    <lastmod>2026-06-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -1341,6 +1341,36 @@
   <url>
     <loc>https://news.guoyouwenduji.cc/leaks/detail/?id=637f043d-4b55-4e19-b8f4-4faa6d6e7956</loc>
     <lastmod>2026-07-31</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://news.guoyouwenduji.cc/leaks/detail/?id=19428735-da74-46d8-972e-6f43ad8a235f</loc>
+    <lastmod>2026-08-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://news.guoyouwenduji.cc/leaks/detail/?id=2986b7e8-17c1-47a9-82f6-cb4b1695324a</loc>
+    <lastmod>2026-08-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://news.guoyouwenduji.cc/leaks/detail/?id=83825b69-e253-4054-b457-e39a6a6c05db</loc>
+    <lastmod>2026-08-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://news.guoyouwenduji.cc/leaks/detail/?id=dec894aa-128b-4d5c-b7aa-6e256b416911</loc>
+    <lastmod>2026-08-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://news.guoyouwenduji.cc/leaks/detail/?id=39c6baa8-8379-495c-8874-29b8b51dc16b</loc>
+    <lastmod>2026-08-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
