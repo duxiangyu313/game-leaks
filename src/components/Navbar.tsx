@@ -17,6 +17,7 @@ const NAV_LINKS = [
   { href: "/submit", label: "投稿" },
   { href: "/calendar", label: "日历" },
   { href: "/videos", label: "视频" },
+  { href: "/tools", label: "工具" },
   { href: "/member", label: "会员" },
 ];
 
