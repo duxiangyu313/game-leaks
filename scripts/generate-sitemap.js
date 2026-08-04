@@ -38,7 +38,6 @@ const PAGES = [
   { url: "/member/", priority: "0.8", changefreq: "weekly" },
   { url: "/submit/", priority: "0.6", changefreq: "weekly" },
   { url: "/claim/", priority: "0.6", changefreq: "weekly" },
-  { url: "/auth/", priority: "0.3", changefreq: "monthly" },
   { url: "/about/", priority: "0.4", changefreq: "monthly" },
   { url: "/contact/", priority: "0.3", changefreq: "monthly" },
   { url: "/cj2026/", priority: "0.9", changefreq: "daily" },
@@ -47,7 +46,7 @@ const PAGES = [
 ];
 
 // 不应出现在 sitemap 中的路径前缀
-const EXCLUDED_PREFIXES = ["/admin/", "/auth/", "/account/", "/member/", "/404", "/_not-found/"];
+const EXCLUDED_PREFIXES = ["/admin/", "/auth/", "/account/", "/member/", "/404", "/_not-found/", "/cj2026/pay/", "/cj2026/alipay/", "/cj2026/success/"];
 
 function isExcluded(url) {
   return EXCLUDED_PREFIXES.some(p => url.startsWith(p));

@@ -108,3 +108,44 @@ export function NewsArticleSchema({ title, description, datePublished, author, u
   };
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />;
 }
+
+/** FAQ 结构化数据 — 抢占搜索结果 FAQ 富媒体卡片 */
+export function FAQSchema({ items }: {
+  items: { question: string; answer: string }[];
+}) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+  };
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />;
+}
+
+/** 展会/活动结构化数据 — 命中「chinajoy 2026 时间/地点/门票」类查询 */
+export function EventSchema({ name, description, startDate, endDate, locationName, locationAddress, url, image }: {
+  name: string; description: string; startDate: string; endDate: string;
+  locationName: string; locationAddress?: string; url?: string; image?: string;
+}) {
+  const jsonLd: any = {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    name,
+    description,
+    startDate,
+    endDate,
+    eventStatus: "https://schema.org/EventScheduled",
+    location: {
+      "@type": "Place",
+      name: locationName,
+      address: locationAddress || locationName,
+    },
+    organizer: { "@type": "Organization", name: "ChinaJoy 组委会" },
+  };
+  if (url) jsonLd.url = url;
+  if (image) jsonLd.image = [image];
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />;
+}

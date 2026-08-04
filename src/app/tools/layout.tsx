@@ -1,4 +1,11 @@
 import LinkNoPrefetch from "@/components/LinkNoPrefetch";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "实用工具 · 国产3A游戏配置检测与参数查询",
+  description: "国游爆料实用工具箱，为国产3A游戏玩家提供电脑配置检测、游戏配置需求查询等实用工具，帮助判断黑神话悟空、影之刃零、归唐、湮灭之潮等国产大作在您设备上的运行表现，快速获得游玩前的硬件建议与参数参考。",
+  alternates: { canonical: "/tools/" },
+};
 
 export default function ToolsLayout({ children }: { children: React.ReactNode }) {
   return (

@@ -5,7 +5,7 @@ import { supabase, db } from "@/lib/supabase/client";
 import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import Cj2026Paywall from "@/components/Cj2026Paywall";
 import { getPrice, getEarlyBirdEnd } from "@/lib/cj2026-utils";
-import { BreadcrumbListSchema } from "@/components/StructuredData";
+import { BreadcrumbListSchema, FAQSchema, EventSchema } from "@/components/StructuredData";
 import {
   Calendar, MapPin, ExternalLink, Clock, Gamepad2,
   ChevronRight, Play, Users, Monitor, Globe, Sparkles, Shield,
@@ -285,6 +285,34 @@ const BILIBILI_VIDEOS = [
   },
 ];
 
+// ── FAQ 数据（覆盖 Bing 长尾搜索词：chinajoy 2026 时间/地点/门票/试玩/参展名单）──
+const FAQ_ITEMS = [
+  {
+    question: "ChinaJoy 2026 什么时候举办？在哪里？",
+    answer: "ChinaJoy 2026（第二十三届中国国际数码互动娱乐展览会）于 2026 年 7 月 31 日至 8 月 3 日在上海新国际博览中心举办，本届主题为「与AI同游」，近 900 家企业参展、展出超 1000 款游戏。",
+  },
+  {
+    question: "ChinaJoy 2026 有哪些国产3A游戏参展？",
+    answer: "已确认参展的国产 PC/主机游戏包括：影之刃零（PlayStation 展台）、一盏秋声：锦衣卫（N1G001 索尼/N1G102 顺网）、猿公剑（N1G102 顺网）、抵抗者（N1-G201）、古神：风里希（N1-G102）、湮灭之潮、归唐（网易雷火）、古剑（上海烛龙）、黑神话：钟馗（游戏科学）、九阴真经 UE5（蜗牛）等，另有 88 款国产独立游戏集中展出。",
+  },
+  {
+    question: "影之刃零在 ChinaJoy 2026 哪个展台？可以试玩吗？",
+    answer: "影之刃零在 PlayStation 展台提供现场试玩。该作已于 7 月 23 日获批版号，定于 10 月 29 日全球发售，是本届 CJ 最受关注的国产买断制 3A 之一。",
+  },
+  {
+    question: "ChinaJoy 2026 有哪些游戏提供现场试玩？",
+    answer: "提供试玩的重点游戏包括：影之刃零、锦衣卫、猿公剑（15 分钟限时 BOSS 挑战赛）、抵抗者（首次公开线下试玩）、坦克世界：征程（N2-05 首曝试玩）、古神：风里希（刑天 BOSS 限时挑战）、异环（完美世界展台）、代号：对决（N3-08）、雾影猎人（N4-05）等。暴雪展台（N3-03）还有暗黑破坏神、魔兽世界、守望先锋等经典 IP 展示。",
+  },
+  {
+    question: "ChinaJoy 2026 门票怎么买？多少钱？",
+    answer: "ChinaJoy 2026 门票通过官方渠道（ChinaJoy 官网及官方小程序）发售，设超级早鸟票、早鸟票和普通票多档价格，超级早鸟票 7 月 8 日开售。单日普通票价格通常在百元左右，具体以官方购票页面为准。",
+  },
+  {
+    question: "去不了现场，哪里能看 ChinaJoy 2026 的报道？",
+    answer: "可以关注 B站账号「国游温度计」获取 CJ2026 现场视频报道，也可以加入本站的「云逛展陪伴团」，获取 4 天每日速递、读者群讨论和总结报告。",
+  },
+];
+
 // ── B站视频卡片 ──
 function BilibiliCard({ bvid, title, desc, live }: { bvid: string | null; title: string; desc: string; live: boolean }) {
   return (
@@ -382,6 +410,8 @@ export default function Cj2026Page() {
   }, []);
 
   const isLive = countdown.days === 0 && countdown.hours === 0 && countdown.minutes === 0 && countdown.seconds === 0;
+  // CJ 已于 8/3 17:00 闭幕 — 闭幕后将倒计时区切换为「已闭幕」状态，避免页面永远卡在「正在直播」
+  const isEnded = Date.now() > new Date("2026-08-03T17:00:00+08:00").getTime();
 
   return (
     <div className="pt-20 pb-20">
@@ -389,6 +419,17 @@ export default function Cj2026Page() {
         { name: "首页", url: "https://news.guoyouwenduji.cc/" },
         { name: "ChinaJoy 2026", url: "https://news.guoyouwenduji.cc/cj2026/" },
       ]} />
+      <EventSchema
+        name="ChinaJoy 2026 中国国际数码互动娱乐展览会"
+        description="ChinaJoy 2026 于 2026年7月31日至8月3日在上海新国际博览中心举办，主题「与AI同游」。影之刃零、锦衣卫、猿公剑、抵抗者、归唐、黑神话：钟馗等国产3A游戏参展并提供现场试玩。"
+        startDate="2026-07-31T09:00:00+08:00"
+        endDate="2026-08-03T17:00:00+08:00"
+        locationName="上海新国际博览中心"
+        locationAddress="上海市浦东新区龙阳路2345号"
+        url="https://news.guoyouwenduji.cc/cj2026/"
+        image="https://news.guoyouwenduji.cc/og-image.png"
+      />
+      <FAQSchema items={FAQ_ITEMS} />
 
       {/* ═══════════ HERO ═══════════ */}
       <section className="relative overflow-hidden mb-16">
@@ -401,15 +442,25 @@ export default function Cj2026Page() {
             ChinaJoy 2026
           </h1>
           <p className="text-xl md:text-2xl text-[#F5A623] font-bold mb-2">
-            国产3A 试玩指南
+            国产3A 参展阵容与试玩指南
           </p>
-          <p className="text-[#94A3B8] max-w-xl mx-auto mb-8 text-sm md:text-base">
+          <p className="text-[#94A3B8] max-w-xl mx-auto mb-4 text-sm md:text-base">
             近900家企业超1000款游戏 · 主题"与AI同游"
+          </p>
+          <p className="text-[#64748B] max-w-2xl mx-auto mb-8 text-xs md:text-sm leading-relaxed">
+            ChinaJoy 2026 于 7月31日-8月3日 在上海新国际博览中心举行。本页汇总 CJ2026 完整参展游戏名单、展台位置、现场试玩信息与每日看点：影之刃零、一盏秋声：锦衣卫、猿公剑、抵抗者、归唐、古剑、黑神话：钟馗等国产3A集中亮相，另有 88 款国产独立游戏参展。
           </p>
 
           {/* 倒计时 */}
           <div className="flex items-center justify-center gap-3 md:gap-5 mb-8">
-            {isLive ? (
+            {isEnded ? (
+              <div className="text-center">
+                <div className="text-2xl md:text-4xl font-black text-[#F5A623] mb-2">
+                  ✅ CJ2026 已圆满闭幕
+                </div>
+                <p className="text-sm text-[#94A3B8]">全程报道与试玩评测持续更新中 · 关注 B站 @国游温度计</p>
+              </div>
+            ) : isLive ? (
               <div className="text-3xl md:text-5xl font-black text-[#E94560] animate-pulse">
                 🔴 正在直播！
               </div>
@@ -892,6 +943,28 @@ export default function Cj2026Page() {
             </div>
           </section>
         </Cj2026Paywall>
+
+        {/* ═══════════ 常见问题 FAQ（SEO 长尾词覆盖） ═══════════ */}
+        <section id="faq">
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-[#F1F5F9] heading-glow">
+              <MessageCircle className="w-5 h-5 inline text-[#06B6D4] mr-2" />
+              ChinaJoy 2026 常见问题
+            </h2>
+            <p className="text-sm text-[#64748B] mt-1">时间地点 · 参展名单 · 试玩信息 · 门票购买</p>
+          </div>
+          <div className="space-y-3">
+            {FAQ_ITEMS.map((f, i) => (
+              <details key={i} className="glass-card p-5 group" open={i === 0}>
+                <summary className="flex items-center justify-between cursor-pointer text-sm font-bold text-[#F1F5F9] group-open:text-[#F5A623] transition-colors list-none">
+                  <h3 className="text-sm font-bold">{f.question}</h3>
+                  <ChevronRight className="w-4 h-4 shrink-0 ml-3 text-[#64748B] group-open:rotate-90 transition-transform" />
+                </summary>
+                <p className="mt-3 text-sm text-[#94A3B8] leading-relaxed">{f.answer}</p>
+              </details>
+            ))}
+          </div>
+        </section>
 
         {/* ═══════════ 底部 CTA ═══════════ */}
         <section className="text-center py-12 glass-card px-6">

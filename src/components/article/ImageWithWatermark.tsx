@@ -21,16 +21,25 @@ export default function ImageWithWatermark({ src, alt, onClick, className = "" }
 
   if (!src) return null;
 
+  // 生成 WebP 备用 URL（.jpg/.png → .webp）
+  const webpSrc = useMemo(() => {
+    if (!src) return null;
+    return src.replace(/\.(jpg|jpeg|png)(\?.*)?$/i, ".webp$2");
+  }, [src]);
+
   return (
     <span className="relative inline-block group max-w-full">
-      {/* eslint-disable-next-line @next/next/no-img-element -- static export */}
-      <img
-        src={src}
-        alt={alt}
-        loading="lazy"
-        onClick={onClick}
-        className={`rounded-xl max-w-full h-auto cursor-zoom-in ${className}`}
-      />
+      <picture>
+        {webpSrc && <source srcSet={webpSrc} type="image/webp" />}
+        {/* eslint-disable-next-line @next/next/no-img-element -- static export */}
+        <img
+          src={src}
+          alt={alt}
+          loading="lazy"
+          onClick={onClick}
+          className={`rounded-xl max-w-full h-auto cursor-zoom-in ${className}`}
+        />
+      </picture>
       {/* CSS 水印叠加层 */}
       <span
         className="absolute inset-0 pointer-events-none rounded-xl overflow-hidden opacity-[0.05] select-none"

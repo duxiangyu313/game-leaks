@@ -4,7 +4,11 @@ Disallow: /admin/
 Disallow: /auth/
 Disallow: /account/
 Disallow: /api/
-Disallow: /member/
-Disallow: /trial/
+Disallow: /member/success/
+Disallow: /member/cancel/
+Disallow: /member/alipay-confirm/
+Disallow: /cj2026/pay/
+Disallow: /cj2026/alipay/
+Disallow: /cj2026/success/
 
 Sitemap: https://news.guoyouwenduji.cc/sitemap.xml
