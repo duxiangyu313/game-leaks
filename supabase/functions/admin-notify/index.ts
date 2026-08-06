@@ -14,6 +14,8 @@ const RESEND_API = "https://api.resend.com/emails";
 const ADMIN_EMAIL = "1852779947@qq.com";
 // 优先用环境变量，否则用 Resend 测试发件人（无需域名验证，不会被静默丢弃）
 const FROM = Deno.env.get("NOTIFY_FROM") || "国游温度计 <onboarding@resend.dev>";
+// 兜底发件人：Resend 官方共享域名，永远无需验证
+const FALLBACK_FROM = "国游温度计 <onboarding@resend.dev>";
 const WEBHOOK_SECRET = "admin-notify-wh-20260718";
 
 interface NotifyPayload {
@@ -97,24 +99,43 @@ serve(async (req) => {
 </body>
 </html>`;
 
-    const res = await fetch(RESEND_API, {
+    const send = (from: string) => fetch(RESEND_API, {
       method: "POST",
       headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` },
-      body: JSON.stringify({ from: FROM, to: [ADMIN_EMAIL], subject, html }),
+      body: JSON.stringify({ from, to: [ADMIN_EMAIL], subject, html }),
     });
+
+    let usedFrom = FROM;
+    let res = await send(FROM);
+
+    // 域名未验证（Resend 403 validation_error）时，自动降级到官方共享发件人重试一次，
+    // 避免因 NOTIFY_FROM 配置了未验证域名而导致通知全线静默失效
+    if (!res.ok && FROM !== FALLBACK_FROM) {
+      const firstErr = await res.text();
+      if (res.status === 403 || firstErr.includes("not verified")) {
+        console.warn(`[admin-notify] FROM "${FROM}" 被拒(${res.status})，降级到 ${FALLBACK_FROM} 重试。原因: ${firstErr.slice(0, 160)}`);
+        usedFrom = FALLBACK_FROM;
+        res = await send(FALLBACK_FROM);
+      } else {
+        console.error("[admin-notify] Resend error:", firstErr);
+        return new Response(JSON.stringify({ sent: false, from: FROM, error: firstErr.slice(0, 300) }), {
+          status: 502, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+        });
+      }
+    }
 
     if (!res.ok) {
       const errText = await res.text();
-      console.error("[admin-notify] Resend error:", errText);
-      return new Response(JSON.stringify({ sent: false, error: errText.slice(0, 200) }), {
+      console.error("[admin-notify] Resend error (after fallback):", errText);
+      return new Response(JSON.stringify({ sent: false, from: usedFrom, error: errText.slice(0, 300) }), {
         status: 502, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
       });
     }
 
     const result = await res.json();
-    console.log(`[admin-notify] ${payload.type}: ${payload.title} → sent to ${ADMIN_EMAIL}`);
+    console.log(`[admin-notify] ${payload.type}: ${payload.title} → sent to ${ADMIN_EMAIL} (from: ${usedFrom})`);
 
-    return new Response(JSON.stringify({ sent: true, id: (result as any)?.id }), {
+    return new Response(JSON.stringify({ sent: true, from: usedFrom, id: (result as any)?.id }), {
       headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
     });
 

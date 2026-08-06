@@ -6,6 +6,10 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/forum/new/",
   },
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function ForumNewLayout({

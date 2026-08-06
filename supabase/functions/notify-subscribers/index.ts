@@ -108,31 +108,37 @@ serve(async (req) => {
       });
     }
 
-    // Query gold + diamond users
+    // Query gold + diamond users — 直接从 profiles.email 拿邮箱
+    // 背景：当前 Supabase 项目 auth.users 的 PostgREST 元数据炸了，
+    // 走 supabase.auth.admin.listUsers() 必定 500 "range not found"，
+    // 所以改读 profiles.email（由 on_auth_user_email_sync 触发器自动同步）。
+    // 会员有效性以 membership 等级为准，不看 subscription_status。
     const { data: users, error: userErr } = await supabase
       .from("profiles")
-      .select("id, membership")
+      .select("id, membership, email")
       .in("membership", ["gold", "diamond"])
-      .eq("subscription_status", "active");
+      .not("email", "is", null);
 
-    if (userErr || !users || users.length === 0) {
+    if (userErr) {
       return new Response(JSON.stringify({
-        sent: 0, skipped: true, reason: userErr?.message || "no_subscribers",
+        error: "Failed to query subscribers: " + userErr.message,
+      }), { status: 500, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } });
+    }
+
+    if (!users || users.length === 0) {
+      return new Response(JSON.stringify({
+        sent: 0, skipped: true, reason: "no_subscribers",
       }), { headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } });
     }
 
-    // Get emails from auth.users
-    const userIds = users.map(u => u.id);
-    const { data: authUsers, error: authErr } = await supabase.auth.admin.listUsers();
-    if (authErr) {
-      return new Response(JSON.stringify({ error: "Failed to list users: " + authErr.message }), {
-        status: 500, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
-      });
-    }
-
+    // Build email map directly from profiles.email — 不再调用 admin.listUsers
     const emailMap = new Map<string, string>();
-    for (const u of authUsers.users) {
-      if (u.email && userIds.includes(u.id)) emailMap.set(u.id, u.email);
+    const userIds: string[] = [];
+    for (const u of users) {
+      if (u.email) {
+        emailMap.set(u.id, u.email);
+        userIds.push(u.id);
+      }
     }
 
     // Build email

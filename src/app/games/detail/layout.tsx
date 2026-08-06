@@ -20,8 +20,8 @@ export const metadata: Metadata = {
     images: ["https://news.guoyouwenduji.cc/og-image.png"],
   },
   robots: {
-    index: true,
-    follow: true,
+    index: false,
+    follow: false,
   },
   keywords: "国产3A游戏,黑神话悟空,影之刃零,归唐,湮灭之潮,燕云十六声,游戏评测,配置要求,发售日期",
 };

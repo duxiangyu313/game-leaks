@@ -46,7 +46,7 @@ const PAGES = [
 ];
 
 // 不应出现在 sitemap 中的路径前缀
-const EXCLUDED_PREFIXES = ["/admin/", "/auth/", "/account/", "/member/", "/404", "/_not-found/", "/cj2026/pay/", "/cj2026/alipay/", "/cj2026/success/"];
+const EXCLUDED_PREFIXES = ["/admin/", "/auth/", "/account/", "/member/", "/404", "/_not-found/", "/cj2026/pay/", "/cj2026/alipay/", "/cj2026/success/", "/games/detail/", "/forum/new/"];
 
 function isExcluded(url) {
   return EXCLUDED_PREFIXES.some(p => url.startsWith(p));
