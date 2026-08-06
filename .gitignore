@@ -34,6 +34,9 @@ yarn-error.log*
 .env*
 !.env.production
 
+# 百度 zz API token（本地/CI 注入，不入库）
+scripts/.baidu-zz-token
+
 # vercel
 .vercel
 
