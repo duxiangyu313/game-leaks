@@ -10,5 +10,8 @@ Disallow: /member/alipay-confirm/
 Disallow: /cj2026/pay/
 Disallow: /cj2026/alipay/
 Disallow: /cj2026/success/
+Disallow: /forum/new/
+# 仅屏蔽无 id 的游戏详情壳 /games/detail/，不误伤 /games/detail/?id=xxx
+Disallow: /games/detail/$
 
 Sitemap: https://news.guoyouwenduji.cc/sitemap.xml
