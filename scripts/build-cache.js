@@ -130,8 +130,12 @@ async function main() {
     if (videos?.length) cache["videos"] = videos;
 
     // ── 今日热点: 综合查询 ──
-    // 编辑精选置顶（8-6 高热度爆料/文章），与前端 HotTopics 保持一致
+    // 编辑精选置顶（高热度爆料/文章），与前端 HotTopics 保持一致
+    // 8-6 新增：CJ2026 三篇首发文章置顶前三（heat 最高）
     const EDITOR_PICKS = [
+      { id: "1fa6e3be-3a45-4a24-a5bd-633e051f9d8f", type: "article" }, // CJ2026·参展阵容全收录
+      { id: "801c3cb5-10d9-4841-b232-704fa82cf911", type: "article" }, // CJ2026·锦衣卫首曝
+      { id: "b94a7786-d652-4d57-9098-87ded67782da", type: "article" }, // CJ2026·国产3A试玩指南
       { id: "4d79b868-4c95-4530-b430-74812c01423a", type: "leak" },
       { id: "70a0e44c-1970-4602-bb75-6e68f5916dff", type: "article" },
       { id: "d911c992-a68e-4120-8ace-7bec59fbac04", type: "leak" },

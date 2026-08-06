@@ -15,9 +15,13 @@ const MOCK_TOPICS: any[] = [
   { type: "leak", title: "望月新玩法曝光", heat: 65, game_name: "望月", id: "h6" },
 ];
 
-// 编辑精选：8-6 高热度爆料/文章置顶（按热度排序，优先占据「今日热点」前排）
+// 编辑精选：高热度爆料/文章置顶（按热度排序，优先占据「今日热点」前排）
 // 突破原逻辑中文章 heat 写死 80 的限制，让新文章也能进前排
+// 8-6 新增：CJ2026 三篇首发文章置顶前三（heat 最高）
 const EDITOR_PICKS: { id: string; type: "leak" | "article" }[] = [
+  { id: "1fa6e3be-3a45-4a24-a5bd-633e051f9d8f", type: "article" }, // CJ2026·参展阵容全收录
+  { id: "801c3cb5-10d9-4841-b232-704fa82cf911", type: "article" }, // CJ2026·锦衣卫首曝
+  { id: "b94a7786-d652-4d57-9098-87ded67782da", type: "article" }, // CJ2026·国产3A试玩指南
   { id: "4d79b868-4c95-4530-b430-74812c01423a", type: "leak" },     // 影之刃零·开发完成+预售
   { id: "70a0e44c-1970-4602-bb75-6e68f5916dff", type: "article" }, // 影之刃零·268元定价拆解
   { id: "d911c992-a68e-4120-8ace-7bec59fbac04", type: "leak" },     // 黑神话：钟馗·8月窗口
