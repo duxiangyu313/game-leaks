@@ -54,10 +54,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* 🔒 CSP — 防 XSS，静态导出用 meta 标签实现 */}
         <meta httpEquiv="Content-Security-Policy" content={
           "default-src 'self'; " +
-          "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://hm.baidu.com https://www.googletagmanager.com; " +
+          "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://hm.baidu.com https://www.googletagmanager.com https://zz.bdstatic.com; " +
           "style-src 'self' 'unsafe-inline'; " +
           "img-src 'self' data: https: blob:; " +
-          "connect-src 'self' https://*.supabase.co https://api.stripe.com wss://*.supabase.co https://hm.baidu.com https://www.google-analytics.com; " +
+          "connect-src 'self' https://*.supabase.co https://api.stripe.com wss://*.supabase.co https://hm.baidu.com https://www.google-analytics.com https://zz.bdstatic.com https://*.baidu.com; " +
           "frame-src 'self' https://www.youtube.com https://player.bilibili.com https://js.stripe.com; " +
           "font-src 'self' https://fonts.gstatic.com; " +
           "object-src 'none'; " +

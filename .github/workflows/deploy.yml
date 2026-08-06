@@ -27,6 +27,11 @@ jobs:
       - name: Fix RSC + Sitemap
         run: node scripts/fix-rsc.js live && node scripts/generate-sitemap.js live && node -e "require('fs').writeFileSync('live/.nojekyll','')"
 
+      - name: Submit to search engines (IndexNow + Baidu)
+        run: node scripts/submit-indexnow.js live
+        env:
+          BAIDU_ZZ_TOKEN: ${{ secrets.BAIDU_ZZ_TOKEN }}
+
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:

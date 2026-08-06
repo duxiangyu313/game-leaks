@@ -73,21 +73,60 @@ function getBaiduToken() {
   return null;
 }
 
-async function submitBaidu(token, site, urls) {
+// 单批推送，返回结构化结果（便于配额感知）
+async function pushBaiduBatch(token, site, urls) {
   // 注意: site 参数必须原样传入，不要 encodeURIComponent（百度接口约定）
   const endpoint = `${BAIDU_ZZ_ENDPOINT}?site=${site}&token=${token}`;
-  const res = await fetch(endpoint, {
-    method: "POST",
-    headers: { "Content-Type": "text/plain" },
-    body: urls.join("\n"),
-  });
-  const text = await res.text().catch(() => "");
-  if (!res.ok) {
-    console.error(`❌ 百度 zz API 返回 ${res.status}: ${text}`);
+  try {
+    const res = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: urls.join("\n"),
+    });
+    const text = await res.text().catch(() => "");
+    if (!res.ok) {
+      if (text.includes("over quota")) return { overQuota: true };
+      console.error(`❌ 百度 zz API 返回 ${res.status}: ${text}`);
+      return null;
+    }
+    try {
+      const j = JSON.parse(text);
+      return { overQuota: false, success: j.success || 0, remain: j.remain ?? 0 };
+    } catch {
+      console.error(`❌ 百度 zz API 返回非 JSON: ${text}`);
+      return null;
+    }
+  } catch (e) {
+    console.error(`❌ 百度 zz API 请求异常: ${e.message}`);
+    return null;
+  }
+}
+
+async function submitBaidu(token, site, urls) {
+  // 新站点百度每日配额较小（通常初始 ~10 条/天），随站点质量提升而增长。
+  // 策略: 先探测 1 条拿到 remain，再按剩余配额分批推送，避免一次性超额整批失败。
+  const probe = await pushBaiduBatch(token, site, urls.slice(0, 1));
+  if (!probe) return false;
+  if (probe.overQuota) {
+    console.log("   ⚠️  今日百度配额已用尽（over quota），明日部署时再推。");
     return false;
   }
-  // 百度返回 JSON: {"success":N,"remain":M,"not_same_site":[],"not_valid":[]}
-  console.log(`✅ 百度 zz API 响应: ${text.trim()}`);
+  let successTotal = probe.success;
+  let idx = 1;
+  let remain = probe.remain;
+  while (remain > 0 && idx < urls.length) {
+    const batchSize = Math.min(remain, urls.length - idx, 1000);
+    const r = await pushBaiduBatch(token, site, urls.slice(idx, idx + batchSize));
+    if (!r) return false;
+    if (r.overQuota) {
+      console.log(`   ⚠️  推送至第 ${idx} 条时配额用尽（over quota），今日已成功 ${successTotal} 条。`);
+      return false;
+    }
+    successTotal += r.success;
+    idx += batchSize;
+    remain = r.remain;
+  }
+  console.log(`✅ 百度 zz API 今日共推送 ${successTotal} 条（剩余配额 ${remain}）`);
   return true;
 }
 
