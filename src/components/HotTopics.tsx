@@ -15,25 +15,44 @@ const MOCK_TOPICS: any[] = [
   { type: "leak", title: "望月新玩法曝光", heat: 65, game_name: "望月", id: "h6" },
 ];
 
+// 编辑精选：8-6 高热度爆料/文章置顶（按热度排序，优先占据「今日热点」前排）
+// 突破原逻辑中文章 heat 写死 80 的限制，让新文章也能进前排
+const EDITOR_PICKS: { id: string; type: "leak" | "article" }[] = [
+  { id: "4d79b868-4c95-4530-b430-74812c01423a", type: "leak" },     // 影之刃零·开发完成+预售
+  { id: "70a0e44c-1970-4602-bb75-6e68f5916dff", type: "article" }, // 影之刃零·268元定价拆解
+  { id: "d911c992-a68e-4120-8ace-7bec59fbac04", type: "leak" },     // 黑神话：钟馗·8月窗口
+  { id: "922b88b0-34ab-4e56-a941-882fa963f3e9", type: "article" }, // 搜打撤·三条路线
+  { id: "74674e5a-a432-41ce-ba30-bc9065b1ad02", type: "leak" },     // 抵抗者·CJ炸场
+  { id: "5a63e2fe-ca8e-46dc-b90a-dab109d13169", type: "article" }, // 网易的两副面孔
+  { id: "15186f18-f2a0-4349-9bbb-bf8b93d200fa", type: "leak" },     // 绝区零·3.1收入新高（替补位）
+];
+
 export default function HotTopics() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: topics, loading } = useCachedQuery<any[]>(
     "topics",
-    () => Promise.all([
-      supabase.from("leaks").select("*").eq("status", "published").order("view_count", { ascending: false }).limit(3),
-      supabase.from("articles").select("*").eq("status", "published").order("created_at", { ascending: false }).limit(3),
-      supabase.from("game_events").select("*, games(title)").gte("event_date", new Date().toISOString().split("T")[0]).order("event_date").limit(3),
-    ]).then(([{ data: leaks }, { data: articles }, { data: events }]) => {
+    async () => {
+      const pickLeakIds = EDITOR_PICKS.filter((p) => p.type === "leak").map((p) => p.id);
+      const pickArticleIds = EDITOR_PICKS.filter((p) => p.type === "article").map((p) => p.id);
+      const rank = new Map(EDITOR_PICKS.map((p, i) => [p.id, 1_000_000 - i]));
+      const [{ data: pLeaks }, { data: pArticles }, { data: leaks }, { data: articles }, { data: events }] =
+        await Promise.all([
+          supabase.from("leaks").select("*").in("id", pickLeakIds).eq("status", "published"),
+          supabase.from("articles").select("*").in("id", pickArticleIds).eq("status", "published"),
+          supabase.from("leaks").select("*").eq("status", "published").order("view_count", { ascending: false }).limit(3),
+          supabase.from("articles").select("*").eq("status", "published").order("created_at", { ascending: false }).limit(3),
+          supabase.from("game_events").select("*, games(title)").gte("event_date", new Date().toISOString().split("T")[0]).order("event_date").limit(3),
+        ]);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const items = [
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ...(leaks || []).map((l: any) => ({ type: "leak", ...l, heat: (l.view_count || 0) * 0.7 + 50 })),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ...(articles || []).map((a: any) => ({ type: "article", ...a, heat: 80 })),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ...(pLeaks || []).map((l: any) => ({ type: "leak", ...l, heat: rank.get(l.id) ?? 50 })),
+        ...(pArticles || []).map((a: any) => ({ type: "article", ...a, heat: rank.get(a.id) ?? 80 })),
+        ...(leaks || []).filter((l: any) => !rank.has(l.id)).map((l: any) => ({ type: "leak", ...l, heat: (l.view_count || 0) * 0.7 + 50 })),
+        ...(articles || []).filter((a: any) => !rank.has(a.id)).map((a: any) => ({ type: "article", ...a, heat: 80 })),
         ...(events || []).map((e: any) => ({ type: "event", ...e, heat: 60, title: e.title, game_name: e.games?.title })),
       ].sort((a: any, b: any) => b.heat - a.heat).slice(0, 6); // eslint-disable-line @typescript-eslint/no-explicit-any
       return items.length > 0 ? items : MOCK_TOPICS;
-    }),
+    },
     MOCK_TOPICS,
     "topics"
   );

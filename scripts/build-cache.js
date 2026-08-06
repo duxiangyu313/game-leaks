@@ -130,8 +130,24 @@ async function main() {
     if (videos?.length) cache["videos"] = videos;
 
     // ── 今日热点: 综合查询 ──
-    const [{ data: hotLeaks }, { data: hotArticles }, { data: events }] =
+    // 编辑精选置顶（8-6 高热度爆料/文章），与前端 HotTopics 保持一致
+    const EDITOR_PICKS = [
+      { id: "4d79b868-4c95-4530-b430-74812c01423a", type: "leak" },
+      { id: "70a0e44c-1970-4602-bb75-6e68f5916dff", type: "article" },
+      { id: "d911c992-a68e-4120-8ace-7bec59fbac04", type: "leak" },
+      { id: "922b88b0-34ab-4e56-a941-882fa963f3e9", type: "article" },
+      { id: "74674e5a-a432-41ce-ba30-bc9065b1ad02", type: "leak" },
+      { id: "5a63e2fe-ca8e-46dc-b90a-dab109d13169", type: "article" },
+      { id: "15186f18-f2a0-4349-9bbb-bf8b93d200fa", type: "leak" },
+    ];
+    const pickLeakIds = EDITOR_PICKS.filter((p) => p.type === "leak").map((p) => p.id);
+    const pickArticleIds = EDITOR_PICKS.filter((p) => p.type === "article").map((p) => p.id);
+    const rank = new Map(EDITOR_PICKS.map((p, i) => [p.id, 1000000 - i]));
+
+    const [{ data: pLeaks }, { data: pArticles }, { data: hotLeaks }, { data: hotArticles }, { data: events }] =
       await Promise.all([
+        supabase.from("leaks").select("*").in("id", pickLeakIds).eq("status", "published"),
+        supabase.from("articles").select("*").in("id", pickArticleIds).eq("status", "published"),
         supabase
           .from("leaks")
           .select("*")
@@ -153,12 +169,14 @@ async function main() {
       ]);
 
     const topics = [
-      ...(hotLeaks || []).map((l) => ({
+      ...(pLeaks || []).map((l) => ({ type: "leak", ...l, heat: rank.get(l.id) ?? 50 })),
+      ...(pArticles || []).map((a) => ({ type: "article", ...a, heat: rank.get(a.id) ?? 80 })),
+      ...(hotLeaks || []).filter((l) => !rank.has(l.id)).map((l) => ({
         type: "leak",
         ...l,
         heat: (l.view_count || 0) * 0.7 + 50,
       })),
-      ...(hotArticles || []).map((a) => ({
+      ...(hotArticles || []).filter((a) => !rank.has(a.id)).map((a) => ({
         type: "article",
         ...a,
         heat: 80,
