@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <div className="pt-20 pb-20">
-      <div className="max-w-3xl mx-auto px-6">
+      <div className="max-w-4xl mx-auto px-6">
         <h1 className="text-3xl font-bold text-[#F1F5F9] mb-4">广告合作</h1>
         <p className="text-[#94A3B8] mb-8">
           国游爆料专注国产3A游戏领域，覆盖主机/PC硬核玩家群体。欢迎游戏厂商、硬件品牌洽谈广告合作。

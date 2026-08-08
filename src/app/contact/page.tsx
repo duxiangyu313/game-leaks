@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <div className="pt-20 pb-20">
-      <div className="max-w-3xl mx-auto px-4 md:px-6">
+      <div className="max-w-4xl mx-auto px-4 md:px-6">
         <div className="mb-10">
           <h1 className="text-3xl font-bold text-[#F1F5F9] mb-2">联系我们</h1>
           <p className="text-sm text-[#64748B]">有疑问？想合作？欢迎随时联系</p>

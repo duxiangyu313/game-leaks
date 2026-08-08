@@ -92,7 +92,7 @@ function WikiEditContent() {
 
   return (
     <div className="pt-20 pb-20">
-      <div className="max-w-3xl mx-auto px-4 md:px-6">
+      <div className="max-w-4xl mx-auto px-4 md:px-6">
         <div className="flex items-center gap-3 mb-6">
           <LinkNoPrefetch href={`/games/detail?id=${id}`} className="text-[#64748B] hover:text-[#F1F5F9]">
             <ArrowLeft className="w-5 h-5" />

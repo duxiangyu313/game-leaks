@@ -132,7 +132,7 @@ function DetailContent() {
 
   if (loading) return (
     <div className="pt-20 pb-20">
-      <div className="max-w-3xl mx-auto px-4 animate-pulse space-y-4">
+      <div className="max-w-6xl mx-auto px-4 animate-pulse space-y-4">
         <div className="h-6 w-48 bg-[#1E293B]/30 rounded" />
         <div className="h-64 bg-[#1E293B]/20 rounded-xl" />
         <div className="h-8 w-3/4 bg-[#1E293B]/30 rounded" />
@@ -171,7 +171,7 @@ function DetailContent() {
 
       {isPaid && <canvas ref={canvasRef} className="fixed inset-0 w-full h-full pointer-events-none z-[999]" />}
 
-      <div className="max-w-3xl mx-auto px-4 md:px-6 mb-6">
+      <div className="max-w-6xl mx-auto px-4 md:px-6 mb-6">
         <LinkNoPrefetch href="/analysis" className="inline-flex items-center gap-2 text-sm text-[#64748B] hover:text-[#F1F5F9] transition-colors">
           <ArrowLeft className="w-4 h-4" /> 返回文章列表
         </LinkNoPrefetch>
@@ -209,7 +209,7 @@ function DetailContent() {
         userBookmarked={userBookmark}
       />
 
-      <div className="max-w-3xl mx-auto px-4 md:px-6 mt-12 pt-8 border-t border-[rgba(30,41,59,0.4)]">
+      <div className="max-w-6xl mx-auto px-4 md:px-6 mt-12 pt-8 border-t border-[rgba(30,41,59,0.4)]">
         <h3 className="text-lg font-bold text-[#F1F5F9] mb-6">评论 ({comments.length})</h3>
 
         <div className="glass-card p-4 mb-6">
@@ -249,7 +249,7 @@ function DetailContent() {
 export default function ArticleDetailPage() {
   return (
     <div className="pt-20 pb-20">
-      <div className="max-w-3xl mx-auto px-4">
+      <div className="max-w-6xl mx-auto px-4">
         <h1 id="seo-fallback-title" className="text-2xl font-bold text-[#F1F5F9] mb-4">文章详情 · 国产3A游戏深度解析评测爆料 · 国游爆料</h1>
         <p id="seo-fallback-desc" className="text-[#94A3B8] text-sm mb-6">国游爆料文章详情 — 黑神话悟空、影之刃零、归唐、湮灭之潮、燕云十六声、百面千相等国产3A游戏的深度解析、评测、爆料与行业观察。</p>
         <Suspense fallback={

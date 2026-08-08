@@ -10,15 +10,9 @@ import LinkNoPrefetch from "@/components/LinkNoPrefetch";
  */
 export default function ArticleSubscribeCTA() {
   return (
-    <div className="mt-12 p-6 rounded-2xl border border-[#06B6D4]/20 bg-gradient-to-r from-[#06B6D4]/5 to-transparent">
-      <h3 className="text-lg font-bold text-[#F1F5F9] mb-1">
-        不想错过下一篇国产3A爆料？
-      </h3>
-      <p className="text-sm text-[#94A3B8] mb-4">
-        订阅邮件，黑神话、影之刃零等新游发售、实机、预售第一时间提醒。
-      </p>
+    <div className="mt-8 p-4 rounded-2xl border border-[#06B6D4]/20 bg-gradient-to-r from-[#06B6D4]/5 to-transparent">
       <EmailSubscribe compact />
-      <div className="mt-4 text-xs text-[#64748B]">
+      <div className="mt-3 text-xs text-[#64748B]">
         想要完整账号、收藏与互动？
         <LinkNoPrefetch href="/auth" className="text-[#06B6D4] hover:underline ml-1">
           免费注册 →

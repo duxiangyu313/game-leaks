@@ -18,6 +18,7 @@ import CredibilityVote from "./CredibilityVote";
 import SmartPaywallNudge from "./SmartPaywallNudge";
 import ArticleSubscribeCTA from "./ArticleSubscribeCTA";
 import RelatedArticles from "./RelatedArticles";
+import HotArticlesSidebar from "./HotArticlesSidebar";
 import Lightbox from "./Lightbox";
 
 interface Props {
@@ -65,7 +66,7 @@ export default function ArticleTemplate({
   );
 
   return (
-    <article className="max-w-3xl mx-auto px-4 md:px-6">
+    <article className="max-w-6xl mx-auto px-4 md:px-6">
       {/* ── Hero 头图 ── */}
       {article.coverImage && (
         <div className={`article-hero ${isPaid ? "article-hero--paid" : ""}`}>
@@ -181,8 +182,12 @@ export default function ArticleTemplate({
             </div>
           )}
 
-          {/* 免费文末 — 订阅/注册 CTA（免费转化层） */}
-          {!isPaid && <ArticleSubscribeCTA />}
+          {/* 免费文末 — 订阅/注册 CTA（移动端显示，桌面端已移至右侧栏） */}
+          {!isPaid && (
+            <div className="lg:hidden">
+              <ArticleSubscribeCTA />
+            </div>
+          )}
 
           {/* 相关文章 */}
           <RelatedArticles
@@ -192,7 +197,7 @@ export default function ArticleTemplate({
         </div>
 
         {/* 右侧 sticky 侧栏（桌面端） */}
-        <div className="hidden lg:block w-56 shrink-0">
+        <div className="hidden lg:block w-72 shrink-0">
           <div className="sticky top-24">
             <TableOfContents items={tocItems} isPaid={isPaid} />
 
@@ -210,6 +215,12 @@ export default function ArticleTemplate({
               />
               <ShareButton articleId={article.id} title={article.title} />
             </div>
+
+            {/* 订阅 CTA（桌面端，填充右侧栏转化触点） */}
+            {!isPaid && <ArticleSubscribeCTA />}
+
+            {/* 热门爆料（桌面端右侧栏） */}
+            <HotArticlesSidebar currentArticleId={article.id} />
           </div>
         </div>
       </div>

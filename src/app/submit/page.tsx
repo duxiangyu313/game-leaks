@@ -192,7 +192,7 @@ export default function SubmitPage() {
   );
 
   return (
-    <div className="pt-20 pb-20"><div className="max-w-3xl mx-auto px-4">
+    <div className="pt-20 pb-20"><div className="max-w-4xl mx-auto px-4">
       <div className="flex items-center gap-3 mb-6">
         <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-[#F59E0B] to-[#D97706] flex items-center justify-center"><Send className="w-5 h-5 text-white" /></div>
         <div><h1 className="text-2xl font-black text-[#F1F5F9]">创作者投稿</h1>

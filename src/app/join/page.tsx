@@ -41,7 +41,7 @@ const POSITIONS = [
 export default function JoinPage() {
   return (
     <div className="pt-20 pb-20">
-      <div className="max-w-3xl mx-auto px-4 md:px-6">
+      <div className="max-w-4xl mx-auto px-4 md:px-6">
         <div className="mb-10">
           <h1 className="text-3xl font-bold text-[#F1F5F9] mb-2">加入我们</h1>
           <p className="text-[#94A3B8]">
