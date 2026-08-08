@@ -505,6 +505,24 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://news.guoyouwenduji.cc/articles/detail/?id=693a9a36-918e-427b-bbda-1903e65bb9ac</loc>
+    <lastmod>2026-08-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://news.guoyouwenduji.cc/articles/detail/?id=8f7cc49f-a493-4731-8d54-7c9eb31acc1d</loc>
+    <lastmod>2026-08-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://news.guoyouwenduji.cc/articles/detail/?id=3b1c1cff-efde-4e5e-be74-d103bcbc2804</loc>
+    <lastmod>2026-08-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://news.guoyouwenduji.cc/games/detail/?id=7ea38758-50f4-4be2-bfe4-eeb3d8be2e46</loc>
     <lastmod>2026-08-02</lastmod>
     <changefreq>weekly</changefreq>
@@ -1447,12 +1465,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://news.guoyouwenduji.cc/leaks/detail/?id=4d79b868-4c95-4530-b430-74812c01423a</loc>
-    <lastmod>2026-08-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://news.guoyouwenduji.cc/leaks/detail/?id=74b366e4-4082-40fb-8218-52a1aa88dcb9</loc>
     <lastmod>2026-08-06</lastmod>
     <changefreq>daily</changefreq>
@@ -1466,6 +1478,12 @@
   </url>
   <url>
     <loc>https://news.guoyouwenduji.cc/leaks/detail/?id=cd9cb24d-05e4-4d4e-9bb2-64cbf979d284</loc>
+    <lastmod>2026-08-06</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://news.guoyouwenduji.cc/leaks/detail/?id=4d79b868-4c95-4530-b430-74812c01423a</loc>
     <lastmod>2026-08-06</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
@@ -1497,6 +1515,36 @@
   <url>
     <loc>https://news.guoyouwenduji.cc/leaks/detail/?id=d911c992-a68e-4120-8ace-7bec59fbac04</loc>
     <lastmod>2026-08-06</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://news.guoyouwenduji.cc/leaks/detail/?id=7cdfcb52-dd4c-4a77-9697-60e385eab085</loc>
+    <lastmod>2026-08-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://news.guoyouwenduji.cc/leaks/detail/?id=5e19d288-8a1f-4aa9-a633-6a33e5eb9a73</loc>
+    <lastmod>2026-08-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://news.guoyouwenduji.cc/leaks/detail/?id=9427ca1e-877d-40f2-8ac2-144ef88798e1</loc>
+    <lastmod>2026-08-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://news.guoyouwenduji.cc/leaks/detail/?id=ae909cf5-a272-4273-8805-700044513a85</loc>
+    <lastmod>2026-08-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://news.guoyouwenduji.cc/leaks/detail/?id=78fe26e2-37de-41b8-8522-0e8a2ef983f6</loc>
+    <lastmod>2026-08-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
