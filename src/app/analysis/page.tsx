@@ -116,7 +116,7 @@ export default function AnalysisPage() {
                     isPaid ? "article-card-paid" : "hover:border-[#06B6D4]/20"
                   }`}
                 >
-                  <LinkNoPrefetch href={`/articles/detail?id=${a.id}`} className="flex flex-col md:flex-row">
+                  <LinkNoPrefetch href={`/articles/${a.id}`} className="flex flex-col md:flex-row">
                     {a.coverImage && (
                       <div className="md:w-48 shrink-0 h-36 md:h-auto overflow-hidden bg-[#1E293B]/40">
                         <img

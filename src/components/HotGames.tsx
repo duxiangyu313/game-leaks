@@ -57,7 +57,7 @@ export default function HotGames() {
         {games.map((game, i) => (
           <motion.div key={game.id} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}>
             <SpotlightCard className="!bg-[#14171D] !border-[rgba(245,166,35,0.2)] p-0" spotlightColor="rgba(245,166,35,0.45)">
-              <LinkNoPrefetch href={`/games/detail?id=${game.id}`} className="glass-card block p-4 group h-full">
+              <LinkNoPrefetch href={`/games/${game.id}`} className="glass-card block p-4 group h-full">
               <div className="flex items-center justify-between mb-3">
                 <span className={`text-lg font-black ${game.rank === 1 ? "text-[#F59E0B]" : game.rank === 2 ? "text-[#94A3B8]" : game.rank === 3 ? "text-[#D97706]" : "text-[#64748B]"}`}>#{game.rank}</span>
                 {game.rating && <span className="flex items-center gap-1 text-xs text-[#F59E0B]"><Star className="w-3 h-3 fill-[#F59E0B]" />{game.rating}</span>}

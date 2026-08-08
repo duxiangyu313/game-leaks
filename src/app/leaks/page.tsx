@@ -73,7 +73,7 @@ export default function LeaksPage() {
         ) : (
           <div className="space-y-4">
             {leaks.map((leak, i) => (
-              <LinkNoPrefetch key={leak.id} href={`/leaks/detail?id=${leak.id}`} className="block active:scale-[0.98] transition-transform">
+              <LinkNoPrefetch key={leak.id} href={`/leaks/${leak.id}`} className="block active:scale-[0.98] transition-transform">
                 <motion.article initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}
                 className="glass-card p-6 hover:border-[#06B6D4]/20 transition-all cursor-pointer">
                 <div className="flex items-start justify-between mb-3">

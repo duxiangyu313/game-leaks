@@ -47,7 +47,7 @@ export default function HotArticlesSidebar({ currentArticleId, limit = 5 }: Prop
           return (
             <li key={a.id}>
               <LinkNoPrefetch
-                href={`/articles/detail?id=${a.id}`}
+                href={`/articles/${a.id}`}
                 className="group flex gap-3 items-start"
               >
                 <span className="text-sm font-bold text-[#334155] w-5 shrink-0 group-hover:text-[#06B6D4] transition-colors">

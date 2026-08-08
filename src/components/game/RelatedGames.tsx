@@ -15,7 +15,7 @@ export default function RelatedGames({ games }: RelatedGamesProps) {
       </h3>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {games.map(r => (
-          <LinkNoPrefetch key={r.id} href={`/games/detail?id=${r.id}`} className="glass-card block p-4 group hover:border-[#06B6D4]/20 transition-all">
+          <LinkNoPrefetch key={r.id} href={`/games/${r.id}`} className="glass-card block p-4 group hover:border-[#06B6D4]/20 transition-all">
             <div className="w-full h-24 rounded-lg bg-gradient-to-br from-[#1E293B] to-[#0F172A] mb-2 flex items-center justify-center text-3xl">{r.title?.charAt(0)}</div>
             <h4 className="text-sm font-semibold text-[#F1F5F9] group-hover:text-[#06B6D4] truncate">{r.title}</h4>
             <p className="text-xs text-[#64748B]">{r.developer}</p>

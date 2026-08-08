@@ -13,7 +13,7 @@ export default function ShareButton({ articleId, title }: Props) {
   const [copied, setCopied] = useState(false);
 
   const handleClick = useCallback(async () => {
-    const url = `${window.location.origin}/articles/detail?id=${articleId}`;
+    const url = `${window.location.origin}/articles/${articleId}`;
 
     // 优先使用 Web Share API
     if (navigator.share) {

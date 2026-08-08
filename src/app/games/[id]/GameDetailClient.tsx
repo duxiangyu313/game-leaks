@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
 import { useGameDetail } from "@/data/hooks";
 import { Loader2 } from "lucide-react";
@@ -15,49 +14,31 @@ import { BreadcrumbListSchema, VideoGameSchema } from "@/components/StructuredDa
 
 type Tab = "intro" | "requirements" | "reviews" | "preorders" | "scores" | "prices" | "dlc" | "videos" | "wiki" | "leaks" | "gallery" | "comments";
 
-function DetailContent() {
-  const params = useSearchParams();
-  const id = params.get("id");
+function DetailContent({ id }: { id: string }) {
   const { detail, loading, error, refresh } = useGameDetail(id);
 
   const [tab, setTab] = useState<Tab>("intro");
   const [lightbox, setLightbox] = useState<string | null>(null);
 
-  // 投票计数
   const [localVotes, setLocalVotes] = useState({ hype: 0, neutral: 0, disappoint: 0 });
   const [localUserVote, setLocalUserVote] = useState<string | null>(null);
 
-  // 同步 hook 的投票数据到本地
   useEffect(() => {
-    if (detail) {
-      setLocalUserVote(detail.userVote);
-    }
+    if (detail) setLocalUserVote(detail.userVote);
   }, [detail]);
 
-  // ── SEO ──
+  // ── 浏览历史（标题/描述由服务端 generateMetadata 处理，此处不再改） ──
   useEffect(() => {
     if (detail?.game) {
-      document.title = `${detail.game.title} · 国游爆料`;
-      const desc = detail.game.description || `${detail.game.title} — ${detail.game.developer || "国产游戏"}，最新动态、评测、攻略`;
-      let meta = document.querySelector("meta[name='description']");
-      if (meta) { meta.setAttribute("content", desc); }
-      else { meta = document.createElement("meta"); meta.setAttribute("name", "description"); meta.setAttribute("content", desc); document.head.appendChild(meta); }
-      // OG tags
-      let ogTitle = document.querySelector("meta[property='og:title']");
-      if (ogTitle) { ogTitle.setAttribute("content", `${detail.game.title} · 国游爆料`); }
-      let ogDesc = document.querySelector("meta[property='og:description']");
-      if (ogDesc) { ogDesc.setAttribute("content", desc); }
-
-      addHistory({ id: detail.game.id, title: detail.game.title, link: `/games/detail?id=${detail.game.id}`, type: "game" });
+      addHistory({ id: detail.game.id, title: detail.game.title, link: `/games/${detail.game.id}`, type: "game" });
     }
   }, [detail]);
 
-  // ── Handlers ──
   const handleVote = async (type: string) => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) { alert("请先登录"); return; }
     if (localUserVote) return;
-    await supabase.from("game_votes").insert({ game_id: id!, user_id: user.id, vote_type: type });
+    await supabase.from("game_votes").insert({ game_id: id, user_id: user.id, vote_type: type });
     setLocalUserVote(type);
     setLocalVotes(prev => ({
       ...prev,
@@ -70,15 +51,14 @@ function DetailContent() {
   const handleComment = async (text: string, rating: number) => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) { alert("请先登录"); return; }
-    const { data } = await supabase.from("game_comments").insert({ game_id: id!, user_id: user.id, content: text, rating }).select().single();
-    if (data) refresh(); // 刷新全部评论
+    const { data } = await supabase.from("game_comments").insert({ game_id: id, user_id: user.id, content: text, rating }).select().single();
+    if (data) refresh();
   };
 
   const handleReviewSuccess = () => {
-    refresh(); // 刷新全部评测
+    refresh();
   };
 
-  // ── Computed ──
   const screenshots = detail?.game
     ? Array.from({ length: 4 }, (_, i) => ({
         src: `https://placehold.co/800x450/1E293B/06B6D4?text=${encodeURIComponent(detail.game.title + ' 截图 ' + (i + 1))}`,
@@ -86,7 +66,6 @@ function DetailContent() {
       }))
     : [];
 
-  // ── Loading / Error / Not Found ──
   if (loading) return (
     <div className="pt-20 pb-20">
       <div className="max-w-5xl mx-auto px-4 animate-pulse">
@@ -108,7 +87,6 @@ function DetailContent() {
     <div className="pt-20 pb-20 text-center text-[#64748B]">游戏未找到</div>
   );
 
-  // ── Render ──
   return (
     <div className="pt-20 pb-20">
       {detail?.game && (
@@ -116,7 +94,7 @@ function DetailContent() {
           <BreadcrumbListSchema items={[
             { name: "首页", url: "https://news.guoyouwenduji.cc/" },
             { name: "游戏库", url: "https://news.guoyouwenduji.cc/games/" },
-            { name: detail.game.title, url: `https://news.guoyouwenduji.cc/games/detail/?id=${detail.game.id}` },
+            { name: detail.game.title, url: `https://news.guoyouwenduji.cc/games/${detail.game.id}` },
           ]} />
           <VideoGameSchema
             title={detail.game.title}
@@ -126,7 +104,7 @@ function DetailContent() {
             releaseDate={detail.game.release_date}
             rating={detail.game.rating}
             hypeScore={detail.game.hype_score}
-            url={`https://news.guoyouwenduji.cc/games/detail/?id=${detail.game.id}`}
+            url={`https://news.guoyouwenduji.cc/games/${detail.game.id}`}
             platform={detail.game.platform}
           />
         </>
@@ -143,7 +121,7 @@ function DetailContent() {
         />
         <GameTabs
           tab={tab} onTabChange={setTab}
-          game={detail.game} gameId={id!}
+          game={detail.game} gameId={id}
           leaks={detail.relatedLeaks}
           comments={detail.comments}
           reviews={detail.reviews}
@@ -166,23 +144,18 @@ function DetailContent() {
   );
 }
 
-export default function GameDetailPage() {
+export default function GameDetailClient({ id }: { id: string }) {
   return (
-    <div className="pt-20 pb-20">
-      <div className="max-w-5xl mx-auto px-4">
-        <h1 id="seo-fallback-title" className="text-2xl font-bold text-[#F1F5F9] mb-4">游戏详情 · 国产3A游戏介绍评测配置要求攻略预购 · 国游爆料</h1>
-        <p id="seo-fallback-desc" className="text-[#94A3B8] text-sm mb-6">国游爆料游戏详情 — 黑神话悟空、影之刃零、归唐、湮灭之潮、燕云十六声等国产3A游戏的详细介绍、评测、配置要求、发售日期、玩家评论与最新动态。</p>
-        <Suspense fallback={
-          <div className="animate-pulse space-y-4">
-            <div className="h-8 w-48 bg-[#1E293B]/30 rounded" />
-            <div className="h-64 bg-[#1E293B]/20 rounded-xl" />
-            <div className="h-8 w-3/4 bg-[#1E293B]/30 rounded" />
-            <div className="h-4 w-full bg-[#1E293B]/20 rounded" />
-          </div>
-        }>
-          <DetailContent />
-        </Suspense>
+    <Suspense fallback={
+      <div className="pt-20 pb-20">
+        <div className="max-w-5xl mx-auto px-4 animate-pulse">
+          <div className="h-64 bg-[#1E293B]/30 rounded-2xl mb-6" />
+          <div className="h-8 w-64 bg-[#1E293B]/30 rounded mb-4" />
+          <div className="h-96 bg-[#1E293B]/20 rounded-xl" />
+        </div>
       </div>
-    </div>
+    }>
+      <DetailContent id={id} />
+    </Suspense>
   );
 }

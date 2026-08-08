@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState, Suspense, useRef } from "react";
-import { useSearchParams } from "next/navigation";
 import LinkNoPrefetch from "@/components/LinkNoPrefetch";
 import { supabase } from "@/lib/supabase/client";
 import { ArrowLeft, Send, Loader2 } from "lucide-react";
@@ -16,9 +15,7 @@ import { BreadcrumbListSchema, NewsArticleSchema } from "@/components/Structured
 
 type PostComment = Database["public"]["Tables"]["post_comments"]["Row"];
 
-function DetailContent() {
-  const params = useSearchParams();
-  const id = params.get("id");
+function DetailContent({ id }: { id: string }) {
   const { article, loading, userLike, userBookmark } = useArticleDetail(id);
 
   const [userLevel, setUserLevel] = useState<MembershipLevel>("free");
@@ -31,38 +28,28 @@ function DetailContent() {
   });
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // ── SEO + 用户等级 ──
+  // ── 用户等级 + 浏览历史 + 浏览量 + 评论 + 互动统计（标题/描述由服务端 generateMetadata 处理，此处不再改） ──
   useEffect(() => {
     if (!article) return;
-    document.title = `${article.title} · 国游爆料`;
-    const desc = article.excerpt || article.title || "";
-    let meta = document.querySelector("meta[name='description']");
-    if (meta) { meta.setAttribute("content", desc); }
-    else { meta = document.createElement("meta"); meta.setAttribute("name", "description"); meta.setAttribute("content", desc); document.head.appendChild(meta); }
-
     getUserLevel().then(setUserLevel);
 
-    // 记录浏览历史
-    addHistory({ id: article.id, title: article.title, link: `/articles/detail?id=${article.id}`, type: "article" });
+    addHistory({ id: article.id, title: article.title, link: `/articles/${article.id}`, type: "article" });
 
-    // 增加浏览量
-    supabase.rpc("increment_view", { article_id: id! }).then(() => {});
+    supabase.rpc("increment_view", { article_id: id }).then(() => {});
 
-    // 加载评论
-    supabase.from("post_comments").select("*").eq("article_id", id!).order("created_at", { ascending: false })
+    supabase.from("post_comments").select("*").eq("article_id", id).order("created_at", { ascending: false })
       .then(({ data: c }) => {
         setComments(c || []);
         setInteractionCounts((prev) => ({ ...prev, comments: c?.length || 0 }));
       });
 
-    // 加载互动统计
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (!user || !article) return;
       const types = ["like", "bookmark", "share", "credibility_believe", "credibility_skeptical"] as const;
       for (const t of types) {
         supabase.from("article_interactions")
           .select("id", { count: "exact", head: true })
-          .eq("article_id", id!)
+          .eq("article_id", id)
           .eq("interaction_type", t)
           .then(({ count }) => {
             if (count != null) {
@@ -123,7 +110,7 @@ function DetailContent() {
     if (!user) return alert("请先登录");
     setSubmittingComment(true);
     const { data } = await supabase.from("post_comments").insert({
-      article_id: id!, user_id: user.id, content: commentText
+      article_id: id, user_id: user.id, content: commentText
     }).select().maybeSingle();
     if (data) setComments((prev) => [data, ...prev]);
     setCommentText("");
@@ -153,18 +140,18 @@ function DetailContent() {
 
   return (
     <div className="pt-20 pb-20">
-      {/* 结构化数据 — 搜索引擎收录 */}
+      {/* 结构化数据 — 搜索引擎收录（URL 改为路径式） */}
       <BreadcrumbListSchema items={[
         { name: "首页", url: "https://news.guoyouwenduji.cc/" },
         { name: "深度解析", url: "https://news.guoyouwenduji.cc/analysis/" },
-        { name: article.title, url: `https://news.guoyouwenduji.cc/articles/detail/?id=${article.id}` },
+        { name: article.title, url: `https://news.guoyouwenduji.cc/articles/${article.id}` },
       ]} />
       <NewsArticleSchema
         title={article.title}
         description={article.excerpt || article.title}
         datePublished={article.published_at || article.created_at || ""}
         author={article.author_name}
-        url={`https://news.guoyouwenduji.cc/articles/detail/?id=${article.id}`}
+        url={`https://news.guoyouwenduji.cc/articles/${article.id}`}
         image={article.cover_image || undefined}
         category={article.category}
       />
@@ -206,7 +193,7 @@ function DetailContent() {
         membershipLevel={userLevel}
         interactionCounts={interactionCounts}
         userLiked={userLike}
-        userBookmarked={userBookmark}
+        userBookmarked={userBookmarked}
       />
 
       <div className="max-w-6xl mx-auto px-4 md:px-6 mt-12 pt-8 border-t border-[rgba(30,41,59,0.4)]">
@@ -246,25 +233,19 @@ function DetailContent() {
   );
 }
 
-export default function ArticleDetailPage() {
+export default function ArticleDetailClient({ id }: { id: string }) {
   return (
-    <div className="pt-20 pb-20">
-      <div className="max-w-6xl mx-auto px-4">
-        <h1 id="seo-fallback-title" className="text-2xl font-bold text-[#F1F5F9] mb-4">文章详情 · 国产3A游戏深度解析评测爆料 · 国游爆料</h1>
-        <p id="seo-fallback-desc" className="text-[#94A3B8] text-sm mb-6">国游爆料文章详情 — 黑神话悟空、影之刃零、归唐、湮灭之潮、燕云十六声、百面千相等国产3A游戏的深度解析、评测、爆料与行业观察。</p>
-        <Suspense fallback={
-          <div className="animate-pulse space-y-4">
-            <div className="h-8 w-48 bg-[#1E293B]/30 rounded" />
-            <div className="h-64 bg-[#1E293B]/20 rounded-xl" />
-            <div className="h-8 w-3/4 bg-[#1E293B]/30 rounded" />
-            <div className="h-4 w-full bg-[#1E293B]/20 rounded" />
-            <div className="h-4 w-5/6 bg-[#1E293B]/20 rounded" />
-            <div className="h-4 w-4/6 bg-[#1E293B]/20 rounded" />
-          </div>
-        }>
-          <DetailContent />
-        </Suspense>
+    <Suspense fallback={
+      <div className="pt-20 pb-20">
+        <div className="max-w-6xl mx-auto px-4 animate-pulse space-y-4">
+          <div className="h-6 w-48 bg-[#1E293B]/30 rounded" />
+          <div className="h-64 bg-[#1E293B]/20 rounded-xl" />
+          <div className="h-8 w-3/4 bg-[#1E293B]/30 rounded" />
+          <div className="h-4 w-full bg-[#1E293B]/20 rounded" />
+        </div>
       </div>
-    </div>
+    }>
+      <DetailContent id={id} />
+    </Suspense>
   );
 }

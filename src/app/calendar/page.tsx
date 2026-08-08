@@ -179,7 +179,7 @@ export default function CalendarPage() {
           <div className="space-y-3">
             {filtered.map(e => (
               <div key={e.id} className="glass-card p-4 flex items-center gap-4 group">
-                <LinkNoPrefetch href={e.game_id ? `/games/detail?id=${e.game_id}` : "#"} className="flex items-center gap-4 flex-1 min-w-0 hover:border-[#06B6D4]/20 transition-all">
+                <LinkNoPrefetch href={e.game_id ? `/games/${e.game_id}` : "#"} className="flex items-center gap-4 flex-1 min-w-0 hover:border-[#06B6D4]/20 transition-all">
                   <div className="text-center shrink-0 w-16">
                     <div className="text-2xl font-black text-[#F1F5F9]">{new Date(e.event_date).getDate()}</div>
                     <div className="text-xs text-[#64748B]">{new Date(e.event_date).toLocaleDateString("zh-CN", { weekday: "short" })}</div>

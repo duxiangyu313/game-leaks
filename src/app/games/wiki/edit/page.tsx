@@ -77,7 +77,7 @@ function WikiEditContent() {
       alert("保存失败: " + error.message);
     } else {
       setSaved(true);
-      setTimeout(() => router.push(`/games/detail?id=${id}`), 1500);
+      setTimeout(() => router.push(`/games/${id}`), 1500);
     }
     setSaving(false);
   };
@@ -94,7 +94,7 @@ function WikiEditContent() {
     <div className="pt-20 pb-20">
       <div className="max-w-4xl mx-auto px-4 md:px-6">
         <div className="flex items-center gap-3 mb-6">
-          <LinkNoPrefetch href={`/games/detail?id=${id}`} className="text-[#64748B] hover:text-[#F1F5F9]">
+          <LinkNoPrefetch href={`/games/${id}`} className="text-[#64748B] hover:text-[#F1F5F9]">
             <ArrowLeft className="w-5 h-5" />
           </LinkNoPrefetch>
           <h1 className="text-2xl font-bold text-[#F1F5F9]">编辑百科 · {game.title}</h1>

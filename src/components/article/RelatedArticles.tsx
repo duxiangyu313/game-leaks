@@ -61,7 +61,7 @@ export default function RelatedArticles({ currentArticleId, category, limit = 3 
           return (
             <LinkNoPrefetch
               key={a.id}
-              href={`/articles/detail?id=${a.id}`}
+              href={`/articles/${a.id}`}
               className={`glass-card p-4 group transition-all ${isPaid ? "article-card-paid" : ""}`}
             >
               {/* 封面图 */}

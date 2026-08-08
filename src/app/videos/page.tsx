@@ -60,7 +60,7 @@ export default function VideosPage() {
             {filtered.map(v => {
               const bvMatch = v.title?.match(/BV[a-zA-Z0-9]+/) || v.content?.match(/BV[a-zA-Z0-9]+/);
               const bvid = bvMatch ? bvMatch[0] : null;
-              const href = bvid ? `https://www.bilibili.com/video/${bvid}` : `/articles/detail?id=${v.id}`;
+              const href = bvid ? `https://www.bilibili.com/video/${bvid}` : `/articles/${v.id}`;
               const isExternal = !!bvid;
               return (
                 <LinkNoPrefetch key={v.id} href={href} target={isExternal ? "_blank" : undefined} rel={isExternal ? "noopener noreferrer" : undefined} className="glass-card block group hover:border-[#E94560]/20 transition-all">

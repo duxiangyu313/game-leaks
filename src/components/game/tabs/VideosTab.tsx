@@ -13,7 +13,7 @@ export default function VideosTab({ videos }: VideosTabProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {videos.map((v: any) => (
-        <LinkNoPrefetch key={v.id} href={`/articles/detail?id=${v.id}`} className="glass-card block p-4 group hover:border-[#E94560]/20 transition-all">
+        <LinkNoPrefetch key={v.id} href={`/articles/${v.id}`} className="glass-card block p-4 group hover:border-[#E94560]/20 transition-all">
           <div className="w-full aspect-video rounded-lg bg-[#1E293B] mb-3 flex items-center justify-center border border-[rgba(30,41,59,0.4)] group-hover:border-[#E94560]/20">
             <Play className="w-8 h-8 text-[#E94560] group-hover:scale-110 transition-transform" />
           </div>

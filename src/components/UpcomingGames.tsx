@@ -55,7 +55,7 @@ export default function UpcomingGames() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {games.map((game, i) => (
           <motion.div key={game.id} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}>
-            <LinkNoPrefetch href={`/games/detail?id=${game.id}`} className="glass-card block p-5 group h-full relative overflow-hidden">
+            <LinkNoPrefetch href={`/games/${game.id}`} className="glass-card block p-5 group h-full relative overflow-hidden">
               <div className="absolute top-0 left-4 right-4 h-[1px] bg-gradient-to-r from-transparent via-[#10B981]/30 to-transparent group-hover:via-[#10B981]/60 transition-all" />
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs text-[#10B981] font-medium flex items-center gap-1"><Timer className="w-3 h-3" />{game.releaseDate || "待定"}</span>

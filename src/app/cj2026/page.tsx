@@ -750,7 +750,7 @@ export default function Cj2026Page() {
               {leaks.map((l: any) => (
                 <LinkNoPrefetch
                   key={l.id}
-                  href={`/leaks/detail/?id=${l.id}`}
+                  href={`/leaks/${l.id}`}
                   className="glass-card p-5 hover:border-[rgba(245,166,35,0.15)] transition-all"
                 >
                   <h3 className="text-sm font-bold text-[#F1F5F9] mb-1.5 line-clamp-2 hover:text-[#F5A623] transition-colors">

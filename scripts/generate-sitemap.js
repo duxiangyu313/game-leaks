@@ -95,7 +95,7 @@ async function fetchDynamicUrls() {
 
     articles.forEach(a => {
       dynamic.push({
-        url: `/articles/detail/?id=${a.id}`,
+        url: `/articles/${a.id}/`,
         priority: "0.7",
         changefreq: "weekly",
         lastmod: a.updated_at ? a.updated_at.slice(0, 10) : null,
@@ -103,7 +103,7 @@ async function fetchDynamicUrls() {
     });
     games.forEach(g => {
       dynamic.push({
-        url: `/games/detail/?id=${g.id}`,
+        url: `/games/${g.id}/`,
         priority: "0.8",
         changefreq: "weekly",
         lastmod: g.updated_at ? g.updated_at.slice(0, 10) : null,
@@ -111,7 +111,7 @@ async function fetchDynamicUrls() {
     });
     leaks.forEach(l => {
       dynamic.push({
-        url: `/leaks/detail/?id=${l.id}`,
+        url: `/leaks/${l.id}/`,
         priority: "0.7",
         changefreq: "daily",
         lastmod: l.updated_at ? l.updated_at.slice(0, 10) : null,

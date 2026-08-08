@@ -44,21 +44,21 @@ export function useSearch(query: string) {
         items.push({
           id: g.id, title: g.title,
           subtitle: `${g.developer ?? ""} · ${(g.genre ?? []).join("、")}`,
-          type: "game", link: `/games/detail?id=${g.id}`,
+          type: "game", link: `/games/${g.id}`,
         });
       }
       for (const l of leaks ?? []) {
         items.push({
           id: l.id, title: l.title,
           subtitle: l.summary?.slice(0, 100) ?? l.game_name ?? "",
-          type: "leak", link: `/leaks/detail?id=${l.id}`,
+          type: "leak", link: `/leaks/${l.id}`,
         });
       }
       for (const a of articles ?? []) {
         items.push({
           id: a.id, title: a.title,
           subtitle: a.excerpt?.slice(0, 100) ?? a.category ?? "",
-          type: "article", link: `/articles/detail?id=${a.id}`,
+          type: "article", link: `/articles/${a.id}`,
         });
       }
 

@@ -118,7 +118,7 @@ export default function GamesPage() {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {filtered.map((game, i) => (
               <motion.div key={game.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: (i % 8) * 0.04 }}>
-                <LinkNoPrefetch href={`/games/detail?id=${game.id}`} className="glass-card block p-4 group h-full hover:border-[#06B6D4]/30 hover:-translate-y-1 transition-all duration-300">
+                <LinkNoPrefetch href={`/games/${game.id}`} className="glass-card block p-4 group h-full hover:border-[#06B6D4]/30 hover:-translate-y-1 transition-all duration-300">
                   {/* Cover placeholder */}
                   <div className="w-full h-40 rounded-xl bg-gradient-to-br from-[#1E293B] to-[#0F172A] mb-3 flex items-center justify-center text-5xl border border-[rgba(30,41,59,0.4)] group-hover:border-[#06B6D4]/20 transition-all relative overflow-hidden">
                     <span className="group-hover:scale-110 transition-transform duration-300">{game.title?.charAt(0)}</span>

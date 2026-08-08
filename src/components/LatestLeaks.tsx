@@ -56,7 +56,7 @@ export default function LatestLeaks() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {leaks.map((leak, i) => (
-          <LinkNoPrefetch key={leak.id} href={`/leaks/detail?id=${leak.id}`} className="block active:scale-[0.98] transition-transform">
+          <LinkNoPrefetch key={leak.id} href={`/leaks/${leak.id}`} className="block active:scale-[0.98] transition-transform">
             <motion.article initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }} className="glass-card p-6 cursor-pointer group">
               <div className="flex items-start justify-between mb-3">
                 <span className={
