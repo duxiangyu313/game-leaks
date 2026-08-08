@@ -22,6 +22,8 @@ const CyberParticles = dynamic(() => import("@/components/cyber/CyberParticles")
 
 // Above-fold lazy — reduces initial JS bundle
 const HotTopics = dynamic(() => import("@/components/HotTopics"));
+// 邮件订阅卡（compact 内嵌版）— 首页免费订阅入口
+const EmailSubscribe = dynamic(() => import("@/components/EmailSubscribe"));
 const LatestLeaks = dynamic(() => import("@/components/LatestLeaks"));
 const HotGames = dynamic(() => import("@/components/HotGames"));
 const UpcomingGames = dynamic(() => import("@/components/UpcomingGames"));
@@ -63,6 +65,12 @@ export default function Home() {
 
         {/* 首屏以上 */}
         <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-4 md:pt-6"><HotTopics /></div>
+
+        {/* 邮件订阅 — 免费转化触点，捕获首屏流量 */}
+        <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-8 md:pt-12">
+          <EmailSubscribe compact />
+        </div>
+
         <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-8 md:pt-16"><LatestLeaks /></div>
         <div className="max-w-[1280px] mx-auto px-4 md:px-6 pt-8 md:pt-16"><HotGames /></div>
 

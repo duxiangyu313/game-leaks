@@ -2,8 +2,9 @@
 
 import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Crown, X } from "lucide-react";
+import { Crown, Mail, X } from "lucide-react";
 import LinkNoPrefetch from "@/components/LinkNoPrefetch";
+import { supabase } from "@/lib/supabase/client";
 import type { MembershipTier } from "@/types";
 
 interface Props {
@@ -26,8 +27,15 @@ export default function SmartPaywallNudge({ membershipLevel, triggerAtPct = 50 }
   });
   const sentinelRef = useRef<HTMLDivElement>(null);
 
+  // 登录态 — 未登录访客优先引导免费注册/订阅，而非直接推付费
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+
   // 会员无需引导（hooks 之后才能 early return）
   const isPremium = membershipLevel === "gold" || membershipLevel === "diamond";
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => setIsLoggedIn(!!user));
+  }, []);
 
   useEffect(() => {
     if (isPremium || dismissed) return;
@@ -82,36 +90,77 @@ export default function SmartPaywallNudge({ membershipLevel, triggerAtPct = 50 }
             className="paywall-nudge"
           >
             <div className="max-w-[1280px] mx-auto px-4">
-              <div className="glass-card-intense p-5 flex items-center justify-between border border-[#F59E0B]/20 bg-gradient-to-r from-[#1A2332] to-[#162030]">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-[#F59E0B]/15 flex items-center justify-center shrink-0">
-                    <Crown className="w-5 h-5 text-[#F59E0B]" />
+              {isLoggedIn ? (
+                /* ── 已登录 free 用户：付费升级引导 ── */
+                <div className="glass-card-intense p-5 flex items-center justify-between border border-[#F59E0B]/20 bg-gradient-to-r from-[#1A2332] to-[#162030]">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-full bg-[#F59E0B]/15 flex items-center justify-center shrink-0">
+                      <Crown className="w-5 h-5 text-[#F59E0B]" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-[#F1F5F9]">
+                        喜欢这篇文章？升级{getUpgradeTier()}会员解锁更多深度内容
+                      </p>
+                      <p className="text-xs text-[#94A3B8] mt-0.5">
+                        独家爆料 · 深度解析 · 行业报告 • 7天无理由退款
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm font-semibold text-[#F1F5F9]">
-                      喜欢这篇文章？升级{getUpgradeTier()}会员解锁更多深度内容
-                    </p>
-                    <p className="text-xs text-[#94A3B8] mt-0.5">
-                      独家爆料 · 深度解析 · 行业报告 • 7天无理由退款
-                    </p>
+                  <div className="flex items-center gap-3 shrink-0">
+                    <LinkNoPrefetch
+                      href="/member"
+                      className="px-5 py-2.5 bg-gradient-to-r from-[#F59E0B] to-[#D97706] text-white text-sm font-semibold rounded-xl hover:shadow-[0_0_20px_rgba(245,158,11,0.25)] transition-all whitespace-nowrap"
+                    >
+                      仅 {getUpgradePrice()} · 立即升级
+                    </LinkNoPrefetch>
+                    <button
+                      onClick={handleDismiss}
+                      className="p-2 text-[#64748B] hover:text-[#94A3B8] transition-colors"
+                      aria-label="关闭"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 shrink-0">
-                  <LinkNoPrefetch
-                    href="/member"
-                    className="px-5 py-2.5 bg-gradient-to-r from-[#F59E0B] to-[#D97706] text-white text-sm font-semibold rounded-xl hover:shadow-[0_0_20px_rgba(245,158,11,0.25)] transition-all whitespace-nowrap"
-                  >
-                    仅 {getUpgradePrice()} · 立即升级
-                  </LinkNoPrefetch>
-                  <button
-                    onClick={handleDismiss}
-                    className="p-2 text-[#64748B] hover:text-[#94A3B8] transition-colors"
-                    aria-label="关闭"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
+              ) : (
+                /* ── 未登录访客：先引导免费注册/订阅（低门槛），付费为次级 ── */
+                <div className="glass-card-intense p-5 flex items-center justify-between border border-[#06B6D4]/20 bg-gradient-to-r from-[#16242A] to-[#14202C]">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-full bg-[#06B6D4]/15 flex items-center justify-center shrink-0">
+                      <Mail className="w-5 h-5 text-[#06B6D4]" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-[#F1F5F9]">
+                        喜欢这篇爆料？免费订阅，新游发售/实机/预售第一时间提醒
+                      </p>
+                      <p className="text-xs text-[#94A3B8] mt-0.5">
+                        免费注册即可订阅 · 无垃圾邮件 · 随时退订
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 shrink-0">
+                    <LinkNoPrefetch
+                      href="/auth"
+                      className="px-5 py-2.5 bg-gradient-to-r from-[#06B6D4] to-[#0891B2] text-white text-sm font-semibold rounded-xl hover:shadow-[0_0_20px_rgba(6,182,212,0.25)] transition-all whitespace-nowrap"
+                    >
+                      免费注册
+                    </LinkNoPrefetch>
+                    <LinkNoPrefetch
+                      href="/subscribe"
+                      className="hidden md:inline text-xs text-[#64748B] hover:text-[#06B6D4] transition-colors whitespace-nowrap"
+                    >
+                      或订阅邮件
+                    </LinkNoPrefetch>
+                    <button
+                      onClick={handleDismiss}
+                      className="p-2 text-[#64748B] hover:text-[#94A3B8] transition-colors"
+                      aria-label="关闭"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </motion.div>
         )}

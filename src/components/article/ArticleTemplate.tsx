@@ -16,6 +16,7 @@ import BookmarkButton from "./BookmarkButton";
 import ShareButton from "./ShareButton";
 import CredibilityVote from "./CredibilityVote";
 import SmartPaywallNudge from "./SmartPaywallNudge";
+import ArticleSubscribeCTA from "./ArticleSubscribeCTA";
 import RelatedArticles from "./RelatedArticles";
 import Lightbox from "./Lightbox";
 
@@ -179,6 +180,9 @@ export default function ArticleTemplate({
               </div>
             </div>
           )}
+
+          {/* 免费文末 — 订阅/注册 CTA（免费转化层） */}
+          {!isPaid && <ArticleSubscribeCTA />}
 
           {/* 相关文章 */}
           <RelatedArticles
