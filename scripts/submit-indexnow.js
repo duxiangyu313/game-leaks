@@ -63,6 +63,22 @@ async function submitIndexNow(key, host, urls) {
   return true;
 }
 
+// ── 百度增量推送：下载线上 sitemap，计算本次新增 URL ──
+const BAIDU_DAILY_CAP = 10; // 新站每日配额很低，无法获取线上 sitemap 时降级限量条数
+
+async function fetchLiveSitemapUrls(host) {
+  const url = `https://${host}/sitemap.xml`;
+  try {
+    const res = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0" } });
+    if (!res.ok) return null;
+    const xml = await res.text();
+    const matches = [...xml.matchAll(/<loc>\s*(https?:\/\/[^<]+)\s*<\/loc>/g)];
+    return new Set(matches.map(m => m[1]));
+  } catch {
+    return null;
+  }
+}
+
 // ── 百度 zz API 推送 ──
 function getBaiduToken() {
   if (process.env.BAIDU_ZZ_TOKEN && process.env.BAIDU_ZZ_TOKEN.trim()) {
@@ -161,12 +177,27 @@ async function main() {
     ok = (await submitIndexNow(keyInfo.key, host, batch)) && ok;
   }
 
-  // 2) 百度 zz API（独立通道）
+  // 2) 百度 zz API（独立通道，增量推送避免每次部署吞掉全部每日配额）
   const baiduToken = getBaiduToken();
   if (baiduToken) {
     console.log("");
     console.log("🔵 推送百度搜索资源平台 zz API ...");
-    await submitBaidu(baiduToken, host, urls);
+    // 增量：只推 sitemap 中线上尚未收录的 URL，把每日配额留给重要页/手动补推
+    const liveSet = await fetchLiveSitemapUrls(host);
+    let baiduUrls = urls;
+    if (liveSet && liveSet.size > 0) {
+      const newUrls = urls.filter(u => !liveSet.has(u));
+      console.log(`   线上已收录 ${liveSet.size} 条，本次新增 ${newUrls.length} 条 → 仅推送新增`);
+      baiduUrls = newUrls;
+    } else {
+      console.log(`   ⚠️ 无法获取线上 sitemap，降级为限量推送前 ${BAIDU_DAILY_CAP} 条`);
+      baiduUrls = urls.slice(0, BAIDU_DAILY_CAP);
+    }
+    if (baiduUrls.length === 0) {
+      console.log("   ℹ️ 无新增 URL，跳过百度推送（保留今日配额）");
+    } else {
+      await submitBaidu(baiduToken, host, baiduUrls);
+    }
   } else {
     console.log("");
     console.log("⚠️  未配置百度 token，跳过百度推送。");
