@@ -20,6 +20,15 @@ const MOCK_TOPICS: any[] = [
 // 8-8 新增：近两日高热度内容（5爆料+3文章）置顶前排
 // 8-6：CJ2026 三篇首发文章 + 其他高热度保留为次级置顶（前排被 8-8 挤下后作兜底）
 const EDITOR_PICKS: { id: string; type: "leak" | "article" }[] = [
+  // ── 8-9 新增：本周热点（最前排，优先占据今日热点前6） ──
+  { id: "544e77b4-8dad-4de8-b77f-b361d7c1b10a", type: "leak" },     // 影之刃零·预售前夜+沐小葵建模
+  { id: "263c5fa9-2230-4c3a-8866-7d0869bf8a3f", type: "article" },  // 8月下旬三连发（行业观察）
+  { id: "50304a85-3dd0-4b44-8d4e-38fb2397ac44", type: "leak" },     // 黑神话钟馗·只是片花+音乐转向
+  { id: "96eccb61-61ee-4e41-924c-9eb5068ed35f", type: "article" },  // 影之刃零·好饭不怕晚（深度解析）
+  { id: "8b7c3c9d-3cc0-43bf-904c-eca73234df5a", type: "leak" },     // 腾讯×米哈游首度联动
+  { id: "4bf6ddf6-e635-4a96-b5c3-7cc609f88a99", type: "article" },  // 垂类精品破圈（市场观察）
+  { id: "fb60dcdf-1c08-458b-b11f-42e80af79420", type: "leak" },     // 米哈游泄密刑案
+  { id: "7804aed1-4f7a-447c-8376-0b353788bb48", type: "leak" },     // 星砂岛8/18上线
   // ── 8-8 新增：近两日高热度内容 ──
   { id: "7cdfcb52-dd4c-4a77-9697-60e385eab085", type: "leak" },     // 黑神话：悟空 全平台七折
   { id: "9427ca1e-877d-40f2-8ac2-144ef88798e1", type: "leak" },     // 腾讯天美《怪物猎人：旅人》启明测试
