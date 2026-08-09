@@ -193,7 +193,7 @@ function DetailContent({ id }: { id: string }) {
         membershipLevel={userLevel}
         interactionCounts={interactionCounts}
         userLiked={userLike}
-        userBookmarked={userBookmarked}
+        userBookmarked={userBookmark}
       />
 
       <div className="max-w-6xl mx-auto px-4 md:px-6 mt-12 pt-8 border-t border-[rgba(30,41,59,0.4)]">
