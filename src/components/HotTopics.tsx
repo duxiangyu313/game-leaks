@@ -20,7 +20,16 @@ const MOCK_TOPICS: any[] = [
 // 8-8 新增：近两日高热度内容（5爆料+3文章）置顶前排
 // 8-6：CJ2026 三篇首发文章 + 其他高热度保留为次级置顶（前排被 8-8 挤下后作兜底）
 const EDITOR_PICKS: { id: string; type: "leak" | "article" }[] = [
-  // ── 8-9 晚间补充批次：最新热点（最前排） ──
+  // ── 8-11 新增：当日热点（最前排） ──
+  { id: "de65f118-54b9-4254-acd9-2f08c0f0c25f", type: "leak" },     // 杨奇：钟馗远离AIGC
+  { id: "9b284e29-d74a-4010-85da-4a75ac3fe9a8", type: "article" },  // 杨奇AIGC宣言（深度解析）
+  { id: "b16c1931-9c33-4f63-8f0f-313530eb0bfc", type: "leak" },     // 影之刃零8/12预售+WeGame 20万
+  { id: "e7f8b0dc-41d3-4495-acee-cd8e83281302", type: "article" },  // 国产单机冰火两极（行业观察）
+  { id: "e59635fb-f9ac-4bd6-a10c-2b6f083c50cb", type: "leak" },     // 工长君确认剑心雕龙被砍
+  { id: "ae6c0801-acff-4d07-983c-82d3cd4df2c0", type: "article" },  // 86%企业用AI（市场观察）
+  { id: "f30444b1-f2fc-4a07-93b8-ad73b06acf31", type: "leak" },     // 前王者主创魏嘉离职做声探疑云
+  { id: "2f848e2a-baf3-4913-a9e5-20a263540d15", type: "leak" },     // 索尼PS5 2028终止实体光盘
+  // ── 8-9 晚间补充批次 ──
   { id: "07444018-a08d-4514-bc75-e7201ed341b5", type: "leak" },     // 原神7.0至冬国定档8/12
   { id: "03a74890-ea12-4761-ac67-cd93c91315cd", type: "article" },  // 至冬国叙事收束（行业观察）
   { id: "9e8c41e7-f143-4444-a348-58c3b91969e7", type: "leak" },     // 沙特PIF 550亿收购EA
