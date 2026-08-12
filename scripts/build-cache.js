@@ -134,6 +134,16 @@ async function main() {
     // 8-8 新增：近两日高热度内容（5爆料+3文章）置顶前排
     // 8-6：CJ2026 三篇首发 + 其他高热度保留为次级置顶
     const EDITOR_PICKS = [
+      // ── 8-12 新增：当日热点（最前排） ──
+      { id: "df57a51a-f6bb-4306-9bfc-058713a5baf7", type: "leak" },     // 影之刃零预售登顶Steam全球榜(268/328元+甄子丹)
+      { id: "bb93bd00-cffd-4b31-a760-d53139d8d5a7", type: "article" },  // 影之刃零新实机全解析（深度解析）
+      { id: "75249379-cdfc-4830-87ce-2e8286337d50", type: "leak" },     // 米哈游BSide AI陪伴28天关停
+      { id: "a350f213-d5f1-42b0-a29e-f28f98ccba62", type: "article" },  // 米哈游BSide关停·AI试错税（深度解析）
+      { id: "e51dee12-8a8f-4577-b466-1852e7d18e06", type: "leak" },     // 盗墓笔记：启程全平台公测(预约破500万)
+      { id: "dd506525-621f-4593-8ac0-a01f5411f5c4", type: "leak" },     // 王者荣耀世界S1延长优化
+      { id: "59ce61cf-4c4b-4585-a876-ff81428fe6d5", type: "leak" },     // 鸣潮3.6·御剑飞行+七弦琴(8/20)
+      { id: "2261e211-00f4-436e-bd94-50690bf0cc94", type: "article" },  // 盗墓笔记公测×鸣潮3.6双轨（行业观察）
+      { id: "a612073b-c375-4a63-9526-6eba0396e9e8", type: "leak" },     // 黑神话悟空两周年·全平台七折
       // ── 8-11 新增：当日热点（最前排） ──
       { id: "de65f118-54b9-4254-acd9-2f08c0f0c25f", type: "leak" },     // 杨奇：钟馗远离AIGC
       { id: "9b284e29-d74a-4010-85da-4a75ac3fe9a8", type: "article" },  // 杨奇AIGC宣言（深度解析）
