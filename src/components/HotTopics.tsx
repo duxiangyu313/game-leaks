@@ -20,6 +20,16 @@ const MOCK_TOPICS: any[] = [
 // 8-8 新增：近两日高热度内容（5爆料+3文章）置顶前排
 // 8-6：CJ2026 三篇首发文章 + 其他高热度保留为次级置顶（前排被 8-8 挤下后作兜底）
 const EDITOR_PICKS: { id: string; type: "leak" | "article" }[] = [
+  // ── 8-13 新增：当日热点（最前排） ──
+  { id: "94798a7e-54f7-4eb4-b82a-0d3a28f1a384", type: "leak" },     // 影之刃零8/18索尼专属State of Play(国产首获非第一方专场)
+  { id: "11c566ae-bbf2-4c68-87ef-52e6462642a3", type: "article" },  // 影之刃零SOP深度解析（深度解析）
+  { id: "5ddb2daa-ed5e-4244-81bb-a7ca9a75bb54", type: "leak" },     // 黑神话悟空Xbox国行版上线
+  { id: "bab79c30-dd48-4565-bd73-0b1aaebf7a5d", type: "leak" },     // 莉莉丝生存日志Steam发售(部分AI美术)
+  { id: "312157f0-1912-48c7-8b9e-5e203726d4a7", type: "article" },  // AI落地与试错双轨（行业观察）
+  { id: "0086141f-7e83-46d0-a788-f756a09eb66c", type: "leak" },     // 诡秘之主8/21全平台公测(4年10亿624人)
+  { id: "a2594ba5-f3fa-4ba7-96b5-1461d27e302f", type: "article" },  // 诡秘之主公测深度解析（深度解析）
+  { id: "dc5430dc-bef4-434f-a7f1-ab90e3052eb2", type: "leak" },     // 王者荣耀匹配新增负面信誉维度
+  { id: "17f72534-a9ae-4462-a5c6-8eb12db52aef", type: "leak" },     // 三国观沧海8/13公测(弹指宇宙水墨战棋)
   // ── 8-12 新增：当日热点（最前排） ──
   { id: "df57a51a-f6bb-4306-9bfc-058713a5baf7", type: "leak" },     // 影之刃零预售登顶Steam全球榜(268/328元+甄子丹)
   { id: "bb93bd00-cffd-4b31-a760-d53139d8d5a7", type: "article" },  // 影之刃零新实机全解析（深度解析）
