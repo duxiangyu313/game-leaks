@@ -134,6 +134,16 @@ async function main() {
     // 8-8 新增：近两日高热度内容（5爆料+3文章）置顶前排
     // 8-6：CJ2026 三篇首发 + 其他高热度保留为次级置顶
     const EDITOR_PICKS = [
+      // ── 8-15 新增：当日热点（最前排） ──
+      { id: "fd4499e2-3b06-4b50-bf37-8b84ddacb76f", type: "leak" },     // 阿里超15亿美元出售灵犀互娱(信宸资本接盘)
+      { id: "3a62f24d-c011-467a-92c6-b984a52aacbd", type: "article" },  // 阿里出售灵犀深度解析（深度解析）
+      { id: "3e0fe999-207c-49f3-8897-d412247683b3", type: "leak" },     // 腾讯半年游戏收入破1300亿
+      { id: "188d5826-2b19-4be3-b6c9-58355f96213e", type: "article" },  // 腾讯财报观察（财报观察）
+      { id: "cc0ed86d-4b28-479d-a0a5-f9287cd1d3cc", type: "leak" },     // 吉比特净利增近70%/境外翻倍
+      { id: "86dca0d9-8887-4a8f-aa19-34a831816461", type: "article" },  // AI提效神话遇冷（行业观察）
+      { id: "40ceb191-dbc8-40f5-b0b7-9dda256e12b2", type: "leak" },     // 祖龙上半年预亏7500万
+      { id: "79148d07-70b4-4411-9cc8-50dbd228e61d", type: "leak" },     // 莉莉丝密集测试多款新品
+      { id: "2ae0fd01-523f-489d-a158-2459eea6df3c", type: "leak" },     // 不心动才有鬼8/14 Steam发售
       // ── 8-13 新增：当日热点（最前排） ──
       { id: "94798a7e-54f7-4eb4-b82a-0d3a28f1a384", type: "leak" },     // 影之刃零8/18索尼专属State of Play(国产首获非第一方专场)
       { id: "11c566ae-bbf2-4c68-87ef-52e6462642a3", type: "article" },  // 影之刃零SOP深度解析（深度解析）
